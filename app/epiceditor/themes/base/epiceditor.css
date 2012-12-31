@@ -4,6 +4,17 @@ body, iframe {
 	height: 100% !important;
 }
 
-#epiceditor-utilbar {
+/*#epiceditor-utilbar {
   display: none;
+}*/
+
+#epiceditor-utilbar {
+	position:fixed;
+	bottom:10px;
+	right:10px;
+	background: #e7e5e4;
+	padding:5px;
+	color: #444;
+	font-family: "Source Sans Pro", sans;
+	-webkit-transition: display 200ms ease 2s;
 }
