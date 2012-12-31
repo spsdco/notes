@@ -481,6 +481,29 @@ body, input, textarea {
   left: 0;
   bottom: 0;
   background: #e7e5e4; }
+  #notebooks ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0; }
+  #notebooks li {
+    height: 33px;
+    line-height: 33px;
+    border-top: 1px solid #f1f1f1;
+    border-bottom: 1px solid #b4b3b1;
+    padding: 0 10px 0 34px;
+    font-size: 14px;
+    color: #222;
+    text-shadow: 0 -1px 0 #f1f1f1;
+    background: url(../img/book.svg) no-repeat;
+    background-size: 33px; }
+    #notebooks li.all {
+      background: url(../img/list.svg) no-repeat 3px 40%;
+      background-size: 28px; }
+    #notebooks li.tag {
+      background: url(../img/tag.svg) no-repeat 3px 50%;
+      background-size: 28px; }
+    #notebooks li.current {
+      background-color: #fafafa; }
 
 #notes {
   width: 299px;
