@@ -16,6 +16,10 @@ $ ->
 
 	editor = new EpicEditor
 		container: 'contentbody'
+		theme:
+    		base:'/themes/base/epiceditor.css'
+    		preview:'/themes/preview/style.css'
+		    editor:'/themes/editor/github.css'
 	editor.load()
 	editor.importFile('some-file',"#Imported markdown\nFancy, huh?");
 	editor.preview();
