@@ -433,48 +433,44 @@ body, input, textarea {
 #panel {
   width: 100%;
   height: 40px;
-  background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #4b4a46), color-stop(100%, #2a2a2a));
-  background: -webkit-linear-gradient(#4b4a46, #2a2a2a);
-  background: -moz-linear-gradient(#4b4a46, #2a2a2a);
-  background: -o-linear-gradient(#4b4a46, #2a2a2a);
-  background: linear-gradient(#4b4a46, #2a2a2a); }
+  background: #333; }
 
 #decor {
   display: inline-block;
-  background: #3c3c3c;
   height: 19px;
-  margin: 10px 9px;
-  border-radius: 19px; }
+  margin: 10px 9px; }
 
 #search {
   position: absolute;
   right: 0;
   top: 0;
   display: inline-block;
-  padding-top: 6px;
+  padding-top: 8px;
   padding-right: 15px; }
   #search input {
-    background: url(../img/search.png) no-repeat 5px 50%, #fafafa;
-    border-radius: 4px;
+    background: url(../img/search.png) no-repeat 5px 50%, rgba(0, 0, 0, 0.2);
     outline: 0;
     padding: 5px 10px 5px 25px;
     font-size: 13px;
-    color: #222;
-    border: 1px solid #2C2C2C;
-    box-shadow: 0 1px 1px #555; }
+    color: #fff;
+    border: 0;
+    border-radius: 4px;
+    box-shadow: 0 0 1px #444; }
 
-#sidebar {
-  width: 300px;
+#notebooks {
+  width: 199px;
+  border-right: 1px solid #b4b3b1;
   background: #f00;
   position: absolute;
   top: 40px;
   left: 0;
-  bottom: 0; }
+  bottom: 0;
+  background: #e7e5e4; }
 
 #content {
   position: absolute;
-  left: 300px;
+  left: 200px;
   right: 0;
   top: 40px;
   bottom: 0;
-  background: #0ff; }
+  background: #fbfaf8; }
