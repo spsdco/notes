@@ -1,5 +1,9 @@
 html, body, iframe, div { margin:0; padding:0; }
 
+body, iframe {
+	height: 100% !important;
+}
+
 #epiceditor-utilbar {
   display: none;
 }
