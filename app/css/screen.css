@@ -489,7 +489,7 @@ body, input, textarea {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #b4b3b1;
+    border-bottom: 1px solid #bbb;
     padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
@@ -512,7 +512,43 @@ body, input, textarea {
   left: 200px;
   top: 40px;
   bottom: 0;
-  background: #fbfaf8; }
+  background: #f7f7f5; }
+  #notes header {
+    padding: 10px 15px 8px;
+    border-bottom: 1px solid #bbb;
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #ebebe8));
+    background: -webkit-linear-gradient(#ffffff, #ebebe8);
+    background: -moz-linear-gradient(#ffffff, #ebebe8);
+    background: -o-linear-gradient(#ffffff, #ebebe8);
+    background: linear-gradient(#ffffff, #ebebe8); }
+    #notes header h1 {
+      color: #333;
+      margin: 0;
+      font-size: 24px;
+      letter-spacing: -1px;
+      font-family: "Ubuntu Light", "Ubuntu";
+      font-weight: 300;
+      text-shadow: 0 1px 0 #fff; }
+  #notes ul {
+    margin: 0;
+    padding: 0;
+    list-style-type: none; }
+  #notes li {
+    border-top: 1px solid #fefefe;
+    border-bottom: 1px solid #ccc;
+    padding: 0 15px 8px;
+    color: #444;
+    font-size: 13px;
+    line-height: 16px;
+    overflow: hidden; }
+  #notes h2 {
+    margin: 8px 0 4px;
+    font-size: 15px;
+    color: #444; }
+  #notes time {
+    color: #522453; }
+    #notes time::after {
+      content: " "; }
 
 #content {
   position: absolute;
@@ -520,4 +556,4 @@ body, input, textarea {
   right: 0;
   top: 40px;
   bottom: 0;
-  background: #fbfaf8; }
+  background: #f9f9f8; }
