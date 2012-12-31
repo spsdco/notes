@@ -170,7 +170,7 @@ kbd,
 pre,
 samp {
   font-family: monospace, serif;
-  _font-family: 'courier new', monospace;
+  _font-family: "courier new", monospace;
   font-size: 1em; }
 
 /*
@@ -289,7 +289,7 @@ form {
  * Define consistent border, margin, and padding.
  */
 fieldset {
-  border: 1px solid #c0c0c0;
+  border: 1px solid silver;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
@@ -428,7 +428,8 @@ table {
   border-spacing: 0; }
 
 body, input, textarea {
-  font-family: "Ubuntu", sans-serif; }
+  font-family: "Ubuntu", sans-serif;
+  overflow: hidden; }
 
 #panel {
   width: 100%;
@@ -450,7 +451,7 @@ body, input, textarea {
   position: absolute;
   padding: 5px 4px;
   top: 0;
-  border-right: 1px solid #444; }
+  border-right: 1px solid #444444; }
   #noteControls img {
     height: 28px;
     margin-right: 6px; }
@@ -470,7 +471,7 @@ body, input, textarea {
     color: #fff;
     border: 0;
     border-radius: 2px;
-    box-shadow: 0 0 1px #444; }
+    box-shadow: 0 0 1px #444444; }
 
 #notebooks {
   width: 199px;
@@ -480,7 +481,8 @@ body, input, textarea {
   top: 40px;
   left: 0;
   bottom: 0;
-  background: #e7e5e4; }
+  background: #e7e5e4;
+  overflow: auto; }
   #notebooks ul {
     list-style-type: none;
     padding: 0;
@@ -489,7 +491,7 @@ body, input, textarea {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #bbbbbb;
     padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
@@ -512,10 +514,11 @@ body, input, textarea {
   left: 200px;
   top: 40px;
   bottom: 0;
-  background: #f7f7f5; }
+  background: #f7f7f5;
+  overflow: auto; }
   #notes header {
     padding: 10px 15px 8px;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #bbbbbb;
     background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #ebebe8));
     background: -webkit-linear-gradient(#ffffff, #ebebe8);
     background: -moz-linear-gradient(#ffffff, #ebebe8);
@@ -528,14 +531,14 @@ body, input, textarea {
       letter-spacing: -1px;
       font-family: "Ubuntu Light", "Ubuntu";
       font-weight: 300;
-      text-shadow: 0 1px 0 #fff; }
+      text-shadow: 0 1px 0 white; }
   #notes ul {
     margin: 0;
     padding: 0;
     list-style-type: none; }
   #notes li {
     border-top: 1px solid #fefefe;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #cccccc;
     padding: 0 15px 8px;
     color: #444;
     font-size: 13px;
@@ -562,7 +565,8 @@ body, input, textarea {
   right: 0;
   top: 40px;
   bottom: 0;
-  background: #f9f9f8; }
+  background: #f9f9f8;
+  overflow: auto; }
   #content header {
     margin: 0;
     padding: 0;
@@ -576,7 +580,7 @@ body, input, textarea {
     #content header h1 {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
-      text-shadow: 0 1px 0 #fff;
+      text-shadow: 0 1px 0 white;
       margin: 0;
       letter-spacing: -1px;
       color: #222; }
@@ -584,3 +588,33 @@ body, input, textarea {
       font-family: "Ubuntu Light", "Ubuntu";
       font-size: 13px;
       color: #522453; }
+  #content #contentbody {
+    margin: 0;
+    padding: 5px;
+    font-family: "Ubuntu Light", "Ubuntu";
+    font-weight: 300; }
+    #content #contentbody h1, #content #contentbody h2, #content #contentbody h3, #content #contentbody h4, #content #contentbody h5, #content #contentbody h6 {
+      text-shadow: 0 1px 0 white; }
+    #content #contentbody a {
+      color: #522453; }
+    #content #contentbody p {
+      font-size: 14px; }
+    #content #contentbody pre {
+      font-family: "Ubuntu Mono", monospace;
+      font-size: 14px;
+      background: #e7e5e4;
+      padding: 5px 5px 5px 25px;
+      border: 1px solid #b4b3b1; }
+    #content #contentbody hr {
+      border-bottom: #b4b3b1; }
+    #content #contentbody blockquote {
+      border: 1px solid #b4b3b1;
+      background: #e7e5e4;
+      margin: 0;
+      padding: 5px 5px 5px 25px; }
+      #content #contentbody blockquote::before {
+        font-size: 48px;
+        content: '\201C'; }
+      #content #contentbody blockquote::after {
+        font-size: 48px;
+        content: '\201D'; }
