@@ -1,22 +1,27 @@
 $ ->
 	# Parse Initial Text
-	window.noted.parseText()
+	#window.noted.parseText()
 
 	# Event Handlers
 	$("#content header .edit").click ->
-		$("#contentbody .preview").toggle()
-		$("#contentbody .edit").toggle()
-		window.noted.parseText()
 
 		# There should be a better way to do this
 		if $(this).text() is "save"
 			$(this).text "edit"
+			editor.preview()
 		else
 			$(this).text "save"
+			editor.edit()
+
+
+	editor = new EpicEditor
+		container: 'contentbody'
+	editor.load()
+	editor.importFile('some-file',"#Imported markdown\nFancy, huh?");
+	editor.preview();
+
 
 
 window.noted =
-	parseText: ->
-		converter = new Showdown.converter()
-		html = htmlToText $("#contentbody .edit").html()
-		$("#contentbody .preview").html converter.makeHtml html
+	blank ->
+		console.log("hey")

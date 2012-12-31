@@ -658,9 +658,10 @@ body, input, textarea {
   line-height: 1.4;
   overflow: auto;
   font-family: "Source Sans Pro"; }
-  #contentbody .edit {
-    display: none;
-    white-space: pre; }
+  #contentbody iframe {
+    max-width: 650px;
+    margin: 0 auto;
+    display: block; }
   #contentbody h1, #contentbody h2, #contentbody h3, #contentbody h4, #contentbody h5, #contentbody h6 {
     font-weight: 300;
     font-family: "Ubuntu Light", "Ubuntu";

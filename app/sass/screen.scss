@@ -279,9 +279,10 @@ body, input, textarea {
 	overflow: auto;
 	font-family: "Source Sans Pro";
 
-	.edit {
-		display: none;
-		white-space: pre;
+	iframe {
+		max-width: 650px;
+		margin: 0 auto;
+		display: block;
 	}
 
 	h1, h2, h3, h4, h5, h6 {
