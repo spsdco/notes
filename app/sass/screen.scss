@@ -177,7 +177,6 @@ body, input, textarea {
 	top: 40px;
 	bottom: 0;
 	background: $white-color;
-	overflow: auto;
 
 	header {
 		margin: 0;
@@ -185,7 +184,10 @@ body, input, textarea {
 		@include background(linear-gradient(lighten($white-color, 5%), darken($white-color, 6%)));
 		border-bottom: 1px solid #b4b3b1;
 		padding: 10px 15px;
-		position: relative;
+		position: absolute;
+		right: 0;
+		left: 0;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 
 		h1 {
 			font-weight: 300;
@@ -252,54 +254,75 @@ body, input, textarea {
 			border-radius: 2px;
 		}
 	}
+}
 
-	#contentbody {
-		margin: 0;
-		padding: 10px;
-		font-family: $light-font;
+#contentbody {
+	position: absolute;
+	top:76px;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	margin: 0;
+	padding: 15px 15px 60px;
+	color: #444;
+	font-size: 16px;
+	line-height: 1.4;
+	overflow: auto;
+
+	h1, h2, h3, h4, h5, h6 {
 		font-weight: 300;
-		color: #444;
+		font-family: $light-font;
+		text-shadow: 0 1px 1px #fff;
+		color: #222;
+	}
 
-		h1, h2, h3, h4, h5, h6 {
-			text-shadow: 0 1px 0 #fff;
-			color: #222;
+	h2 {
+		margin-top: 1em;
+		font-size: 28px;
+		margin-bottom: 0.5em;
+	}
+
+	a {
+		color: $purple;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
 		}
+	}
 
-		a {
-			color: $purple;
-		}
+	p {
+		margin-bottom: 1.3em;
+		max-width: 700px;
+	}
 
-		p {
-			font-size: 14px;
-		}
+	pre {
+		font-family: "Ubuntu Mono", monospace;
+		font-size: 14px;
+		background: $sidebar-color;
+		padding: 5px 5px 5px 25px;
+		border: 1px solid $border-color;
+		max-width: 700px;
+	}
 
-		pre {
-			font-family: "Ubuntu Mono", monospace;
-			font-size: 14px;
-			background: $sidebar-color;
-			padding: 5px 5px 5px 25px;
-			border: 1px solid $border-color;
-		}
+	hr {
+		border-bottom: $border-color;
+		max-width: 700px;
+	}
 
-		hr {
-			border-bottom: $border-color;
-		}
+	blockquote {
+		color:#555;
+		border-left:0.25em solid #eee;
+		padding-left:0.5em;
+		margin:1.5em 0 0px 0.13em;
+		padding-top:0px;
+		padding-bottom:0;
+		max-width: 700px;
+		font-weight:300;
 
-		blockquote {
-			border: 1px solid $border-color;
-			background: $sidebar-color;
-			margin: 0;
-			padding: 5px 5px 5px 25px;
-		
-			&::before {
-				font-size: 48px;
-				content: '\201C';
-			}
-
-			&::after {
-				font-size: 48px;
-				content: '\201D';
-			}
+ 		p {
+ 			font-size:18px;
+			margin:10px 0;
 		}
 	}
 }
