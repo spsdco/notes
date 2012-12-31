@@ -255,12 +255,14 @@ body, input, textarea {
 
 	#contentbody {
 		margin: 0;
-		padding: 5px;
+		padding: 10px;
 		font-family: $light-font;
 		font-weight: 300;
+		color: #444;
 
 		h1, h2, h3, h4, h5, h6 {
 			text-shadow: 0 1px 0 #fff;
+			color: #222;
 		}
 
 		a {

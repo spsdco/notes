@@ -637,11 +637,13 @@ body, input, textarea {
       border-radius: 2px; }
   #content #contentbody {
     margin: 0;
-    padding: 5px;
+    padding: 10px;
     font-family: "Ubuntu Light", "Ubuntu";
-    font-weight: 300; }
+    font-weight: 300;
+    color: #444; }
     #content #contentbody h1, #content #contentbody h2, #content #contentbody h3, #content #contentbody h4, #content #contentbody h5, #content #contentbody h6 {
-      text-shadow: 0 1px 0 #fff; }
+      text-shadow: 0 1px 0 #fff;
+      color: #222; }
     #content #contentbody a {
       color: #522453; }
     #content #contentbody p {
