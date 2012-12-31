@@ -39,6 +39,11 @@ body, input, textarea {
 	img {
 		height: 28px;
 		margin-right: 6px;
+		opacity: 0.7;
+
+		&:active {
+			opacity: 1;
+		}
 	}
 }
 #search {
@@ -180,6 +185,7 @@ body, input, textarea {
 		@include background(linear-gradient(lighten($white-color, 5%), darken($white-color, 6%)));
 		border-bottom: 1px solid #b4b3b1;
 		padding: 10px 15px;
+		position: relative;
 
 		h1 {
 			font-weight: 300;
@@ -194,6 +200,56 @@ body, input, textarea {
 			font-family: $light-font;
 			font-size: 13px;
 			color: $purple
+		}
+
+		.left {
+			display: inline-block;
+		}
+
+		.right {
+			display: inline-block;
+			text-align: right;
+			vertical-align: top;
+			position: absolute;
+			right: 15px;
+			top: 8px;
+			color: #999;
+		}
+
+		.toggle, .dot {
+			color: #999;
+			display: inline-block;
+			border: 0;
+			font-size: 14px;
+			margin: 7px 0;
+			background: transparent;
+			cursor: default;
+			font-weight: bold;
+		}
+		.toggle:hover {
+			color: #444;
+		}
+
+		ul {
+			margin: 0;
+			padding: 0 0 0 20px;
+			list-style-type: none;
+			font-size: 0;
+			background: url(../img/tag.svg) 0 -1px no-repeat;
+			background-size: 24px;
+		}
+
+		li {
+			@include background(linear-gradient(#fafafa, #f5f5f5));
+			box-shadow: 0 1px 1px #fcfcfc;
+			color: $purple;
+			font-size: 13px;
+			display: inline-block;
+			border: 1px solid #ccc;
+			margin-left: 5px;
+			padding: 2px 6px;
+			cursor: default;
+			border-radius: 2px;
 		}
 	}
 
