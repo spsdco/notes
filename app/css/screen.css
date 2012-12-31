@@ -438,7 +438,7 @@ body, input, textarea {
 #decor {
   display: inline-block;
   height: 19px;
-  margin: 11px 15px; }
+  margin: 11px 13px; }
   #decor img {
     margin-right: 8px; }
 
@@ -448,7 +448,7 @@ body, input, textarea {
   top: 0;
   display: inline-block;
   padding-top: 7px;
-  padding-right: 15px; }
+  padding-right: 13px; }
   #search input {
     background: url(../img/search.png) no-repeat 7px 50%, rgba(0, 0, 0, 0.2);
     outline: 0;
@@ -469,9 +469,18 @@ body, input, textarea {
   bottom: 0;
   background: #e7e5e4; }
 
-#content {
+#notes {
+  width: 299px;
+  border-right: 1px solid #b4b3b1;
   position: absolute;
   left: 200px;
+  top: 40px;
+  bottom: 0;
+  background: #fbfaf8; }
+
+#content {
+  position: absolute;
+  left: 500px;
   right: 0;
   top: 40px;
   bottom: 0;
