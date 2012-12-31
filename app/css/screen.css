@@ -560,19 +560,21 @@ body, input, textarea {
   #content header {
     margin: 0;
     padding: 0;
-    background: #e7e5e4;
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #ebebe8));
+    background: -webkit-linear-gradient(#ffffff, #ebebe8);
+    background: -moz-linear-gradient(#ffffff, #ebebe8);
+    background: -o-linear-gradient(#ffffff, #ebebe8);
+    background: linear-gradient(#ffffff, #ebebe8);
     border-bottom: 1px solid #b4b3b1;
     padding: 10px 15px; }
-    #content header h1 {  
-      font-weight: 300;  
+    #content header h1 {
+      font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
-      text-shadow: 0 1px 0 #fff; }
-    #content header p {
-      font-family: "Ubuntu Light", "Ubuntu";
-      font-size: 14px; }
+      text-shadow: 0 1px 0 #fff;
+      margin: 0;
+      letter-spacing: -1px;
+      color: #222; }
     #content header time {
       font-family: "Ubuntu Light", "Ubuntu";
-      font-size: 14px;
+      font-size: 13px;
       color: #522453; }
-    #content header time::before {
-      content: "Note created: ";
