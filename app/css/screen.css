@@ -557,3 +557,22 @@ body, input, textarea {
   top: 40px;
   bottom: 0;
   background: #f9f9f8; }
+  #content header {
+    margin: 0;
+    padding: 0;
+    background: #e7e5e4;
+    border-bottom: 1px solid #b4b3b1;
+    padding: 10px 15px; }
+    #content header h1 {  
+      font-weight: 300;  
+      font-family: "Ubuntu Light", "Ubuntu";
+      text-shadow: 0 1px 0 #fff; }
+    #content header p {
+      font-family: "Ubuntu Light", "Ubuntu";
+      font-size: 14px; }
+    #content header time {
+      font-family: "Ubuntu Light", "Ubuntu";
+      font-size: 14px;
+      color: #522453; }
+    #content header time::before {
+      content: "Note created: ";
