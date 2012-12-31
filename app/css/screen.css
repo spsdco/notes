@@ -170,7 +170,7 @@ kbd,
 pre,
 samp {
   font-family: monospace, serif;
-  _font-family: 'courier new', monospace;
+  _font-family: "courier new", monospace;
   font-size: 1em; }
 
 /*
@@ -289,7 +289,7 @@ form {
  * Define consistent border, margin, and padding.
  */
 fieldset {
-  border: 1px solid #c0c0c0;
+  border: 1px solid silver;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
@@ -451,7 +451,7 @@ body, input, textarea {
   position: absolute;
   padding: 5px 4px;
   top: 0;
-  border-right: 1px solid #444; }
+  border-right: 1px solid #444444; }
   #noteControls img {
     height: 28px;
     margin-right: 6px;
@@ -474,7 +474,7 @@ body, input, textarea {
     color: #fff;
     border: 0;
     border-radius: 2px;
-    box-shadow: 0 0 1px #444; }
+    box-shadow: 0 0 1px #444444; }
 
 #notebooks {
   width: 199px;
@@ -494,7 +494,7 @@ body, input, textarea {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #bbbbbb;
     padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
@@ -521,7 +521,7 @@ body, input, textarea {
   overflow: auto; }
   #notes header {
     padding: 10px 15px 8px;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #bbbbbb;
     background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #ebebe8));
     background: -webkit-linear-gradient(#ffffff, #ebebe8);
     background: -moz-linear-gradient(#ffffff, #ebebe8);
@@ -534,14 +534,14 @@ body, input, textarea {
       letter-spacing: -1px;
       font-family: "Ubuntu Light", "Ubuntu";
       font-weight: 300;
-      text-shadow: 0 1px 0 #fff; }
+      text-shadow: 0 1px 0 white; }
   #notes ul {
     margin: 0;
     padding: 0;
     list-style-type: none; }
   #notes li {
     border-top: 1px solid #fefefe;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #cccccc;
     padding: 0 15px 8px;
     color: #444;
     font-size: 13px;
@@ -592,7 +592,7 @@ body, input, textarea {
     #content header h1 {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
-      text-shadow: 0 1px 0 #fff;
+      text-shadow: 0 1px 0 white;
       margin: 0;
       letter-spacing: -1px;
       color: #222; }
@@ -639,7 +639,7 @@ body, input, textarea {
       color: #522453;
       font-size: 13px;
       display: inline-block;
-      border: 1px solid #ccc;
+      border: 1px solid #cccccc;
       margin-left: 5px;
       padding: 2px 6px;
       cursor: default;
@@ -652,7 +652,7 @@ body, input, textarea {
   left: 0;
   right: 0;
   margin: 0;
-  padding: 40px 15px 60px;
+  padding: 0;
   color: #444;
   font-size: 16px;
   line-height: 1.4;

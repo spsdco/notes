@@ -1,9 +1,10 @@
 #epiceditor-preview {
-  position: absolute;
-  margin: 0;
+  margin: 0 auto;
+  width: 650px;
   padding: 0;
   color: #444;
   font-size: 16px;
+  display: block;
   line-height: 1.4;
   overflow: auto;
   font-family: "Source Sans Pro"; }
