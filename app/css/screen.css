@@ -578,11 +578,17 @@ body, input, textarea {
     background: -o-linear-gradient(#ffffff, #ebebe8);
     background: linear-gradient(#ffffff, #ebebe8);
     border-bottom: 1px solid #b4b3b1;
-    padding: 10px 15px;
     position: absolute;
     right: 0;
     left: 0;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); }
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    height: 76px; }
+    #content header .headerwrap {
+      max-width: 650px;
+      margin: 0 auto;
+      position: absolute;
+      left: 0;
+      right: 0; }
     #content header h1 {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
@@ -595,14 +601,15 @@ body, input, textarea {
       font-size: 13px;
       color: #522453; }
     #content header .left {
-      display: inline-block; }
+      display: inline-block;
+      margin-top: 10px; }
     #content header .right {
       display: inline-block;
       text-align: right;
       vertical-align: top;
       position: absolute;
       right: 15px;
-      top: 8px;
+      top: 10px;
       color: #999; }
     #content header .toggle, #content header .dot {
       color: #999;
