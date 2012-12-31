@@ -38,6 +38,11 @@ body, input, textarea {
 	img {
 		height: 28px;
 		margin-right: 6px;
+		opacity: 0.7;
+
+		&:active {
+			opacity: 1;
+		}
 	}
 }
 #search {

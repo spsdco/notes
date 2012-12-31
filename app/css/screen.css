@@ -453,7 +453,10 @@ body, input, textarea {
   border-right: 1px solid #444; }
   #noteControls img {
     height: 28px;
-    margin-right: 6px; }
+    margin-right: 6px;
+    opacity: 0.7; }
+    #noteControls img:active {
+      opacity: 1; }
 
 #search {
   position: absolute;
