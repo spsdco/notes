@@ -120,7 +120,7 @@
     id = id || '';
     var headID = context.getElementsByTagName("head")[0]
       , cssNode = context.createElement('link');
-    
+
     _applyAttrs(cssNode, {
       type: 'text/css'
     , id: id
@@ -322,7 +322,7 @@
     else if (typeof self.settings.container == 'object') {
       self.element = self.settings.container;
     }
-    
+
     // Figure out the file name. If no file name is given we'll use the ID.
     // If there's no ID either we'll use a namespaced file name that's incremented
     // based on the calling order. As long as it doesn't change, drafts will be saved.
@@ -437,7 +437,7 @@
                     '<img width="30" src="' + this.settings.basePath + '/images/fullscreen.png" title="Enter Fullscreen" class="epiceditor-fullscreen-btn">' +
                   '</div>' +
                 '</div>'
-    
+
     // The previewer is just an empty box for the generated HTML to go into
     , previewer: '<div id="epiceditor-preview"></div>'
     };
@@ -460,7 +460,7 @@
     // Write an iframe and then select it for the editor
     self.element.innerHTML = '<iframe scrolling="no" frameborder="0" id= "' + self._instanceId + '"></iframe>';
     iframeElement = document.getElementById(self._instanceId);
-    
+
     // Store a reference to the iframeElement itself
     self.iframeElement = iframeElement;
 
@@ -480,7 +480,7 @@
     // Need something for... you guessed it, Firefox
     self.editorIframeDocument.write('');
     self.editorIframeDocument.close();
-    
+
     // Setup the previewer iframe
     self.previewerIframeDocument = _getIframeInnards(self.previewerIframe);
     self.previewerIframeDocument.open();
@@ -497,15 +497,15 @@
     widthDiff = _outerWidth(self.element) - self.element.offsetWidth;
     heightDiff = _outerHeight(self.element) - self.element.offsetHeight;
     elementsToResize = [self.iframeElement, self.editorIframe, self.previewerIframe];
-     
+
     setupIframeStyles(elementsToResize);
 
     // Insert Base Stylesheet
     _insertCSSLink(self.settings.basePath + self.settings.theme.base, self.iframe, 'theme');
-    
+
     // Insert Editor Stylesheet
     _insertCSSLink(self.settings.basePath + self.settings.theme.editor, self.editorIframeDocument, 'theme');
-    
+
     // Insert Previewer Stylesheet
     _insertCSSLink(self.settings.basePath + self.settings.theme.preview, self.previewerIframeDocument, 'theme');
 
@@ -515,9 +515,9 @@
     // Now grab the editor and previewer for later use
     self.editor = self.editorIframeDocument.body;
     self.previewer = self.previewerIframeDocument.getElementById('epiceditor-preview');
-   
+
     self.editor.contentEditable = true;
- 
+
     // Firefox's <body> gets all fucked up so, to be sure, we need to hardcode it
     self.iframe.body.style.height = this.element.offsetHeight + 'px';
 
@@ -548,7 +548,7 @@
 
     _elementStates = {}
     _goFullscreen = function (el) {
-      
+
       if (self.eeState.fullscreen) {
         _exitFullscreen(el);
         return;
@@ -637,7 +637,7 @@
       _saveStyleState(self.iframeElement, 'apply', _elementStates.iframeElement);
       _saveStyleState(self.editorIframe, 'apply', _elementStates.editorIframe);
       _saveStyleState(self.previewerIframe, 'apply', _elementStates.previewerIframe);
-     
+
       // We want to always revert back to the original styles in the CSS so,
       // if it's a fluid width container it will expand on resize and not get
       // stuck at a specific width after closing fullscreen.
@@ -645,7 +645,7 @@
       self.element.style.height = '';
 
       utilBtns.style.visibility = 'visible';
-      
+
       if (!nativeFs) {
         document.body.style.overflow = 'auto';
       }
@@ -655,7 +655,7 @@
       // Put the editor back in the right state
       // TODO: This is ugly... how do we make this nicer?
       self.eeState.fullscreen = false;
-      
+
       if (_isInEdit) {
         self.edit();
       }
@@ -677,7 +677,7 @@
         }
       }, 250);
     });
-    
+
     fsElement = self.iframeElement;
 
     // Sets up the onclick event on utility buttons
@@ -734,7 +734,7 @@
       }
       mousePos = { y: e.pageY, x: e.pageX };
     }
- 
+
     // Add keyboard shortcuts for convenience.
     function shortcutHandler(e) {
       if (e.keyCode == self.settings.shortcut.modifier) { isMod = true } // check for modifier press(default is alt key), save to var
@@ -785,7 +785,7 @@
       }
 
     }
-    
+
     function shortcutUpHandler(e) {
       if (e.keyCode == self.settings.shortcut.modifier) { isMod = false }
       if (e.keyCode == 17) { isCtrl = false }
@@ -793,7 +793,7 @@
 
     // Hide and show the util bar based on mouse movements
     eventableIframes = [self.previewerIframeDocument, self.editorIframeDocument];
-    
+
     for (i = 0; i < eventableIframes.length; i++) {
       eventableIframes[i].addEventListener('mousemove', function (e) {
         utilBarHandler(e);
@@ -875,15 +875,29 @@
     self.eeState.loaded = false;
     self.eeState.unloaded = true;
     callback = callback || function () {};
-    
+
     if (self.saveInterval) {
       window.clearInterval(self.saveInterval);
     }
-    
+
     callback.call(this);
     self.emit('unload');
     return self;
   }
+
+  /**
+   * reflow allows you to dynamically re-fit the editor in the parent without
+   * having to unload and then reload the editor again.
+   *
+   * @param {string} kind Can either be 'width' or 'height' or null
+   * if null, both the height and width will be resized
+   *
+   * @returns {object} EpicEditor will be returned
+   */
+  EpicEditor.prototype.reflow = function () {
+    console.log("hey")
+  }
+
 
   /**
    * Will take the markdown and generate a preview view based on the theme
@@ -892,7 +906,7 @@
    */
   EpicEditor.prototype.preview = function (theme) {
     var self = this;
-    
+
     theme = theme || self.settings.basePath + self.settings.theme.preview;
 
     _replaceClass(self.getElement('wrapper'), 'epiceditor-edit-mode', 'epiceditor-preview-mode');
@@ -904,10 +918,10 @@
     else if (self.previewerIframeDocument.getElementById('theme').name !== theme) {
       self.previewerIframeDocument.getElementById('theme').href = theme;
     }
-    
+
     // Add the generated HTML into the previewer
     self.previewer.innerHTML = self.exportFile(null, 'html');
-    
+
     // Hide the editor and display the previewer
     if (!self.eeState.fullscreen) {
       self.editorIframe.style.display = 'none';
@@ -916,7 +930,7 @@
       self.eeState.edit = false;
       self.previewerIframe.focus();
     }
-    
+
     self.emit('preview');
     return self;
   }
@@ -1086,7 +1100,7 @@
     content = content || '';
     kind = kind || 'md';
     meta = meta || {};
-  
+
     if (JSON.parse(this._storage[self.settings.localStorageName])[name] === undefined) {
       isNew = true;
     }
@@ -1121,7 +1135,7 @@
 
     name = name || self.settings.file.name;
     kind = kind || 'text';
-   
+
     file = self.getFiles(name);
 
     // If the file doesn't exist just return early with undefined
@@ -1130,7 +1144,7 @@
     }
 
     content = file.content;
-   
+
     switch (kind) {
     case 'html':
       // Get this, 2 spaces in a content editable actually converts to:

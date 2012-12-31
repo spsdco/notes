@@ -5,10 +5,10 @@
     $("#content header .edit").click(function() {
       if ($(this).text() === "save") {
         $(this).text("edit");
-        return window.noted.preview();
+        return window.noted.editor.preview();
       } else {
         $(this).text("save");
-        return window.noted.edit();
+        return window.noted.editor.edit();
       }
     });
     window.noted.editor = new EpicEditor({
@@ -16,7 +16,7 @@
       theme: {
         base: '/themes/base/epiceditor.css',
         preview: '/themes/preview/style.css',
-        editor: '/themes/editor/github.css'
+        editor: '/themes/editor/style.css'
       }
     });
     window.noted.editor.load();
