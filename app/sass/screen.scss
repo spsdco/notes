@@ -97,7 +97,7 @@ body, input, textarea {
 			background-size: 28px;
 		}
 
-		&.current {
+		&.selected {
 			background-color: lighten($sidebar-color, 8%);
 		}
 	}
@@ -141,6 +141,10 @@ body, input, textarea {
 		font-size: 13px;
 		line-height: 16px;
 		overflow: hidden;
+
+		&.selected {
+			@include background(linear-gradient(darken($white-color, 2%), lighten($white-color, 10%)));
+		}
 	}
 
 	h2 {

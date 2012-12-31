@@ -502,7 +502,7 @@ body, input, textarea {
     #notebooks li.tag {
       background: url(../img/tag.svg) no-repeat 3px 50%;
       background-size: 28px; }
-    #notebooks li.current {
+    #notebooks li.selected {
       background-color: #fafafa; }
 
 #notes {
@@ -541,6 +541,12 @@ body, input, textarea {
     font-size: 13px;
     line-height: 16px;
     overflow: hidden; }
+    #notes li.selected {
+      background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f4f4f3), color-stop(100%, #ffffff));
+      background: -webkit-linear-gradient(#f4f4f3, #ffffff);
+      background: -moz-linear-gradient(#f4f4f3, #ffffff);
+      background: -o-linear-gradient(#f4f4f3, #ffffff);
+      background: linear-gradient(#f4f4f3, #ffffff); }
   #notes h2 {
     margin: 8px 0 4px;
     font-size: 15px;
