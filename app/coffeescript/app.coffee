@@ -8,24 +8,20 @@ $ ->
 		# There should be a better way to do this
 		if $(this).text() is "save"
 			$(this).text "edit"
-			editor.preview()
+			window.noted.preview()
 		else
 			$(this).text "save"
-			editor.edit()
+			window.noted.edit()
 
 
-	editor = new EpicEditor
+	window.noted.editor = new EpicEditor
 		container: 'contentbody'
 		theme:
     		base:'/themes/base/epiceditor.css'
     		preview:'/themes/preview/style.css'
 		    editor:'/themes/editor/github.css'
-	editor.load()
-	editor.importFile('some-file',"#Imported markdown\nFancy, huh?");
-	editor.preview();
+	window.noted.editor.load()
+	window.noted.editor.importFile('some-file',"#Imported markdown\nFancy, huh?")
+	window.noted.editor.preview()
 
-
-
-window.noted =
-	blank ->
-		console.log("hey")
+window.noted = {}
