@@ -17,6 +17,12 @@
       $('#maximize').click(function() {
         return win.maximize();
       });
+      $('#panel').mouseenter(function() {
+        return $('#panel').addClass('drag');
+      });
+      $('#panel').mouseleave(function() {
+        return $('#panel').removeClass('drag');
+      });
     } catch (e) {
       console.log("We're not running under node-webkit.");
     }

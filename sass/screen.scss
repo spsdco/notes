@@ -12,6 +12,10 @@ body, input, textarea {
 	overflow: hidden;
 }
 
+.drag {
+	-webkit-app-region: drag;
+}
+
 #panel {
 	width: 100%;
 	height: 40px;

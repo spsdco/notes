@@ -10,12 +10,17 @@ $ ->
 		win.showDevTools()
 
 		$('#close').click ->
-			win.close();
+			win.close()
 		$('#minimize').click ->
-			win.minimize();
+			win.minimize()
 		$('#maximize').click ->
 			win.maximize()
 			# Show restore button?
+
+		$('#panel').mouseenter ->
+			$('#panel').addClass('drag')
+		$('#panel').mouseleave ->
+			$('#panel').removeClass('drag')
 	catch e
 		console.log("We're not running under node-webkit.")
 
