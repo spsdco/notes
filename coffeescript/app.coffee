@@ -13,11 +13,16 @@ $ ->
 		win.showDevTools()
 
 		$('#close').click ->
-			win.close();
+			win.close()
 		$('#minimize').click ->
-			win.minimize();
+			win.minimize()
 		$('#maximize').click ->
 			win.maximize()
+
+		$('#panel').mouseenter ->
+			$('#panel').addClass('drag')
+		$('#panel').mouseleave ->
+			$('#panel').removeClass('drag')
 
 		node = true
 	catch e

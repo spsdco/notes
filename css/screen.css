@@ -431,6 +431,9 @@ body, input, textarea {
   font-family: "Ubuntu", sans-serif;
   overflow: hidden; }
 
+.drag {
+  -webkit-app-region: drag; }
+
 #panel {
   width: 100%;
   height: 40px;
