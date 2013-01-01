@@ -1,8 +1,11 @@
 $ ->
+	node = false
 
 	# Node Webkit Stuff
 	try
 		gui = require 'nw.gui'
+		fs = require 'fs'
+		path = require 'path'
 
 		# Show Window
 		win = gui.Window.get()
@@ -15,7 +18,8 @@ $ ->
 			win.minimize();
 		$('#maximize').click ->
 			win.maximize()
-			# Show restore button?
+
+		node = true
 	catch e
 		console.log("We're not running under node-webkit.")
 
@@ -40,7 +44,13 @@ $ ->
     		preview:'/themes/preview/style.css'
 		    editor:'/themes/editor/style.css'
 	window.noted.editor.load()
-	window.noted.editor.importFile('appnotes/Welcome.mdown', "Loading content...")
+
+	if node
+		fs.readFile '/Users/jono/file.txt', 'utf-8', (err, data) ->
+			throw err if (err)
+			window.noted.editor.importFile('file', data)
+	else
+		window.noted.editor.importFile('file', "Not running under node webkit")
 	window.noted.editor.preview()
 
 window.noted = {}

@@ -2,9 +2,12 @@
 (function() {
 
   $(function() {
-    var gui, win;
+    var fs, gui, node, path, win;
+    node = false;
     try {
       gui = require('nw.gui');
+      fs = require('fs');
+      path = require('path');
       win = gui.Window.get();
       win.show();
       win.showDevTools();
@@ -17,6 +20,7 @@
       $('#maximize').click(function() {
         return win.maximize();
       });
+      node = true;
     } catch (e) {
       console.log("We're not running under node-webkit.");
     }
@@ -38,7 +42,16 @@
       }
     });
     window.noted.editor.load();
-    window.noted.editor.importFile('appnotes/Welcome.mdown', "Loading content...");
+    if (node) {
+      fs.readFile('/Users/jono/file.txt', 'utf-8', function(err, data) {
+        if (err) {
+          throw err;
+        }
+        return window.noted.editor.importFile('file', data);
+      });
+    } else {
+      window.noted.editor.importFile('file', "Not running under node webkit");
+    }
     return window.noted.editor.preview();
   });
 
