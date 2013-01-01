@@ -296,6 +296,7 @@
           }
         , focusOnLoad: false
         , shortcut: { modifier: 18 // alt keycode
+          , fullscreen: 70 // f keycode
           , preview: 80 // p keycode
           , edit: 79 // o keycode
           }
@@ -431,10 +432,9 @@
                   '<iframe frameborder="0" id="epiceditor-editor-frame"></iframe>' +
                   '<iframe frameborder="0" id="epiceditor-previewer-frame"></iframe>' +
                   '<div id="epiceditor-utilbar">' +
-						'<p>Need help? See <a href="PLACEHOLDER">this article</a>.</p>' +
-//                    '<img width="30" src="' + this.settings.basePath + '/images/preview.png" title="Toggle Preview Mode" class="epiceditor-toggle-btn epiceditor-toggle-preview-btn"> ' +
-//                    '<img width="30" src="' + this.settings.basePath + '/images/edit.png" title="Toggle Edit Mode" class="epiceditor-toggle-btn epiceditor-toggle-edit-btn"> ' +
-//                    '<img width="30" src="' + this.settings.basePath + '/images/fullscreen.png" title="Enter Fullscreen" class="epiceditor-fullscreen-btn">' +
+                    '<img width="30" src="' + this.settings.basePath + '/images/preview.png" title="Toggle Preview Mode" class="epiceditor-toggle-btn epiceditor-toggle-preview-btn"> ' +
+                    '<img width="30" src="' + this.settings.basePath + '/images/edit.png" title="Toggle Edit Mode" class="epiceditor-toggle-btn epiceditor-toggle-edit-btn"> ' +
+                    '<img width="30" src="' + this.settings.basePath + '/images/fullscreen.png" title="Enter Fullscreen" class="epiceditor-fullscreen-btn">' +
                   '</div>' +
                 '</div>'
 
@@ -730,7 +730,7 @@
         // begin a new timer that hides our object after 1000 ms
         utilBarTimer = window.setTimeout(function () {
           utilBar.style.display = 'none';
-        }, 5000);
+        }, 1000);
       }
       mousePos = { y: e.pageY, x: e.pageX };
     }
