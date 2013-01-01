@@ -297,7 +297,7 @@
         , focusOnLoad: false
         , shortcut: { modifier: 18 // alt keycode
           , preview: 80 // p keycode
-          , edit: 69 // e keycode
+          , edit: 79 // o keycode
           }
         , parser: typeof marked == 'function' ? marked : null
         }
