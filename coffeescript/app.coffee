@@ -40,7 +40,7 @@ $ ->
     		preview:'/themes/preview/style.css'
 		    editor:'/themes/editor/style.css'
 	window.noted.editor.load()
-	window.noted.editor.importFile('some-file',"#Imported markdown\nFancy, huh?")
+	window.noted.editor.importFile('appnotes/Welcome.mdown', "Loading content...")
 	window.noted.editor.preview()
 
 window.noted = {}

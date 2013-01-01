@@ -38,7 +38,7 @@
       }
     });
     window.noted.editor.load();
-    window.noted.editor.importFile('some-file', "#Imported markdown\nFancy, huh?");
+    window.noted.editor.importFile('appnotes/Welcome.mdown', "Loading content...");
     return window.noted.editor.preview();
   });
 

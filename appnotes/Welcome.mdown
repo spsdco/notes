@@ -1,0 +1,36 @@
+Welcome to Noted
+====
+
+Noted is a free to use planner for your everyday life, take notes and read them - sync them with [Ubuntu One](https://one.ubuntu.com/ "Ubuntu One") or [Dropbox](https://www.dropbox.com/ "Dropbox"). You can buy a professional license for just $1.99 (£1.23) in which you receive:
+
+  * Peace of mind with dedicated support.
+  * A dark theme - which is easier on the eyes.
+ 
+How to get started
+----
+
+You can start by clicking the new button. It's on the titlebar above your current notes. Later changed your mind and want to remove your note? Select it and press delete, it's really that simple! Feeling Social? In between the Add and Remove buttons you can share your note for others to read.
+
+Formatting Help
+----
+Noted uses Markdown - For more information on Markdown, see [this link](http://daringfireball.net/projects/markdown/syntax "Markdown Syntax"). To get started quickly, here's how to create headers in markdown:
+    # Header 1
+    ## Header 2
+    ### Header 3
+    #### Header 4
+    ##### Header 5
+    ###### Header 6
+
+To create line breaks, add two spaces on the end of a line. You can make horizonal rules with 4 hyphens, seperated by spaces. To create a list, replace bullets with a asterik (Example: " * Complete this document."), and for numbered lists, use a number followed by a period (Example: "1. Complete this document.").  
+To add code to a markdown document, creat a indent of 4 spaces and paste your code. Each line on the code block should be 4 spaces wide before the code begins. To add a blockquote use a less than sign.
+    > This is a blockquote.
+This creates:
+> This is a blockquote.
+
+To create a link or an image, you need to do the following:  
+<pre><code>[This is a hyperlink](http://url.to.resource.com/ "Title")
+![This is a image](http://imgur.com/i/someimage.png "Optional Title")
+</code></pre>
+
+- - - -
+Last revision: Tue 1st January 11:51:10
