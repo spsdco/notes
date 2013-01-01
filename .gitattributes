@@ -1,0 +1,7 @@
+* text
+
+# Binary Files.
+*.png binary
+*.jpg binary
+*.gif binary
+*.svg binary
