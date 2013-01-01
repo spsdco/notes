@@ -17,7 +17,7 @@ $ ->
 			win.maximize()
 			# Show restore button?
 	catch e
-		console.log("not running under node webkit")
+		console.log("We're not running under node-webkit.")
 
 
 

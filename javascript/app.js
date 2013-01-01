@@ -18,7 +18,7 @@
         return win.maximize();
       });
     } catch (e) {
-      console.log("not running under node webkit");
+      console.log("We're not running under node-webkit.");
     }
     $("#content header .edit").click(function() {
       if ($(this).text() === "save") {
