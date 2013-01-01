@@ -2,6 +2,15 @@
 (function() {
 
   $(function() {
+    var gui, win;
+    try {
+      gui = require('nw.gui');
+      win = gui.Window.get();
+      win.show();
+      win.showDevTools();
+    } catch (e) {
+      console.log("not running under node webkit");
+    }
     $("#content header .edit").click(function() {
       if ($(this).text() === "save") {
         $(this).text("edit");
