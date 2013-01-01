@@ -8,6 +8,14 @@ $ ->
 		win = gui.Window.get()
 		win.show()
 		win.showDevTools()
+
+		$('#close').click ->
+			win.close();
+		$('#minimize').click ->
+			win.minimize();
+		$('#maximize').click ->
+			win.maximize()
+			# Show restore button?
 	catch e
 		console.log("not running under node webkit")
 

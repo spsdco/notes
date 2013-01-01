@@ -8,6 +8,15 @@
       win = gui.Window.get();
       win.show();
       win.showDevTools();
+      $('#close').click(function() {
+        return win.close();
+      });
+      $('#minimize').click(function() {
+        return win.minimize();
+      });
+      $('#maximize').click(function() {
+        return win.maximize();
+      });
     } catch (e) {
       console.log("not running under node webkit");
     }
