@@ -25,6 +25,7 @@ $ ->
 			$('#panel').removeClass('drag')
 
 		node = true
+		storage_dir = process.env.HOME
 	catch e
 		console.log("We're not running under node-webkit.")
 
@@ -48,14 +49,16 @@ $ ->
     		base:'/themes/base/epiceditor.css'
     		preview:'/themes/preview/style.css'
 		    editor:'/themes/editor/style.css'
+
 	window.noted.editor.load()
 
 	if node
-		fs.readFile '/Users/jono/file.txt', 'utf-8', (err, data) ->
+		fs.readFile path.join(storage_dir, 'file.txt'), 'utf-8', (err, data) ->
 			throw err if (err)
 			window.noted.editor.importFile('file', data)
+			window.noted.editor.preview()
 	else
 		window.noted.editor.importFile('file', "Not running under node webkit")
-	window.noted.editor.preview()
+		window.noted.editor.preview()
 
 window.noted = {}

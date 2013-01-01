@@ -2,7 +2,7 @@
 (function() {
 
   $(function() {
-    var fs, gui, node, path, win;
+    var fs, gui, node, path, storage_dir, win;
     node = false;
     try {
       gui = require('nw.gui');
@@ -27,6 +27,7 @@
         return $('#panel').removeClass('drag');
       });
       node = true;
+      storage_dir = process.env.HOME;
     } catch (e) {
       console.log("We're not running under node-webkit.");
     }
@@ -49,16 +50,17 @@
     });
     window.noted.editor.load();
     if (node) {
-      fs.readFile('/Users/jono/file.txt', 'utf-8', function(err, data) {
+      return fs.readFile(path.join(storage_dir, 'file.txt'), 'utf-8', function(err, data) {
         if (err) {
           throw err;
         }
-        return window.noted.editor.importFile('file', data);
+        window.noted.editor.importFile('file', data);
+        return window.noted.editor.preview();
       });
     } else {
       window.noted.editor.importFile('file', "Not running under node webkit");
+      return window.noted.editor.preview();
     }
-    return window.noted.editor.preview();
   });
 
   window.noted = {};
