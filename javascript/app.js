@@ -23,6 +23,12 @@
       $('#panel').mouseenter(function() {
         return $('#panel').addClass('drag');
       });
+      $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(function() {
+        return $('#panel').removeClass('drag');
+      });
+      $('#panel #decor img, #panel #noteControls img, #panel #search').mouseleave(function() {
+        return $('#panel').addClass('drag');
+      });
       $('#panel').mouseleave(function() {
         return $('#panel').removeClass('drag');
       });

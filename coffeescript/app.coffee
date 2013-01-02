@@ -21,6 +21,10 @@ $ ->
 
 		$('#panel').mouseenter ->
 			$('#panel').addClass('drag')
+		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter ->
+			$('#panel').removeClass('drag')
+		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseleave ->
+			$('#panel').addClass('drag')
 		$('#panel').mouseleave ->
 			$('#panel').removeClass('drag')
 
