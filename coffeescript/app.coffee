@@ -28,6 +28,13 @@ $ ->
 		$('#panel').mouseleave ->
 			$('#panel').removeClass('drag')
 
+		# OS Detection
+		OSName = "Unknown OS"
+		OSName = "Windows"  unless navigator.appVersion.indexOf("Win") is -1
+		OSName = "MacOS"  unless navigator.appVersion.indexOf("Mac") is -1
+		OSName = "UNIX"  unless navigator.appVersion.indexOf("X11") is -1
+		OSName = "Linux"  unless navigator.appVersion.indexOf("Linux") is -1
+
 		node = true
 		storage_dir = process.env.HOME
 	catch e

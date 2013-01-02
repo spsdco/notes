@@ -2,7 +2,7 @@
 (function() {
 
   $(function() {
-    var fs, gui, node, path, storage_dir, win;
+    var OSName, fs, gui, node, path, storage_dir, win;
     node = false;
     try {
       gui = require('nw.gui');
@@ -32,6 +32,19 @@
       $('#panel').mouseleave(function() {
         return $('#panel').removeClass('drag');
       });
+      OSName = "Unknown OS";
+      if (navigator.appVersion.indexOf("Win") !== -1) {
+        OSName = "Windows";
+      }
+      if (navigator.appVersion.indexOf("Mac") !== -1) {
+        OSName = "MacOS";
+      }
+      if (navigator.appVersion.indexOf("X11") !== -1) {
+        OSName = "UNIX";
+      }
+      if (navigator.appVersion.indexOf("Linux") !== -1) {
+        OSName = "Linux";
+      }
       node = true;
       storage_dir = process.env.HOME;
     } catch (e) {
