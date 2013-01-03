@@ -71,6 +71,11 @@
           return window.noted.editor.edit();
         }
       });
+      $("body").on("click", "#notebooks ul li", function() {
+        $(this).parent().find(".selected").removeClass("selected");
+        $(this).addClass("selected");
+        return window.noted.loadNotes($(this).html());
+      });
       window.noted.editor = new EpicEditor({
         container: 'contentbody',
         theme: {
@@ -88,15 +93,14 @@
       });
     },
     listNotebooks: function(data) {
-      var i;
+      var i, _results;
       i = 0;
+      _results = [];
       while (i < data.length) {
         $("#notebooks ul").append("<li>" + data[i] + "</li>");
-        i++;
+        _results.push(i++);
       }
-      return $("#notebooks ul li").click(function() {
-        return window.noted.loadNotes($(this).html());
-      });
+      return _results;
     },
     loadNotes: function(name) {
       console.log(name);

@@ -97,6 +97,7 @@ body, input, textarea {
 		text-shadow: 0 -1px 0 #f1f1f1;
 		background: url(../img/book.svg) no-repeat;
 		background-size: 33px;
+		cursor: default;
 
 		&.all {
 			background: url(../img/list.svg) no-repeat 3px 40%;
