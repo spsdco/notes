@@ -6,6 +6,7 @@ $ ->
 		gui = require 'nw.gui'
 		fs = require 'fs'
 		path = require 'path'
+		ncp = require('ncp').ncp
 
 		# Show Window
 		win = gui.Window.get()
@@ -81,7 +82,9 @@ $ ->
 		fs.readdir path.join(storage_dir, "/Notebooks/"), (err, data) ->
 			if err.code is "ENOENT"
 				fs.mkdir path.join(storage_dir, "/Notebooks/"), ->
-		      		# Copy over the default notes
+					# Copy over the default notes
+		      		ncp path.join(window.location.pathname, "../default_notebooks"), path.join(storage_dir, "/Notebooks/"), (err) ->
+						console.log 'done'
 
 
 	# 	fs.readFile path.join(storage_dir, 'file.txt'), 'utf-8', (err, data) ->

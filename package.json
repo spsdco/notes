@@ -2,7 +2,7 @@
   "main": "index.html",
   "name": "Noted",
   "description": "Easier than looking outside.",
-  "version": "1.2",
+  "version": "1.0.0",
   "keywords": [ "noted", "notes" ],
   "window": {
     "toolbar": false,
@@ -16,5 +16,8 @@
   },
   "webkit": {
     "plugin": false
+  },
+  "dependencies": {
+    "ncp": "0.2.x"
   }
 }

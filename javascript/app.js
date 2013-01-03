@@ -2,12 +2,13 @@
 (function() {
 
   $(function() {
-    var OSName, fs, gui, home_dir, node, path, storage_dir, win;
+    var OSName, fs, gui, home_dir, ncp, node, path, storage_dir, win;
     node = false;
     try {
       gui = require('nw.gui');
       fs = require('fs');
       path = require('path');
+      ncp = require('ncp').ncp;
       win = gui.Window.get();
       win.show();
       win.showDevTools();
@@ -81,7 +82,10 @@
     if (node) {
       return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {
         if (err.code === "ENOENT") {
-          return fs.mkdir(path.join(storage_dir, "/Notebooks/"), function() {});
+          fs.mkdir(path.join(storage_dir, "/Notebooks/"), function() {
+            return ncp(path.join(window.location.pathname, "../default_notebooks"), path.join(storage_dir, "/Notebooks/"), function(err) {});
+          });
+          return console.log('done');
         }
       });
     }
