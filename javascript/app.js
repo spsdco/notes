@@ -111,11 +111,11 @@
       i = 0;
       while (i < data.length) {
         name = data[i].replace(".txt", "");
-        $("#notes ul").append("<li><h2>" + name + "</h2></li>");
+        $("#notes ul").append("<li><h2>" + name + "</h2><time></time></li>");
         i++;
       }
       return $("#notes ul li").click(function() {
-        return window.noted.loadNote($(this + "h2").html());
+        return window.noted.loadNote($(this).html());
       });
     },
     loadNote: function(name) {

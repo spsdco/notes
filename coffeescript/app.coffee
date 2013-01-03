@@ -86,6 +86,7 @@ window.noted =
 		$("#notebooks ul li").click ->
 			window.noted.loadNotes($(this).html())
 
+
 	loadNotes: (name) ->
 		console.log(name)
 		# Clear list while we load.
@@ -98,10 +99,11 @@ window.noted =
 		i = 0
 		while i < data.length
 			name = data[i].replace ".txt",""
-			$("#notes ul").append "<li><h2>" + name + "</h2></li>"
+			$("#notes ul").append "<li><h2>" + name + "</h2><time></time></li>"
 			i++
+		# TODO: Can't find of a effective way to get the name.
 		$("#notes ul li").click ->
-			window.noted.loadNote($(this + "h2").html())
+			window.noted.loadNote($(this).html())
 
 	loadNote: (name) ->
 		console.log(name)
