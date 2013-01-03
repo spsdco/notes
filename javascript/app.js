@@ -55,7 +55,7 @@
         storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted");
       }
       if (OSName === "Linux") {
-        storage_dir = path.join(home_dir, "/.local/Noted/");
+        storage_dir = path.join(home_dir, "/.config/Noted/");
       }
     } catch (e) {
       console.log("We're not running under node-webkit.");
