@@ -83,20 +83,19 @@ window.noted =
 
 		window.noted.editor.load()
 
+	# We'll add more to this as stuff changes
 	render: ->
 		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
-			console.log(data)
 			window.noted.listNotebooks(data)
 
 	listNotebooks: (data) ->
 		i = 0
 		while i < data.length
-			# fs.readdir path.join(storage_dir, "Notebooks", data[i]), (err, stat, data[i]) ->
-			$("#notebooks ul").append "<li>" + data[i] + "</li>"
+			if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
+				$("#notebooks ul").append "<li>" + data[i] + "</li>"
 			i++
 
 	loadNotes: (name) ->
-		console.log(name)
 		# Clear list while we load.
 		$("#notes header h1").html(name)
 		$("#notes ul").html("")

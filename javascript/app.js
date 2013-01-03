@@ -91,7 +91,6 @@
     },
     render: function() {
       return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
-        console.log(data);
         return window.noted.listNotebooks(data);
       });
     },
@@ -100,13 +99,14 @@
       i = 0;
       _results = [];
       while (i < data.length) {
-        $("#notebooks ul").append("<li>" + data[i] + "</li>");
+        if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
+          $("#notebooks ul").append("<li>" + data[i] + "</li>");
+        }
         _results.push(i++);
       }
       return _results;
     },
     loadNotes: function(name) {
-      console.log(name);
       $("#notes header h1").html(name);
       $("#notes ul").html("");
       return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
