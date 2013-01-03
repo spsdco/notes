@@ -29,7 +29,7 @@
       storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted");
     }
     if (OSName === "Linux") {
-      storage_dir = path.join(home_dir, "/.local/Noted/");
+      storage_dir = path.join(home_dir, "/.config/Noted/");
     }
   } catch (_error) {}
 

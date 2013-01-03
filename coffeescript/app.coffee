@@ -22,7 +22,7 @@ try
 		#Microsoft y u so inconsistant? - Don't assume /AppData - XP uses /Application Data - Use ENV variable
 		storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted")
 	if OSName is "Linux"
-		storage_dir = path.join(home_dir, "/.local/Noted/")
+		storage_dir = path.join(home_dir, "/.config/Noted/")
 
 
 # Proper Functions
