@@ -63,6 +63,11 @@ window.noted =
 				$(this).text "save"
 				window.noted.editor.edit()
 
+		$("body").on "click", "#notebooks ul li", ->
+			$(this).parent().find(".selected").removeClass "selected"
+			$(this).addClass "selected"
+			window.noted.loadNotes($(this).html())
+
 		# Create Markdown Editor
 		window.noted.editor = new EpicEditor
 			container: 'contentbody'
@@ -83,9 +88,6 @@ window.noted =
 		while i < data.length
 			$("#notebooks ul").append "<li>" + data[i] + "</li>"
 			i++
-		$("#notebooks ul li").click ->
-			window.noted.loadNotes($(this).html())
-
 
 	loadNotes: (name) ->
 		console.log(name)
