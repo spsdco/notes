@@ -2,7 +2,7 @@
 (function() {
 
   $(function() {
-    var OSName, fs, gui, node, path, storage_dir, win;
+    var OSName, fs, gui, home_dir, node, path, storage_dir, win;
     node = false;
     try {
       gui = require('nw.gui');
@@ -37,7 +37,7 @@
         OSName = "Windows";
       }
       if (navigator.appVersion.indexOf("Mac") !== -1) {
-        OSName = "MacOS";
+        OSName = "Mac";
       }
       if (navigator.appVersion.indexOf("X11") !== -1) {
         OSName = "UNIX";
@@ -46,10 +46,20 @@
         OSName = "Linux";
       }
       node = true;
-      storage_dir = process.env.HOME;
+      home_dir = process.env.HOME;
+      if (OSName === "Mac") {
+        storage_dir = path.join(home_dir, "/Library/Application Support/Noted/");
+      }
+      if (OSName === "Windows") {
+        path.join(home_dir, "");
+      }
+      if (OSName === "Linux") {
+        storage_dir = path.join(home_dir, "/.local/Noted/");
+      }
     } catch (e) {
       console.log("We're not running under node-webkit.");
     }
+    console.log(storage_dir);
     $("#content header .edit").click(function() {
       if ($(this).text() === "save") {
         $(this).text("edit");

@@ -38,14 +38,20 @@ $ ->
 		OSName = "Linux"  unless navigator.appVersion.indexOf("Linux") is -1
 
 		node = true
-		storage_dir = process.env.HOME
+		home_dir = process.env.HOME
+
+		# Set Up Storage Stuffs
+		if OSName is "Mac"
+			storage_dir = path.join(home_dir, "/Library/Application Support/Noted/")
+		if OSName is "Windows"
+			path.join(home_dir, "")
+		if OSName is "Linux"
+			storage_dir = path.join(home_dir, "/.local/Noted/")
+
 	catch e
 		console.log("We're not running under node-webkit.")
 
-	# Set Up Storage Stuffs
-	# if OSName is "Mac"
-	# 	fs.mkdir(path.join(storage_dir, "/Library/Application Support/Noted/")
-
+	console.log(storage_dir)
 
 	# Event Handlers
 	$("#content header .edit").click ->
