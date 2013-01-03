@@ -29,6 +29,7 @@ try
 window.noted =
 
 	selectedList: "Getting Started"
+	selectedNote: ""
 
 	setupPanel: ->
 		win = gui.Window.get()
@@ -92,14 +93,24 @@ window.noted =
 
 	# We'll add more to this as stuff changes
 	render: ->
+		# Lists the New Notebooks & Shows Selected
 		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
-			window.noted.listNotebooks(data)
+			window.noted.listNotebooks data
+
+
 
 	listNotebooks: (data) ->
 		i = 0
 		while i < data.length
 			if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
 				$("#notebooks ul").append "<li data-id='" + data[i] + "'>" + data[i] + "</li>"
+
+			# if i is data.length -1
+			# 	if window.noted.selectedNote is ""
+			# 		# We load the first Note
+			# 		$($("#notes li")[0]).trigger "click"
+			# 	else
+			# 		$("#notes [data-id='" + window.noted.selectedNote + "']").trigger "click"
 			i++
 
 		# Add Selected Class to the Right Notebook
@@ -117,10 +128,14 @@ window.noted =
 				if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
 					# Removes txt extension
 					name = data[i].substr(0, data[i].length - 4)
-					$("#notes ul").append "<li><h2>" + name + "</h2><time></time></li>"
+					$("#notes ul").append "<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>"
 				i++
 
 	loadNote: (name) ->
+		# Caches Selected Note
+		window.noted.selectedNote = name
+
+		# Opens ze note
 		fs.readFile path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', (err, data) ->
 			throw err if (err)
 			window.noted.editor.importFile('file', data)

@@ -35,6 +35,7 @@
 
   window.noted = {
     selectedList: "Getting Started",
+    selectedNote: "",
     setupPanel: function() {
       var win;
       win = gui.Window.get();
@@ -118,7 +119,7 @@
         while (i < data.length) {
           if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
             name = data[i].substr(0, data[i].length - 4);
-            $("#notes ul").append("<li><h2>" + name + "</h2><time></time></li>");
+            $("#notes ul").append("<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>");
           }
           _results.push(i++);
         }
@@ -126,6 +127,7 @@
       });
     },
     loadNote: function(name) {
+      window.noted.selectedNote = name;
       return fs.readFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', function(err, data) {
         if (err) {
           throw err;
