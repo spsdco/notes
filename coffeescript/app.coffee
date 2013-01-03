@@ -76,13 +76,35 @@ window.noted =
 	render: ->
 		fs.readdir path.join(storage_dir, "/Notebooks/"), (err, data) ->
 			console.log(data)
-			listNotebooks(data)
+			window.noted.listNotebooks(data)
 
 	listNotebooks: (data) ->
 		i = 0
 		while i < data.length
 			$("#notebooks ul").append "<li>" + data[i] + "</li>"
 			i++
+		$("#notebooks ul li").click ->
+			window.noted.loadNotes($(this).html())
+
+	loadNotes: (name) ->
+		console.log(name)
+		# Clear list while we load.
+		$("#notes header h1").html(name)
+		$("#notes ul").html("")
+		fs.readdir path.join(storage_dir, "/Notebooks/"+name), (err, data) ->
+			window.noted.listNotes(data)
+
+	listNotes: (data) ->
+		i = 0
+		while i < data.length
+			name = data[i].replace ".txt",""
+			$("#notes ul").append "<li><h2>" + name + "</h2></li>"
+			i++
+		$("#notes ul li").click ->
+			window.noted.loadNote($(this + "h2").html())
+
+	loadNote: (name) ->
+		console.log(name)
 
 # Document Ready Guff
 $ ->

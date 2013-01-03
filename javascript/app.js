@@ -88,14 +88,38 @@
       });
     },
     listNotebooks: function(data) {
-      var i, _results;
+      var i;
       i = 0;
-      _results = [];
       while (i < data.length) {
         $("#notebooks ul").append("<li>" + data[i] + "</li>");
-        _results.push(i++);
+        i++;
       }
-      return _results;
+      return $("#notebooks ul li").click(function() {
+        return window.noted.loadNotes($(this).html());
+      });
+    },
+    loadNotes: function(name) {
+      console.log(name);
+      $("#notes header h1").html(name);
+      $("#notes ul").html("");
+      return fs.readdir(path.join(storage_dir, "/Notebooks/" + name), function(err, data) {
+        return window.noted.listNotes(data);
+      });
+    },
+    listNotes: function(data) {
+      var i, name;
+      i = 0;
+      while (i < data.length) {
+        name = data[i].replace(".txt", "");
+        $("#notes ul").append("<li><h2>" + name + "</h2></li>");
+        i++;
+      }
+      return $("#notes ul li").click(function() {
+        return window.noted.loadNote($(this + "h2").html());
+      });
+    },
+    loadNote: function(name) {
+      return console.log(name);
     }
   };
 
