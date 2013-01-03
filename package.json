@@ -1,9 +1,9 @@
 {
   "main": "index.html",
   "name": "Noted",
-  "description": "Easier than looking outside.",
+  "description": "Organise your life with notes.",
   "version": "1.0.0",
-  "keywords": [ "noted", "notes" ],
+  "keywords": [ "noted", "notes", "planner" ],
   "window": {
     "toolbar": false,
     "width": 1200,
