@@ -110,15 +110,15 @@ window.noted =
 		$("#notes header h1").html(name)
 		$("#notes ul").html("")
 		fs.readdir path.join(storage_dir, "Notebooks", name), (err, data) ->
-			window.noted.listNotes(data)
+			i = 0
+			while i < data.length
 
-	listNotes: (data) ->
-		i = 0
-		while i < data.length
-			# Removes txt extension
-			name = data[i].substr(0, data[i].length - 4)
-			$("#notes ul").append "<li><h2>" + name + "</h2><time></time></li>"
-			i++
+				# Makes sure that it is a text file
+				if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
+					# Removes txt extension
+					name = data[i].substr(0, data[i].length - 4)
+					$("#notes ul").append "<li><h2>" + name + "</h2><time></time></li>"
+				i++
 
 	loadNote: (name) ->
 		fs.readFile path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', (err, data) ->

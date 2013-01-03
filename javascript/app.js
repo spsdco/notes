@@ -112,19 +112,18 @@
       $("#notes header h1").html(name);
       $("#notes ul").html("");
       return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
-        return window.noted.listNotes(data);
+        var i, _results;
+        i = 0;
+        _results = [];
+        while (i < data.length) {
+          if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
+            name = data[i].substr(0, data[i].length - 4);
+            $("#notes ul").append("<li><h2>" + name + "</h2><time></time></li>");
+          }
+          _results.push(i++);
+        }
+        return _results;
       });
-    },
-    listNotes: function(data) {
-      var i, name, _results;
-      i = 0;
-      _results = [];
-      while (i < data.length) {
-        name = data[i].substr(0, data[i].length - 4);
-        $("#notes ul").append("<li><h2>" + name + "</h2><time></time></li>");
-        _results.push(i++);
-      }
-      return _results;
     },
     loadNote: function(name) {
       return fs.readFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', function(err, data) {
