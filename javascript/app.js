@@ -83,8 +83,19 @@
     },
     render: function() {
       return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {
-        return console.log(data);
+        console.log(data);
+        return window.noted.listNotebooks(data);
       });
+    },
+    listNotebooks: function(data) {
+      var i, _results;
+      i = 0;
+      _results = [];
+      while (i < data.length) {
+        $("#notebooks ul").append("<li>" + data[i] + "</li>");
+        _results.push(i++);
+      }
+      return _results;
     }
   };
 

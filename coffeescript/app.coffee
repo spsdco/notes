@@ -76,6 +76,13 @@ window.noted =
 	render: ->
 		fs.readdir path.join(storage_dir, "/Notebooks/"), (err, data) ->
 			console.log(data)
+			listNotebooks(data)
+
+	listNotebooks: (data) ->
+		i = 0
+		while i < data.length
+			$("#notebooks ul").append "<li>" + data[i] + "</li>"
+			i++
 
 # Document Ready Guff
 $ ->
