@@ -12,6 +12,7 @@ $ ->
 		win.show()
 		win.showDevTools()
 
+		# Panel Controls
 		$('#close').click ->
 			win.close()
 		$('#minimize').click ->
@@ -19,6 +20,7 @@ $ ->
 		$('#maximize').click ->
 			win.maximize()
 
+		# Panel Dragging
 		$('#panel').mouseenter ->
 			$('#panel').addClass('drag')
 		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter ->
@@ -31,7 +33,7 @@ $ ->
 		# OS Detection
 		OSName = "Unknown OS"
 		OSName = "Windows"  unless navigator.appVersion.indexOf("Win") is -1
-		OSName = "MacOS"  unless navigator.appVersion.indexOf("Mac") is -1
+		OSName = "Mac"  unless navigator.appVersion.indexOf("Mac") is -1
 		OSName = "UNIX"  unless navigator.appVersion.indexOf("X11") is -1
 		OSName = "Linux"  unless navigator.appVersion.indexOf("Linux") is -1
 
@@ -40,6 +42,9 @@ $ ->
 	catch e
 		console.log("We're not running under node-webkit.")
 
+	# Set Up Storage Stuffs
+	# if OSName is "Mac"
+	# 	fs.mkdir(path.join(storage_dir, "/Library/Application Support/Noted/")
 
 
 	# Event Handlers

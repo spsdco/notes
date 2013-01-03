@@ -1,9 +1,9 @@
 {
   "main": "index.html",
-  "name": "Stormcloud",
+  "name": "Noted",
   "description": "Easier than looking outside.",
   "version": "1.2",
-  "keywords": [ "stormcloud", "weather", "yahoo" ],
+  "keywords": [ "noted", "notes" ],
   "window": {
     "toolbar": false,
     "width": 1200,
