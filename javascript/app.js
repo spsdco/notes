@@ -51,7 +51,7 @@
         storage_dir = path.join(home_dir, "/Library/Application Support/Noted/");
       }
       if (OSName === "Windows") {
-        path.join(home_dir, "");
+        storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted");
       }
       if (OSName === "Linux") {
         storage_dir = path.join(home_dir, "/.local/Noted/");

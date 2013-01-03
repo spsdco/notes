@@ -44,7 +44,8 @@ $ ->
 		if OSName is "Mac"
 			storage_dir = path.join(home_dir, "/Library/Application Support/Noted/")
 		if OSName is "Windows"
-			path.join(home_dir, "")
+			#Microsoft y u so inconsistant? - Don't assume /AppData - XP uses /Application Data - Use ENV variable
+			storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted")
 		if OSName is "Linux"
 			storage_dir = path.join(home_dir, "/.local/Noted/")
 
