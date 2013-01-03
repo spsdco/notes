@@ -79,16 +79,11 @@
     });
     window.noted.editor.load();
     if (node) {
-      return fs.readFile(path.join(storage_dir, 'file.txt'), 'utf-8', function(err, data) {
-        if (err) {
-          throw err;
+      return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {
+        if (err.code === "ENOENT") {
+          return fs.mkdir(path.join(storage_dir, "/Notebooks/"), function() {});
         }
-        window.noted.editor.importFile('file', data);
-        return window.noted.editor.preview();
       });
-    } else {
-      window.noted.editor.importFile('file', "Not running under node webkit");
-      return window.noted.editor.preview();
     }
   });
 

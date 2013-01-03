@@ -75,12 +75,20 @@ $ ->
 	window.noted.editor.load()
 
 	if node
-		fs.readFile path.join(storage_dir, 'file.txt'), 'utf-8', (err, data) ->
-			throw err if (err)
-			window.noted.editor.importFile('file', data)
-			window.noted.editor.preview()
-	else
-		window.noted.editor.importFile('file', "Not running under node webkit")
-		window.noted.editor.preview()
+
+		# If the notebooks file isn't made, we'll make some sample notes
+		fs.readdir path.join(storage_dir, "/Notebooks/"), (err, data) ->
+			if err.code is "ENOENT"
+				fs.mkdir path.join(storage_dir, "/Notebooks/"), ->
+		      		# Copy over the default notes
+
+
+	# 	fs.readFile path.join(storage_dir, 'file.txt'), 'utf-8', (err, data) ->
+	# 		throw err if (err)
+	# 		window.noted.editor.importFile('file', data)
+	# 		window.noted.editor.preview()
+	# else
+	# 	window.noted.editor.importFile('file', "Not running under node webkit")
+	# 	window.noted.editor.preview()
 
 window.noted = {}
