@@ -78,6 +78,8 @@
         return window.noted.loadNotes($(this).html());
       });
       $("body").on("click", "#notes li", function() {
+        $("#notes .selected").removeClass("selected");
+        $(this).addClass("selected");
         return window.noted.loadNote($(this).find("h2").html());
       });
       window.noted.editor = new EpicEditor({
@@ -125,7 +127,13 @@
       return _results;
     },
     loadNote: function(name) {
-      return console.log(name);
+      return fs.readFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', function(err, data) {
+        if (err) {
+          throw err;
+        }
+        window.noted.editor.importFile('file', data);
+        return window.noted.editor.preview();
+      });
     }
   };
 

@@ -73,6 +73,11 @@ window.noted =
 
 		# Notes Click
 		$("body").on "click", "#notes li", ->
+			# UI
+			$("#notes .selected").removeClass("selected")
+			$(this).addClass("selected")
+
+			# Loads Actual Note
 			window.noted.loadNote($(this).find("h2").html())
 
 		# Create Markdown Editor
@@ -116,7 +121,10 @@ window.noted =
 			i++
 
 	loadNote: (name) ->
-		console.log(name)
+		fs.readFile path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', (err, data) ->
+			throw err if (err)
+			window.noted.editor.importFile('file', data)
+			window.noted.editor.preview()
 
 # Document Ready Guff
 $ ->
