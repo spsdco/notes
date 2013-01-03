@@ -63,10 +63,15 @@ window.noted =
 				$(this).text "save"
 				window.noted.editor.edit()
 
-		$("body").on "click", "#notebooks ul li", ->
+		# Notebooks Click
+		$("body").on "click", "#notebooks li", ->
 			$(this).parent().find(".selected").removeClass "selected"
 			$(this).addClass "selected"
 			window.noted.loadNotes($(this).html())
+
+		# Notes Click
+		$("body").on "click", "#notes li", ->
+			window.noted.loadNote($(this).html())
 
 		# Create Markdown Editor
 		window.noted.editor = new EpicEditor
@@ -79,13 +84,14 @@ window.noted =
 		window.noted.editor.load()
 
 	render: ->
-		fs.readdir path.join(storage_dir, "/Notebooks/"), (err, data) ->
+		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
 			console.log(data)
 			window.noted.listNotebooks(data)
 
 	listNotebooks: (data) ->
 		i = 0
 		while i < data.length
+			# fs.readdir path.join(storage_dir, "Notebooks", data[i]), (err, stat, data[i]) ->
 			$("#notebooks ul").append "<li>" + data[i] + "</li>"
 			i++
 
@@ -94,7 +100,7 @@ window.noted =
 		# Clear list while we load.
 		$("#notes header h1").html(name)
 		$("#notes ul").html("")
-		fs.readdir path.join(storage_dir, "/Notebooks/"+name), (err, data) ->
+		fs.readdir path.join(storage_dir, "Notebooks", name), (err, data) ->
 			window.noted.listNotes(data)
 
 	listNotes: (data) ->
@@ -103,9 +109,6 @@ window.noted =
 			name = data[i].replace ".txt",""
 			$("#notes ul").append "<li><h2>" + name + "</h2><time></time></li>"
 			i++
-		# TODO: Can't find of a effective way to get the name.
-		$("#notes ul li").click ->
-			window.noted.loadNote($(this).html())
 
 	loadNote: (name) ->
 		console.log(name)

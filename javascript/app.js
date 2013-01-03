@@ -71,10 +71,13 @@
           return window.noted.editor.edit();
         }
       });
-      $("body").on("click", "#notebooks ul li", function() {
+      $("body").on("click", "#notebooks li", function() {
         $(this).parent().find(".selected").removeClass("selected");
         $(this).addClass("selected");
         return window.noted.loadNotes($(this).html());
+      });
+      $("body").on("click", "#notes li", function() {
+        return window.noted.loadNote($(this).html());
       });
       window.noted.editor = new EpicEditor({
         container: 'contentbody',
@@ -87,7 +90,7 @@
       return window.noted.editor.load();
     },
     render: function() {
-      return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {
+      return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
         console.log(data);
         return window.noted.listNotebooks(data);
       });
@@ -106,21 +109,20 @@
       console.log(name);
       $("#notes header h1").html(name);
       $("#notes ul").html("");
-      return fs.readdir(path.join(storage_dir, "/Notebooks/" + name), function(err, data) {
+      return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
         return window.noted.listNotes(data);
       });
     },
     listNotes: function(data) {
-      var i, name;
+      var i, name, _results;
       i = 0;
+      _results = [];
       while (i < data.length) {
         name = data[i].replace(".txt", "");
         $("#notes ul").append("<li><h2>" + name + "</h2><time></time></li>");
-        i++;
+        _results.push(i++);
       }
-      return $("#notes ul li").click(function() {
-        return window.noted.loadNote($(this).html());
-      });
+      return _results;
     },
     loadNote: function(name) {
       return console.log(name);
