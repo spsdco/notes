@@ -34,6 +34,7 @@
   } catch (_error) {}
 
   window.noted = {
+    selectedList: "Getting Started",
     setupPanel: function() {
       var win;
       win = gui.Window.get();
@@ -77,7 +78,7 @@
         return window.noted.loadNotes($(this).html());
       });
       $("body").on("click", "#notes li", function() {
-        return window.noted.loadNote($(this).html());
+        return window.noted.loadNote($(this).find("h2").html());
       });
       window.noted.editor = new EpicEditor({
         container: 'contentbody',
@@ -95,16 +96,15 @@
       });
     },
     listNotebooks: function(data) {
-      var i, _results;
+      var i;
       i = 0;
-      _results = [];
       while (i < data.length) {
         if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
-          $("#notebooks ul").append("<li>" + data[i] + "</li>");
+          $("#notebooks ul").append("<li data-id='" + data[i] + "'>" + data[i] + "</li>");
         }
-        _results.push(i++);
+        i++;
       }
-      return _results;
+      return $("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click");
     },
     loadNotes: function(name) {
       $("#notes header h1").html(name);
@@ -118,7 +118,7 @@
       i = 0;
       _results = [];
       while (i < data.length) {
-        name = data[i].replace(".txt", "");
+        name = data[i].substr(0, data[i].length - 4);
         $("#notes ul").append("<li><h2>" + name + "</h2><time></time></li>");
         _results.push(i++);
       }

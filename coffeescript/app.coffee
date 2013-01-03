@@ -28,6 +28,8 @@ try
 # Proper Functions
 window.noted =
 
+	selectedList: "Getting Started"
+
 	setupPanel: ->
 		win = gui.Window.get()
 		win.show()
@@ -71,7 +73,7 @@ window.noted =
 
 		# Notes Click
 		$("body").on "click", "#notes li", ->
-			window.noted.loadNote($(this).html())
+			window.noted.loadNote($(this).find("h2").html())
 
 		# Create Markdown Editor
 		window.noted.editor = new EpicEditor
@@ -92,8 +94,11 @@ window.noted =
 		i = 0
 		while i < data.length
 			if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
-				$("#notebooks ul").append "<li>" + data[i] + "</li>"
+				$("#notebooks ul").append "<li data-id='" + data[i] + "'>" + data[i] + "</li>"
 			i++
+
+		# Add Selected Class to the Right Notebook
+		$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
 
 	loadNotes: (name) ->
 		# Clear list while we load.
@@ -105,7 +110,8 @@ window.noted =
 	listNotes: (data) ->
 		i = 0
 		while i < data.length
-			name = data[i].replace ".txt",""
+			# Removes txt extension
+			name = data[i].substr(0, data[i].length - 4)
 			$("#notes ul").append "<li><h2>" + name + "</h2><time></time></li>"
 			i++
 
