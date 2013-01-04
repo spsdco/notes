@@ -86,9 +86,10 @@
         $(this).addClass("selected");
         return window.noted.loadNote($(this).find("h2").text());
       });
-      $("body").on("keyup", ".headerwrap .left h1", function(e) {
+      $("body").on("keydown", ".headerwrap .left h1", function(e) {
         if (e.keyCode === 13) {
           e.preventDefault();
+          $(this).blur();
         }
         if ($(this).text() !== "") {
           $("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", $(this).text()).find("h2").text($(this).text());

@@ -85,9 +85,11 @@ window.noted =
 			# Loads Actual Note
 			window.noted.loadNote($(this).find("h2").text())
 
-		$("body").on "keyup", ".headerwrap .left h1", (e) ->
+		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			# Deny the enter key
-			e.preventDefault() if e.keyCode is 13
+			if e.keyCode is 13
+				e.preventDefault()
+				$(this).blur()
 
 			# We can't have "".txt
 			if $(this).text() isnt ""
