@@ -34,6 +34,8 @@
   } catch (_error) {}
 
   window.noted = {
+    selectedList: "Getting Started",
+    selectedNote: "",
     setupPanel: function() {
       var win;
       win = gui.Window.get();
@@ -71,10 +73,15 @@
           return window.noted.editor.edit();
         }
       });
-      $("body").on("click", "#notebooks ul li", function() {
+      $("body").on("click", "#notebooks li", function() {
         $(this).parent().find(".selected").removeClass("selected");
         $(this).addClass("selected");
         return window.noted.loadNotes($(this).html());
+      });
+      $("body").on("click", "#notes li", function() {
+        $("#notes .selected").removeClass("selected");
+        $(this).addClass("selected");
+        return window.noted.loadNote($(this).find("h2").html());
       });
       window.noted.editor = new EpicEditor({
         container: 'contentbody',
@@ -87,43 +94,47 @@
       return window.noted.editor.load();
     },
     render: function() {
-      return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {
-        console.log(data);
+      return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
         return window.noted.listNotebooks(data);
       });
     },
     listNotebooks: function(data) {
-      var i, _results;
-      i = 0;
-      _results = [];
-      while (i < data.length) {
-        $("#notebooks ul").append("<li>" + data[i] + "</li>");
-        _results.push(i++);
-      }
-      return _results;
-    },
-    loadNotes: function(name) {
-      console.log(name);
-      $("#notes header h1").html(name);
-      $("#notes ul").html("");
-      return fs.readdir(path.join(storage_dir, "/Notebooks/" + name), function(err, data) {
-        return window.noted.listNotes(data);
-      });
-    },
-    listNotes: function(data) {
-      var i, name;
+      var i;
       i = 0;
       while (i < data.length) {
-        name = data[i].replace(".txt", "");
-        $("#notes ul").append("<li><h2>" + name + "</h2><time></time></li>");
+        if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
+          $("#notebooks ul").append("<li data-id='" + data[i] + "'>" + data[i] + "</li>");
+        }
         i++;
       }
-      return $("#notes ul li").click(function() {
-        return window.noted.loadNote($(this).html());
+      return $("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click");
+    },
+    loadNotes: function(name) {
+      $("#notes header h1").html(name);
+      $("#notes ul").html("");
+      return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
+        var i, _results;
+        i = 0;
+        _results = [];
+        while (i < data.length) {
+          if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
+            name = data[i].substr(0, data[i].length - 4);
+            $("#notes ul").append("<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>");
+          }
+          _results.push(i++);
+        }
+        return _results;
       });
     },
     loadNote: function(name) {
-      return console.log(name);
+      window.noted.selectedNote = name;
+      return fs.readFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', function(err, data) {
+        if (err) {
+          throw err;
+        }
+        window.noted.editor.importFile('file', data);
+        return window.noted.editor.preview();
+      });
     }
   };
 
