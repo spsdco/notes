@@ -68,8 +68,6 @@
         if ($(this).text() === "save") {
           $(this).text("edit");
           $('.headerwrap .left h1').attr('contenteditable', 'false');
-          fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $('.headerwrap .left h1').html() + '.txt'));
-          window.noted.selectedNote = $('.headerwrap .left h1').html();
           window.noted.loadNotes(window.noted.selectedList);
           return window.noted.editor.preview();
         } else {
@@ -81,12 +79,22 @@
       $("body").on("click", "#notebooks li", function() {
         $(this).parent().find(".selected").removeClass("selected");
         $(this).addClass("selected");
-        return window.noted.loadNotes($(this).html());
+        return window.noted.loadNotes($(this).text());
       });
       $("body").on("click", "#notes li", function() {
         $("#notes .selected").removeClass("selected");
         $(this).addClass("selected");
-        return window.noted.loadNote($(this).find("h2").html());
+        return window.noted.loadNote($(this).find("h2").text());
+      });
+      $("body").on("keyup", ".headerwrap .left h1", function(e) {
+        if (e.keyCode === 13) {
+          e.preventDefault();
+        }
+        if ($(this).text() !== "") {
+          $("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", $(this).text()).find("h2").text($(this).text());
+          fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'));
+          return window.noted.selectedNote = $(this).text();
+        }
       });
       window.noted.editor = new EpicEditor({
         container: 'contentbody',
@@ -137,7 +145,7 @@
         if (err) {
           throw err;
         }
-        $('.headerwrap .left h1').html(name);
+        $('.headerwrap .left h1').text(name);
         window.noted.editor.importFile('file', data);
         return window.noted.editor.preview();
       });

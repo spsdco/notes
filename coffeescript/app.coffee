@@ -62,8 +62,6 @@ window.noted =
 			if $(this).text() is "save"
 				$(this).text "edit"
 				$('.headerwrap .left h1').attr('contenteditable', 'false')
-				fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $('.headerwrap .left h1').html() + '.txt'))
-				window.noted.selectedNote = $('.headerwrap .left h1').html()
 				# Reload Notes.
 				window.noted.loadNotes(window.noted.selectedList)
 				window.noted.editor.preview()
@@ -76,7 +74,7 @@ window.noted =
 		$("body").on "click", "#notebooks li", ->
 			$(this).parent().find(".selected").removeClass "selected"
 			$(this).addClass "selected"
-			window.noted.loadNotes($(this).html())
+			window.noted.loadNotes($(this).text())
 
 		# Notes Click
 		$("body").on "click", "#notes li", ->
@@ -85,7 +83,20 @@ window.noted =
 			$(this).addClass("selected")
 
 			# Loads Actual Note
-			window.noted.loadNote($(this).find("h2").html())
+			window.noted.loadNote($(this).find("h2").text())
+
+		$("body").on "keyup", ".headerwrap .left h1", (e) ->
+			# Deny the enter key
+			e.preventDefault() if e.keyCode is 13
+
+			# We can't have "".txt
+			if $(this).text() isnt ""
+				$("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", $(this).text()).find("h2").text($(this).text())
+				fs.rename(
+					path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'),
+					path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'))
+
+				window.noted.selectedNote = $(this).text()
 
 		# Create Markdown Editor
 		window.noted.editor = new EpicEditor
@@ -144,7 +155,7 @@ window.noted =
 		# Opens ze note
 		fs.readFile path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', (err, data) ->
 			throw err if (err)
-			$('.headerwrap .left h1').html(name)
+			$('.headerwrap .left h1').text(name)
 			window.noted.editor.importFile('file', data)
 			window.noted.editor.preview()
 
