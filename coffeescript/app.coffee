@@ -61,9 +61,15 @@ window.noted =
 			# There should be a better way to do this
 			if $(this).text() is "save"
 				$(this).text "edit"
+				$('.headerwrap .left h1').attr('contenteditable', 'false')
+				fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $('.headerwrap .left h1').html() + '.txt'))
+				window.noted.selectedNote = $('.headerwrap .left h1').html()
+				# Reload Notes.
+				window.noted.loadNotes(window.noted.selectedList)
 				window.noted.editor.preview()
 			else
 				$(this).text "save"
+				$('.headerwrap .left h1').attr('contenteditable', 'true')
 				window.noted.editor.edit()
 
 		# Notebooks Click
@@ -138,6 +144,7 @@ window.noted =
 		# Opens ze note
 		fs.readFile path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', (err, data) ->
 			throw err if (err)
+			$('.headerwrap .left h1').html(name)
 			window.noted.editor.importFile('file', data)
 			window.noted.editor.preview()
 

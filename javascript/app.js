@@ -67,9 +67,14 @@
       $("#content header .edit").click(function() {
         if ($(this).text() === "save") {
           $(this).text("edit");
+          $('.headerwrap .left h1').attr('contenteditable', 'false');
+          fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $('.headerwrap .left h1').html() + '.txt'));
+          window.noted.selectedNote = $('.headerwrap .left h1').html();
+          window.noted.loadNotes(window.noted.selectedList);
           return window.noted.editor.preview();
         } else {
           $(this).text("save");
+          $('.headerwrap .left h1').attr('contenteditable', 'true');
           return window.noted.editor.edit();
         }
       });
@@ -132,6 +137,7 @@
         if (err) {
           throw err;
         }
+        $('.headerwrap .left h1').html(name);
         window.noted.editor.importFile('file', data);
         return window.noted.editor.preview();
       });
