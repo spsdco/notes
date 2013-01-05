@@ -112,10 +112,10 @@
       window.noted.editor.on("save", function(e) {
         return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), e.content);
       });
-      return $('#panel #noteControls #new').click(function() {
+      return $('#new').click(function() {
         var defaultcontent;
         $("#notes ul").append("<li data-id='Untitled Note'><h2>Untitled Note</h2><time></time></li>");
-        defaultcontent = "Untitled Note\n====\n\nUntitiled Note";
+        defaultcontent = "Add some content!";
         return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent);
       });
     },
