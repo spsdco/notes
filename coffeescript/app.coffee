@@ -139,7 +139,7 @@ window.noted =
 		# Add note modal dialogue.
 		$('#panel #noteControls #new').click ->
 			$("#notes ul").append "<li data-id='Untitled Note'><h2>Untitled Note</h2><time></time></li>"
-			defaultcontent = "Untitled Note\n====\n\nUntitiled Note"
+			defaultcontent = "Untitled Note\n====\nUntitiled Note"
 			fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent)
 
 	render: ->
