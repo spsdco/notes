@@ -138,6 +138,7 @@
       return window.noted.listNotebooks();
     },
     listNotebooks: function() {
+      $("#notebooks ul").html("").append("<li class='all'>All Notes</li>");
       return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
         var i;
         i = 0;

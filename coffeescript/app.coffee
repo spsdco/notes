@@ -165,6 +165,8 @@ window.noted =
 
 
 	listNotebooks: ->
+		# Clear & Add All Notes
+		$("#notebooks ul").html("").append "<li class='all'>All Notes</li>"
 		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
 			i = 0
 			while i < data.length
