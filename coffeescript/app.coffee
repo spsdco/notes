@@ -61,8 +61,11 @@ window.noted =
 
 			# There should be a better way to do this
 			if $(this).text() is "save"
+
 				$(this).text "edit"
 				$('.headerwrap .left h1').attr('contenteditable', 'false')
+				window.noted.editor.save()
+
 				# Reload Notes.
 				window.noted.loadNotes(window.noted.selectedList)
 				window.noted.editor.preview()
@@ -128,13 +131,16 @@ window.noted =
 				editor:'/themes/editor/style.css'
 
 		window.noted.editor.load()
+
 		window.noted.editor.on "save", (e) ->
-			fs.writeFile(path.join(
-				storage_dir,
-				"Notebooks",
-				window.noted.selectedList,
-				window.noted.selectedNote + '.txt'
-			), e.content)
+			# Make sure a note is selected
+			if window.noted.selectedNote isnt ""
+				fs.writeFile(path.join(
+					storage_dir,
+					"Notebooks",
+					window.noted.selectedList,
+					window.noted.selectedNote + '.txt'
+				), e.content)
 
 		# Add note modal dialogue.
 		$('#new').click ->

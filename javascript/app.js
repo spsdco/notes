@@ -66,6 +66,7 @@
         if ($(this).text() === "save") {
           $(this).text("edit");
           $('.headerwrap .left h1').attr('contenteditable', 'false');
+          window.noted.editor.save();
           window.noted.loadNotes(window.noted.selectedList);
           return window.noted.editor.preview();
         } else {
@@ -110,7 +111,9 @@
       });
       window.noted.editor.load();
       window.noted.editor.on("save", function(e) {
-        return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), e.content);
+        if (window.noted.selectedNote !== "") {
+          return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), e.content);
+        }
       });
       $('#new').click(function() {
         var defaultcontent;
