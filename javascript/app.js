@@ -88,8 +88,10 @@
       $("body").on("keydown", ".headerwrap .left h1", function(e) {
         if (e.keyCode === 13) {
           e.preventDefault();
-          $(this).blur();
+          return $(this).blur();
         }
+      });
+      $("body").on("keyup", ".headerwrap .left h1", function(e) {
         if ($(this).text() !== "") {
           $("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", $(this).text()).find("h2").text($(this).text());
           fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'));
