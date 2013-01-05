@@ -103,12 +103,20 @@ window.noted =
 		# Create Markdown Editor
 		window.noted.editor = new EpicEditor
 			container: 'contentbody'
+			file:
+				name: 'epiceditor',
+				defaultContent: '',
+				autoSave: 2500
 			theme:
 				base:'/themes/base/epiceditor.css'
 				preview:'/themes/preview/style.css'
 				editor:'/themes/editor/style.css'
 
 		window.noted.editor.load()
+
+		window.noted.editor.on "save", (e) ->
+			fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), e.content)
+		
 
 	# We'll add more to this as stuff changes
 	render: ->
