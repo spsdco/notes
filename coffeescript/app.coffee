@@ -130,16 +130,16 @@ window.noted =
 		window.noted.editor.load()
 		window.noted.editor.on "save", (e) ->
 			fs.writeFile(path.join(
-			storage_dir, 
-			"Notebooks", 
-			window.noted.selectedList, 
-			window.noted.selectedNote + '.txt'
+				storage_dir,
+				"Notebooks",
+				window.noted.selectedList,
+				window.noted.selectedNote + '.txt'
 			), e.content)
 
 		# Add note modal dialogue.
-		$('#panel #noteControls #new').click ->
+		$('#new').click ->
 			$("#notes ul").append "<li data-id='Untitled Note'><h2>Untitled Note</h2><time></time></li>"
-			defaultcontent = "Untitled Note\n====\nUntitiled Note"
+			defaultcontent = "Add some content!"
 			fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent)
 
 	render: ->
