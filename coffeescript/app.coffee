@@ -15,11 +15,10 @@ try
 	node = true
 	home_dir = process.env.HOME
 
-	# Set Up Storage Stuffs
+	# Set Up Storage - are there env variables for these?
 	if OSName is "Mac"
 		storage_dir = path.join(home_dir, "/Library/Application Support/Noted/")
 	if OSName is "Windows"
-		#Microsoft y u so inconsistant? - Don't assume /AppData - XP uses /Application Data - Use ENV variable
 		storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted")
 	if OSName is "Linux"
 		storage_dir = path.join(home_dir, "/.config/Noted/")
@@ -45,14 +44,16 @@ window.noted =
 			win.maximize()
 
 		# Panel Dragging
-		$('#panel').mouseenter ->
+		$('#panel').mouseenter(->
 			$('#panel').addClass('drag')
-		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter ->
+		).mouseleave ->
 			$('#panel').removeClass('drag')
-		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseleave ->
+
+		# Disallows Dragging on Buttons
+		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
+			$('#panel').removeClass('drag')
+		).mouseleave ->
 			$('#panel').addClass('drag')
-		$('#panel').mouseleave ->
-			$('#panel').removeClass('drag')
 
 	setupUI: ->
 		# Event Handlers
@@ -110,30 +111,24 @@ window.noted =
 
 		window.noted.editor.load()
 
-	# We'll add more to this as stuff changes
+	# We'll add more to this as stuff changes. There's not a lot in here for now.
 	render: ->
+
 		# Lists the New Notebooks & Shows Selected
+		window.noted.listNotebooks()
+
+
+
+	listNotebooks: ->
 		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
-			window.noted.listNotebooks data
+			i = 0
+			while i < data.length
+				if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
+					$("#notebooks ul").append "<li data-id='" + data[i] + "'>" + data[i] + "</li>"
+				i++
 
-
-
-	listNotebooks: (data) ->
-		i = 0
-		while i < data.length
-			if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
-				$("#notebooks ul").append "<li data-id='" + data[i] + "'>" + data[i] + "</li>"
-
-			# if i is data.length -1
-			# 	if window.noted.selectedNote is ""
-			# 		# We load the first Note
-			# 		$($("#notes li")[0]).trigger "click"
-			# 	else
-			# 		$("#notes [data-id='" + window.noted.selectedNote + "']").trigger "click"
-			i++
-
-		# Add Selected Class to the Right Notebook
-		$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
+			# Add Selected Class to the Right Notebook
+			$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
 
 	loadNotes: (name) ->
 		# Clear list while we load.
@@ -142,9 +137,9 @@ window.noted =
 		fs.readdir path.join(storage_dir, "Notebooks", name), (err, data) ->
 			i = 0
 			while i < data.length
-
 				# Makes sure that it is a text file
 				if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
+
 					# Removes txt extension
 					name = data[i].substr(0, data[i].length - 4)
 					$("#notes ul").append "<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>"
@@ -163,13 +158,10 @@ window.noted =
 
 # Document Ready Guff
 $ ->
-
-	if node
-		window.noted.setupPanel()
-
 	window.noted.setupUI()
 
 	if node
+		window.noted.setupPanel()
 
 		# If the notebooks file isn't made, we'll make some sample notes
 		fs.readdir path.join(storage_dir, "/Notebooks/"), (err, data) ->

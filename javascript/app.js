@@ -52,15 +52,13 @@
       });
       $('#panel').mouseenter(function() {
         return $('#panel').addClass('drag');
-      });
-      $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(function() {
+      }).mouseleave(function() {
         return $('#panel').removeClass('drag');
       });
-      $('#panel #decor img, #panel #noteControls img, #panel #search').mouseleave(function() {
+      return $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(function() {
+        return $('#panel').removeClass('drag');
+      }).mouseleave(function() {
         return $('#panel').addClass('drag');
-      });
-      return $('#panel').mouseleave(function() {
-        return $('#panel').removeClass('drag');
       });
     },
     setupUI: function() {
@@ -108,20 +106,20 @@
       return window.noted.editor.load();
     },
     render: function() {
-      return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
-        return window.noted.listNotebooks(data);
-      });
+      return window.noted.listNotebooks();
     },
-    listNotebooks: function(data) {
-      var i;
-      i = 0;
-      while (i < data.length) {
-        if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
-          $("#notebooks ul").append("<li data-id='" + data[i] + "'>" + data[i] + "</li>");
+    listNotebooks: function() {
+      return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
+        var i;
+        i = 0;
+        while (i < data.length) {
+          if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
+            $("#notebooks ul").append("<li data-id='" + data[i] + "'>" + data[i] + "</li>");
+          }
+          i++;
         }
-        i++;
-      }
-      return $("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click");
+        return $("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click");
+      });
     },
     loadNotes: function(name) {
       $("#notes header h1").html(name);
@@ -154,11 +152,9 @@
   };
 
   $(function() {
-    if (node) {
-      window.noted.setupPanel();
-    }
     window.noted.setupUI();
     if (node) {
+      window.noted.setupPanel();
       return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {
         if (err) {
           if (err.code === "ENOENT") {
