@@ -113,15 +113,19 @@
       });
       window.noted.editor.load();
       window.noted.editor.on("save", function(e) {
+        var list;
+        list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list");
         if (window.noted.selectedNote !== "") {
-          return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), e.content);
+          return fs.writeFile(path.join(storage_dir, "Notebooks", list, window.noted.selectedNote + '.txt'), e.content);
         }
       });
       $('#new').click(function() {
         var defaultcontent;
-        $("#notes ul").append("<li data-id='Untitled Note'><h2>Untitled Note</h2><time></time></li>");
-        defaultcontent = "Add some content!";
-        return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent);
+        if (window.noted.selectedList !== "All Notes") {
+          $("#notes ul").append("<li data-id='Untitled Note' data-list='" + window.noted.selectedList + "'><h2>Untitled Note</h2><time></time></li>");
+          defaultcontent = "Add some content!";
+          return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent);
+        }
       });
       return $('#del').click(function() {
         window.noted.editor.remove('file');

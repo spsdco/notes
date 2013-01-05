@@ -135,20 +135,22 @@ window.noted =
 		window.noted.editor.load()
 
 		window.noted.editor.on "save", (e) ->
+			list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
 			# Make sure a note is selected
 			if window.noted.selectedNote isnt ""
 				fs.writeFile(path.join(
 					storage_dir,
 					"Notebooks",
-					window.noted.selectedList,
+					list,
 					window.noted.selectedNote + '.txt'
 				), e.content)
 
 		# Add note modal dialogue.
 		$('#new').click ->
-			$("#notes ul").append "<li data-id='Untitled Note'><h2>Untitled Note</h2><time></time></li>"
-			defaultcontent = "Add some content!"
-			fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent)
+			if window.noted.selectedList isnt "All Notes"
+				$("#notes ul").append "<li data-id='Untitled Note' data-list='" + window.noted.selectedList + "'><h2>Untitled Note</h2><time></time></li>"
+				defaultcontent = "Add some content!"
+				fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent)
 
 		$('#del').click ->
 			window.noted.editor.remove('file')
