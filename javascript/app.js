@@ -146,6 +146,7 @@
       });
     },
     loadNotes: function(name) {
+      window.noted.selectedList = name;
       $("#notes header h1").html(name);
       $("#notes ul").html("");
       return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {

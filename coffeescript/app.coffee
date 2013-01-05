@@ -168,6 +168,7 @@ window.noted =
 			$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
 
 	loadNotes: (name) ->
+		window.noted.selectedList = name
 		# Clear list while we load.
 		$("#notes header h1").html(name)
 		$("#notes ul").html("")
