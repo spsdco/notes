@@ -149,22 +149,37 @@
       });
     },
     loadNotes: function(name) {
-      window.noted.selectedList = name;
-      $("#notes header h1").html(name);
-      $("#notes ul").html("");
-      return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
-        var i, _results;
-        i = 0;
-        _results = [];
-        while (i < data.length) {
-          if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
-            name = data[i].substr(0, data[i].length - 4);
-            $("#notes ul").append("<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>");
+      if (name === "All Notes") {
+        return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
+          var i, _results;
+          i = 0;
+          _results = [];
+          while (i < data.length) {
+            if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
+              window.noted.loadNotes(data[i]);
+            }
+            _results.push(i++);
           }
-          _results.push(i++);
-        }
-        return _results;
-      });
+          return _results;
+        });
+      } else {
+        window.noted.selectedList = name;
+        $("#notes header h1").html(name);
+        $("#notes ul").html("");
+        return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
+          var i, _results;
+          i = 0;
+          _results = [];
+          while (i < data.length) {
+            if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
+              name = data[i].substr(0, data[i].length - 4);
+              $("#notes ul").append("<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>");
+            }
+            _results.push(i++);
+          }
+          return _results;
+        });
+      }
     },
     loadNote: function(name) {
       window.noted.selectedNote = name;

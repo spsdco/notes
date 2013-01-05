@@ -174,23 +174,31 @@ window.noted =
 			$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
 
 	loadNotes: (name) ->
-		window.noted.selectedList = name
-		# Clear list while we load.
-		$("#notes header h1").html(name)
-		$("#notes ul").html("")
-		fs.readdir path.join(storage_dir, "Notebooks", name), (err, data) ->
-			i = 0
-			while i < data.length
-				# Makes sure that it is a text file
-				if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
+		if name is "All Notes"
+			fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
+				i = 0
+				while i < data.length
+					if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
+						window.noted.loadNotes(data[i])
+					i++
+		else
+			window.noted.selectedList = name
+			# Clear list while we load.
+			$("#notes header h1").html(name)
+			$("#notes ul").html("")
+			fs.readdir path.join(storage_dir, "Notebooks", name), (err, data) ->
+				i = 0
+				while i < data.length
+					# Makes sure that it is a text file
+					if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
 
-					# Removes txt extension
-					name = data[i].substr(0, data[i].length - 4)
-					$("#notes ul").append "<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>"
-				i++
+						# Removes txt extension
+						name = data[i].substr(0, data[i].length - 4)
+						$("#notes ul").append "<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>"
+					i++
 
 	loadNote: (name) ->
-		# Caches Selected Note
+		# Caches Selected Note and List
 		window.noted.selectedNote = name
 
 		# Opens ze note
