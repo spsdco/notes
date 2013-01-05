@@ -112,11 +112,21 @@
       window.noted.editor.on("save", function(e) {
         return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), e.content);
       });
-      return $('#new').click(function() {
+      $('#new').click(function() {
         var defaultcontent;
         $("#notes ul").append("<li data-id='Untitled Note'><h2>Untitled Note</h2><time></time></li>");
         defaultcontent = "Add some content!";
         return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent);
+      });
+      return $('#del').click(function() {
+        window.noted.editor.remove('file');
+        $('.headerwrap .left h1').html("No note selected");
+        return fs.unlink(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), function(err) {
+          if (err) {
+            throw err;
+          }
+          return window.noted.loadNotes(window.noted.selectedList);
+        });
       });
     },
     render: function() {

@@ -142,6 +142,13 @@ window.noted =
 			defaultcontent = "Add some content!"
 			fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent)
 
+		$('#del').click ->
+			window.noted.editor.remove('file')
+			$('.headerwrap .left h1').html("No note selected")
+			fs.unlink path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), (err) ->
+				throw err if (err)
+				window.noted.loadNotes(window.noted.selectedList)
+
 	render: ->
 
 		# Lists the New Notebooks & Shows Selected
