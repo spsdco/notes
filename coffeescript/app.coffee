@@ -94,10 +94,24 @@ window.noted =
 
 			# We can't have "".txt
 			if $(this).text() isnt ""
-				$("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", $(this).text()).find("h2").text($(this).text())
+				$("#notes [data-id='" + window.noted.selectedNote + "']")
+					.attr("data-id", $(this).text()).find("h2").text($(this).text())
+
+				# Renames the Note
 				fs.rename(
-					path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'),
-					path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'))
+					path.join(
+						storage_dir,
+						"Notebooks",
+						window.noted.selectedList,
+						window.noted.selectedNote + '.txt'
+					),
+					path.join(
+						storage_dir,
+						"Notebooks",
+						window.noted.selectedList,
+						$(this).text() + '.txt'
+					)
+				)
 
 				window.noted.selectedNote = $(this).text()
 
