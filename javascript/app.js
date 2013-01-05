@@ -151,31 +151,36 @@
         return $("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click");
       });
     },
-    loadNotes: function(name) {
+    loadNotes: function(name, type) {
       if (name === "All Notes") {
         return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
-          var i;
-          i = 0;
-          while (i < data.length) {
-            if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
-              window.noted.loadNotes(data[i]);
-            }
-            i++;
-          }
-          return $("#notes header h1").html("All Notes");
-        });
-      } else {
-        window.noted.selectedList = name;
-        $("#notes header h1").html(name);
-        $("#notes ul").html("");
-        return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
           var i, _results;
           i = 0;
           _results = [];
           while (i < data.length) {
+            if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
+              window.noted.loadNotes(data[i], "all");
+            }
+            _results.push(i++);
+          }
+          return _results;
+        });
+      } else {
+        window.noted.selectedList = name;
+        if (type !== "all") {
+          $("#notes header h1").html(name);
+          $("#notes ul").html("");
+        } else {
+          $("#notes header h1").html("All Notes");
+        }
+        return fs.readdir(path.join(storage_dir, "Notebooks", name), function(err, data) {
+          var i, noteName, _results;
+          i = 0;
+          _results = [];
+          while (i < data.length) {
             if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
-              name = data[i].substr(0, data[i].length - 4);
-              $("#notes ul").append("<li data-id='" + name + "' data-list='" + window.noted.selectedList + "'><h2>" + name + "</h2><time></time></li>");
+              noteName = data[i].substr(0, data[i].length - 4);
+              $("#notes ul").append("<li data-id='" + noteName + "' data-list='" + name + "'><h2>" + noteName + "</h2><time></time></li>");
             }
             _results.push(i++);
           }
