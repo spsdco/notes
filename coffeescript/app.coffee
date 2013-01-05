@@ -87,7 +87,7 @@ window.noted =
 			$(this).addClass("selected")
 
 			# Loads Actual Note
-			window.noted.loadNote($(this).find("h2").text())
+			window.noted.loadNote($(this))
 
 		# Because we can't prevent default on keyup
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
@@ -205,14 +205,14 @@ window.noted =
 						$("#notes ul").append "<li data-id='" + noteName + "' data-list='" + name + "'><h2>" + noteName + "</h2><time></time></li>"
 					i++
 
-	loadNote: (name) ->
+	loadNote: (selector) ->
 		# Caches Selected Note and List
-		window.noted.selectedNote = name
+		window.noted.selectedNote = $(selector).find("h2").text()
 
 		# Opens ze note
-		fs.readFile path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', (err, data) ->
+		fs.readFile path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', (err, data) ->
 			throw err if (err)
-			$('.headerwrap .left h1').text(name)
+			$('.headerwrap .left h1').text(window.noted.selectedNote)
 			window.noted.editor.importFile('file', data)
 			window.noted.editor.preview()
 

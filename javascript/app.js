@@ -83,7 +83,7 @@
       $("body").on("click", "#notes li", function() {
         $("#notes .selected").removeClass("selected");
         $(this).addClass("selected");
-        return window.noted.loadNote($(this).find("h2").text());
+        return window.noted.loadNote($(this));
       });
       $("body").on("keydown", ".headerwrap .left h1", function(e) {
         if (e.keyCode === 13) {
@@ -188,13 +188,13 @@
         });
       }
     },
-    loadNote: function(name) {
-      window.noted.selectedNote = name;
-      return fs.readFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), 'utf-8', function(err, data) {
+    loadNote: function(selector) {
+      window.noted.selectedNote = $(selector).find("h2").text();
+      return fs.readFile(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', function(err, data) {
         if (err) {
           throw err;
         }
-        $('.headerwrap .left h1').text(name);
+        $('.headerwrap .left h1').text(window.noted.selectedNote);
         window.noted.editor.importFile('file', data);
         return window.noted.editor.preview();
       });
