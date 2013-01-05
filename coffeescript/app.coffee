@@ -89,12 +89,14 @@ window.noted =
 			# Loads Actual Note
 			window.noted.loadNote($(this).find("h2").text())
 
+		# Because we can't prevent default on keyup
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			# Deny the enter key
 			if e.keyCode is 13
 				e.preventDefault()
 				$(this).blur()
 
+		$("body").on "keyup", ".headerwrap .left h1", (e) ->
 			# We can't have "".txt
 			if $(this).text() isnt ""
 				$("#notes [data-id='" + window.noted.selectedNote + "']")
