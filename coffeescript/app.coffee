@@ -183,6 +183,7 @@ window.noted =
 					if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
 						window.noted.loadNotes(data[i])
 					i++
+				$("#notes header h1").html("All Notes")
 		else
 			window.noted.selectedList = name
 			# Clear list while we load.
@@ -196,7 +197,7 @@ window.noted =
 
 						# Removes txt extension
 						name = data[i].substr(0, data[i].length - 4)
-						$("#notes ul").append "<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>"
+						$("#notes ul").append "<li data-id='" + name + "' data-list='"+window.noted.selectedList+"'><h2>" + name + "</h2><time></time></li>"
 					i++
 
 	loadNote: (name) ->

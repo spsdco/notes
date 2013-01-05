@@ -153,16 +153,15 @@
     loadNotes: function(name) {
       if (name === "All Notes") {
         return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
-          var i, _results;
+          var i;
           i = 0;
-          _results = [];
           while (i < data.length) {
             if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
               window.noted.loadNotes(data[i]);
             }
-            _results.push(i++);
+            i++;
           }
-          return _results;
+          return $("#notes header h1").html("All Notes");
         });
       } else {
         window.noted.selectedList = name;
@@ -175,7 +174,7 @@
           while (i < data.length) {
             if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
               name = data[i].substr(0, data[i].length - 4);
-              $("#notes ul").append("<li data-id='" + name + "'><h2>" + name + "</h2><time></time></li>");
+              $("#notes ul").append("<li data-id='" + name + "' data-list='" + window.noted.selectedList + "'><h2>" + name + "</h2><time></time></li>");
             }
             _results.push(i++);
           }
