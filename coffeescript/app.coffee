@@ -225,17 +225,20 @@ window.noted =
 					i++
 
 	loadNote: (selector) ->
+		console.log("called")
 		# Caches Selected Note and List
 		window.noted.selectedNote = $(selector).find("h2").text()
 
 		# Opens ze note
 		fs.readFile path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', (err, data) ->
 			throw err if (err)
+			$("#content").removeClass("deselected")
 			$('.headerwrap .left h1').text(window.noted.selectedNote)
 			window.noted.editor.importFile('file', data)
 			window.noted.editor.preview()
 
 	deselectNote: ->
+		$("#content").addClass("deselected")
 		window.noted.selectedNote = ""
 		window.noted.editor.importFile('file', "")
 		window.noted.editor.preview()

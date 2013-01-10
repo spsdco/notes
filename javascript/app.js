@@ -199,17 +199,20 @@
       }
     },
     loadNote: function(selector) {
+      console.log("called");
       window.noted.selectedNote = $(selector).find("h2").text();
       return fs.readFile(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', function(err, data) {
         if (err) {
           throw err;
         }
+        $("#content").removeClass("deselected");
         $('.headerwrap .left h1').text(window.noted.selectedNote);
         window.noted.editor.importFile('file', data);
         return window.noted.editor.preview();
       });
     },
     deselectNote: function() {
+      $("#content").addClass("deselected");
       window.noted.selectedNote = "";
       window.noted.editor.importFile('file', "");
       return window.noted.editor.preview();

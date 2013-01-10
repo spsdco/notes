@@ -183,6 +183,13 @@ body, input, textarea {
 	bottom: 0;
 	background: $white-color;
 
+	&.deselected {
+		background: #0f0;
+		header, #contentbody {
+			visibility: hidden
+		}
+	}
+
 	header {
 		margin: 0;
 		padding: 0;
