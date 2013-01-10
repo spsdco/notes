@@ -197,6 +197,7 @@ window.noted =
 
 	loadNotes: (name, type) ->
 		if name is "All Notes"
+			$("#notes ul").html("")
 			fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
 				i = 0
 				while i < data.length

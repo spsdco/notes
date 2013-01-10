@@ -162,6 +162,7 @@
     },
     loadNotes: function(name, type) {
       if (name === "All Notes") {
+        $("#notes ul").html("");
         return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
           var i, _results;
           i = 0;
