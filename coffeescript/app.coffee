@@ -178,6 +178,18 @@ window.noted =
 
 			# Add Selected Class to the Right Notebook
 			$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
+		window.noted.listTags()
+
+	listTags: ->
+		fs.readdir path.join(storage_dir, "Tags"), (err, data) ->
+			i = 0
+			while i < data.length
+				console.log(data[i])
+				# Get tag name from inside the file.
+				fs.readFile path.join(storage_dir, "Tags", data[i]), (err, data) ->
+					tag = JSON.parse(data)
+					$('#notebooks ul').append "<li class='tag' data-id='"+tag.name+"'>"+tag.name+"</li>"
+				i++
 
 	loadNotes: (name, type) ->
 		if name is "All Notes"

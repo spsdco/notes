@@ -143,7 +143,7 @@
     },
     listNotebooks: function() {
       $("#notebooks ul").html("").append("<li class='all'>All Notes</li>");
-      return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
+      fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
         var i;
         i = 0;
         while (i < data.length) {
@@ -153,6 +153,24 @@
           i++;
         }
         return $("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click");
+      });
+      return window.noted.listTags();
+    },
+    listTags: function() {
+      return fs.readdir(path.join(storage_dir, "Tags"), function(err, data) {
+        var i, _results;
+        i = 0;
+        _results = [];
+        while (i < data.length) {
+          console.log(data[i]);
+          fs.readFile(path.join(storage_dir, "Tags", data[i]), function(err, data) {
+            var tag;
+            tag = JSON.parse(data);
+            return $('#notebooks ul').append("<li class='tag' data-id='" + tag.name + "'>" + tag.name + "</li>");
+          });
+          _results.push(i++);
+        }
+        return _results;
       });
     },
     loadNotes: function(name, type) {
