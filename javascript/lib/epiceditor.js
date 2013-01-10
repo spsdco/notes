@@ -431,11 +431,7 @@
       chrome:   '<div id="epiceditor-wrapper" class="epiceditor-edit-mode">' +
                   '<iframe frameborder="0" id="epiceditor-editor-frame"></iframe>' +
                   '<iframe frameborder="0" id="epiceditor-previewer-frame"></iframe>' +
-                  '<div id="epiceditor-utilbar">' +
-                    '<img width="30" src="' + this.settings.basePath + '/images/preview.png" title="Toggle Preview Mode" class="epiceditor-toggle-btn epiceditor-toggle-preview-btn"> ' +
-                    '<img width="30" src="' + this.settings.basePath + '/images/edit.png" title="Toggle Edit Mode" class="epiceditor-toggle-btn epiceditor-toggle-edit-btn"> ' +
-                    '<img width="30" src="' + this.settings.basePath + '/images/fullscreen.png" title="Enter Fullscreen" class="epiceditor-fullscreen-btn">' +
-                  '</div>' +
+                  '<div id="epiceditor-utilbar"></div>' +
                 '</div>'
 
     // The previewer is just an empty box for the generated HTML to go into
