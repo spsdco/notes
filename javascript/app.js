@@ -78,7 +78,8 @@
       $("body").on("click", "#notebooks li", function() {
         $(this).parent().find(".selected").removeClass("selected");
         $(this).addClass("selected");
-        return window.noted.loadNotes($(this).text());
+        window.noted.loadNotes($(this).text());
+        return window.noted.deselectNote();
       });
       $("body").on("click", "#notes li", function() {
         $("#notes .selected").removeClass("selected");
@@ -206,6 +207,11 @@
         window.noted.editor.importFile('file', data);
         return window.noted.editor.preview();
       });
+    },
+    deselectNote: function() {
+      window.noted.selectedNote = "";
+      window.noted.editor.importFile('file', "");
+      return window.noted.editor.preview();
     }
   };
 

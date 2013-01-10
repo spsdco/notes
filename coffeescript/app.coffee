@@ -79,6 +79,7 @@ window.noted =
 			$(this).parent().find(".selected").removeClass "selected"
 			$(this).addClass "selected"
 			window.noted.loadNotes($(this).text())
+			window.noted.deselectNote()
 
 		# Notes Click
 		$("body").on "click", "#notes li", ->
@@ -232,6 +233,11 @@ window.noted =
 			$('.headerwrap .left h1').text(window.noted.selectedNote)
 			window.noted.editor.importFile('file', data)
 			window.noted.editor.preview()
+
+	deselectNote: ->
+		window.noted.selectedNote = ""
+		window.noted.editor.importFile('file', "")
+		window.noted.editor.preview()
 
 # Document Ready Guff
 $ ->
