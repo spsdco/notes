@@ -67,7 +67,6 @@ window.noted =
 				window.noted.editor.save()
 
 				# Reload Notes.
-				window.noted.loadNotes(window.noted.selectedList)
 				window.noted.editor.preview()
 			else
 				$(this).text "save"
@@ -155,9 +154,9 @@ window.noted =
 
 		$('#del').click ->
 			window.noted.editor.remove('file')
-			$('.headerwrap .left h1').html("No note selected")
 			fs.unlink path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), (err) ->
 				throw err if (err)
+				window.noted.deselectNote()
 				window.noted.loadNotes(window.noted.selectedList)
 
 	render: ->

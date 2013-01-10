@@ -67,7 +67,6 @@
           $(this).text("edit");
           $('.headerwrap .left h1').attr('contenteditable', 'false');
           window.noted.editor.save();
-          window.noted.loadNotes(window.noted.selectedList);
           return window.noted.editor.preview();
         } else {
           $(this).text("save");
@@ -130,11 +129,11 @@
       });
       return $('#del').click(function() {
         window.noted.editor.remove('file');
-        $('.headerwrap .left h1').html("No note selected");
         return fs.unlink(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), function(err) {
           if (err) {
             throw err;
           }
+          window.noted.deselectNote();
           return window.noted.loadNotes(window.noted.selectedList);
         });
       });
