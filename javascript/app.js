@@ -129,7 +129,7 @@
       });
       return $('#del').click(function() {
         window.noted.editor.remove('file');
-        return fs.unlink(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), function(err) {
+        return fs.unlink(path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), function(err) {
           if (err) {
             throw err;
           }
@@ -161,6 +161,7 @@
     },
     loadNotes: function(name, type) {
       if (name === "All Notes") {
+        window.noted.selectedList = name;
         $("#notes ul").html("");
         return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
           var i, _results;
@@ -175,8 +176,8 @@
           return _results;
         });
       } else {
-        window.noted.selectedList = name;
         if (type !== "all") {
+          window.noted.selectedList = name;
           $("#notes header h1").html(name);
           $("#notes ul").html("");
         } else {

@@ -154,7 +154,7 @@ window.noted =
 
 		$('#del').click ->
 			window.noted.editor.remove('file')
-			fs.unlink path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), (err) ->
+			fs.unlink path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), (err) ->
 				throw err if (err)
 				window.noted.deselectNote()
 				window.noted.loadNotes(window.noted.selectedList)
@@ -196,6 +196,7 @@ window.noted =
 
 	loadNotes: (name, type) ->
 		if name is "All Notes"
+			window.noted.selectedList = name
 			$("#notes ul").html("")
 			fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
 				i = 0
@@ -204,9 +205,9 @@ window.noted =
 						window.noted.loadNotes(data[i], "all")
 					i++
 		else
-			window.noted.selectedList = name
 			# Clear list while we load.
 			if type isnt "all"
+				window.noted.selectedList = name
 				$("#notes header h1").html(name)
 				$("#notes ul").html("")
 			else
