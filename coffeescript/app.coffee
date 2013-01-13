@@ -80,6 +80,15 @@ window.noted =
 			window.noted.loadNotes($(this).text())
 			window.noted.deselectNote()
 
+		$('body').on "keydown", "#notebooks input", (e) ->
+			# Deny the enter key
+			if e.keyCode is 13
+				e.preventDefault()
+				fs.mkdir(path.join(storage_dir, "Notebooks", $('#notebooks input').val()))
+				# Reload Notebooks.
+				window.noted.listNotebooks()
+				$('#notebooks input').val("")
+
 		# Notes Click
 		$("body").on "click", "#notes li", ->
 			# UI

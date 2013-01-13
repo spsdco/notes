@@ -80,6 +80,14 @@
         window.noted.loadNotes($(this).text());
         return window.noted.deselectNote();
       });
+      $('body').on("keydown", "#notebooks input", function(e) {
+        if (e.keyCode === 13) {
+          e.preventDefault();
+          fs.mkdir(path.join(storage_dir, "Notebooks", $('#notebooks input').val()));
+          window.noted.listNotebooks();
+          return $('#notebooks input').val("");
+        }
+      });
       $("body").on("click", "#notes li", function() {
         $("#notes .selected").removeClass("selected");
         $(this).addClass("selected");

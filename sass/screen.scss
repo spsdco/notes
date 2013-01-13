@@ -113,6 +113,14 @@ body, input, textarea {
 			background-color: lighten($sidebar-color, 8%);
 		}
 	}
+	input {
+		background: $sidebar-color;
+		width: 155px;
+		padding: 0 10px 0 34px;
+		height: 33px;
+		font-size: 14px;
+		border: 0;
+	}
 }
 
 #notes {
