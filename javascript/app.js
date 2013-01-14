@@ -207,7 +207,6 @@
       }
     },
     loadNote: function(selector) {
-      console.log("called");
       window.noted.selectedNote = $(selector).find("h2").text();
       return fs.readFile(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', function(err, data) {
         if (err) {

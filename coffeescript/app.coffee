@@ -234,7 +234,6 @@ window.noted =
 					i++
 
 	loadNote: (selector) ->
-		console.log("called")
 		# Caches Selected Note and List
 		window.noted.selectedNote = $(selector).find("h2").text()
 
