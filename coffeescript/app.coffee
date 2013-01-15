@@ -4,6 +4,7 @@ try
 	fs = require 'fs'
 	path = require 'path'
 	ncp = require('ncp').ncp
+	util = require 'util'
 
 	# OS Detection
 	OSName = "Unknown OS"
@@ -153,6 +154,8 @@ window.noted =
 					list,
 					window.noted.selectedNote + '.txt'
 				), e.content)
+				# Reload to reveal new timestamp
+				window.noted.loadNotes(window.noted.selectedList)
 
 		# Add note modal dialogue.
 		$('#new').click ->
@@ -227,10 +230,12 @@ window.noted =
 				while i < data.length
 					# Makes sure that it is a text file
 					if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
-
 						# Removes txt extension
 						noteName = data[i].substr(0, data[i].length - 4)
-						$("#notes ul").append "<li data-id='" + noteName + "' data-list='" + name + "'><h2>" + noteName + "</h2><time></time></li>"
+						console.log(noteName)
+						noteTime = fs.statSync(path.join(storage_dir,"Notebooks",name,noteName+'.txt'))['mtime']
+						time = new Date(Date.parse(noteTime))
+						$("#notes ul").append "<li data-id='" + noteName + "' data-list='" + name + "'><h2>" + noteName + "</h2><time>"+time.getDate()+"/"+(time.getMonth()+1)+"/"+time.getFullYear()+"</time></li>"
 					i++
 
 	loadNote: (selector) ->
