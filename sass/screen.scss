@@ -192,7 +192,7 @@ body, input, textarea {
 	background: $white-color;
 
 	&.deselected {
-		background: #0f0;
+		background: darken($white-color, 1%);
 		header, #contentbody {
 			visibility: hidden
 		}

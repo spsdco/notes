@@ -581,7 +581,7 @@ body, input, textarea {
   bottom: 0;
   background: #f9f9f8; }
   #content.deselected {
-    background: #0f0; }
+    background: #f7f7f5; }
     #content.deselected header, #content.deselected #contentbody {
       visibility: hidden; }
   #content header {
