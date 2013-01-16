@@ -228,6 +228,7 @@
     },
     deselectNote: function() {
       $("#content").addClass("deselected");
+      $("#content .left h1, #content .left time").text("");
       window.noted.selectedNote = "";
       window.noted.editor.importFile('file', "");
       return window.noted.editor.preview();

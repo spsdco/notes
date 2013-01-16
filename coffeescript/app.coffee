@@ -254,6 +254,7 @@ window.noted =
 
 	deselectNote: ->
 		$("#content").addClass("deselected")
+		$("#content .left h1, #content .left time").text("")
 		window.noted.selectedNote = ""
 		window.noted.editor.importFile('file', "")
 		window.noted.editor.preview()
