@@ -232,8 +232,7 @@ window.noted =
 					if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
 						# Removes txt extension
 						noteName = data[i].substr(0, data[i].length - 4)
-						console.log(noteName)
-						noteTime = fs.statSync(path.join(storage_dir,"Notebooks",name,noteName+'.txt'))['mtime']
+						noteTime = fs.statSync(path.join(storage_dir,"Notebooks",name,noteName+'.txt'))['ctime']
 						time = new Date(Date.parse(noteTime))
 						$("#notes ul").append "<li data-id='" + noteName + "' data-list='" + name + "'><h2>" + noteName + "</h2><time>"+time.getDate()+"/"+(time.getMonth()+1)+"/"+time.getFullYear()+"</time></li>"
 					i++
@@ -247,6 +246,9 @@ window.noted =
 			throw err if (err)
 			$("#content").removeClass("deselected")
 			$('.headerwrap .left h1').text(window.noted.selectedNote)
+			noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['ctime']
+			time = new Date(Date.parse(noteTime))
+			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getDate())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getFullYear()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
 			window.noted.editor.importFile('file', data)
 			window.noted.editor.preview()
 
@@ -255,6 +257,10 @@ window.noted =
 		window.noted.selectedNote = ""
 		window.noted.editor.importFile('file', "")
 		window.noted.editor.preview()
+
+window.noted.timeControls =
+	pad: (n) ->
+		(if (n < 10) then ("0" + n) else n)
 
 # Document Ready Guff
 $ ->

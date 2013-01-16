@@ -200,8 +200,7 @@
           while (i < data.length) {
             if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
               noteName = data[i].substr(0, data[i].length - 4);
-              console.log(noteName);
-              noteTime = fs.statSync(path.join(storage_dir, "Notebooks", name, noteName + '.txt'))['mtime'];
+              noteTime = fs.statSync(path.join(storage_dir, "Notebooks", name, noteName + '.txt'))['ctime'];
               time = new Date(Date.parse(noteTime));
               $("#notes ul").append("<li data-id='" + noteName + "' data-list='" + name + "'><h2>" + noteName + "</h2><time>" + time.getDate() + "/" + (time.getMonth() + 1) + "/" + time.getFullYear() + "</time></li>");
             }
@@ -214,11 +213,15 @@
     loadNote: function(selector) {
       window.noted.selectedNote = $(selector).find("h2").text();
       return fs.readFile(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', function(err, data) {
+        var noteTime, time;
         if (err) {
           throw err;
         }
         $("#content").removeClass("deselected");
         $('.headerwrap .left h1').text(window.noted.selectedNote);
+        noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['ctime'];
+        time = new Date(Date.parse(noteTime));
+        $('.headerwrap .left time').text(window.noted.timeControls.pad(time.getDate()) + "/" + (window.noted.timeControls.pad(time.getMonth() + 1)) + "/" + time.getFullYear() + " " + window.noted.timeControls.pad(time.getHours()) + ":" + window.noted.timeControls.pad(time.getMinutes()));
         window.noted.editor.importFile('file', data);
         return window.noted.editor.preview();
       });
@@ -228,6 +231,16 @@
       window.noted.selectedNote = "";
       window.noted.editor.importFile('file', "");
       return window.noted.editor.preview();
+    }
+  };
+
+  window.noted.timeControls = {
+    pad: function(n) {
+      if (n < 10) {
+        return "0" + n;
+      } else {
+        return n;
+      }
     }
   };
 
