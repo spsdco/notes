@@ -582,8 +582,10 @@ body, input, textarea {
   background: #f9f9f8; }
   #content.deselected {
     background: #f7f7f5; }
-    #content.deselected header, #content.deselected #contentbody {
-      visibility: hidden; }
+  #content.deselected header .left h1::before {
+    content: "No note selected"; }
+  #content.deselected #contentbody::before {
+    content: ""; }
   #content header {
     margin: 0;
     padding: 0;

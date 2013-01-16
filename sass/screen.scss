@@ -193,9 +193,14 @@ body, input, textarea {
 
 	&.deselected {
 		background: darken($white-color, 1%);
-		header, #contentbody {
-			visibility: hidden
-		}
+	}
+
+	&.deselected header .left h1::before {
+		content: "No note selected";
+	}
+
+	&.deselected #contentbody::before {
+		content: "";
 	}
 
 	header {
