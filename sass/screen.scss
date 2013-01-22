@@ -201,15 +201,28 @@ body, input, textarea {
 	background: $white-color;
 
 	&.deselected {
-		background: darken($white-color, 1%);
-	}
+		background-color: #ededea;
+		background-image: url(../img/page.svg);
+		background-repeat: no-repeat;
+		background-position: 50% 100px;
+		background-size: 140px;
 
-	&.deselected header .left h1::before {
-		content: "No note selected";
-	}
+		&::after {
+			position: absolute;
+			top: 240px;
+			font-family: $light-font;
+			font-weight: 300;
+			content: "No note selected.";
+			color: #222;
+			font-size: 22px;
+			text-align: center;
+			left: 0;
+			right: 0;
+		}
 
-	&.deselected #contentbody::before {
-		content: "";
+		header {
+			display: none;
+		}
 	}
 
 	header {

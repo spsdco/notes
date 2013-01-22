@@ -588,11 +588,24 @@ body, input, textarea {
   bottom: 0;
   background: #f9f9f8; }
   #content.deselected {
-    background: #f7f7f5; }
-  #content.deselected header .left h1::before {
-    content: "No note selected"; }
-  #content.deselected #contentbody::before {
-    content: ""; }
+    background-color: #ededea;
+    background-image: url(../img/page.svg);
+    background-repeat: no-repeat;
+    background-position: 50% 100px;
+    background-size: 140px; }
+    #content.deselected::after {
+      position: absolute;
+      top: 240px;
+      font-family: "Ubuntu Light", "Ubuntu";
+      font-weight: 300;
+      content: "No note selected.";
+      color: #222;
+      font-size: 22px;
+      text-align: center;
+      left: 0;
+      right: 0; }
+    #content.deselected header {
+      display: none; }
   #content header {
     margin: 0;
     padding: 0;
