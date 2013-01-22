@@ -514,12 +514,19 @@ body, input, textarea {
     #notebooks li.selected {
       background-color: #fafafa; }
   #notebooks input {
-    background: #e7e5e4;
+    background-color: #e7e5e4;
+    background-image: url(../img/book_input.svg);
+    background-size: 33px;
+    background-repeat: no-repeat;
+    color: #222;
     width: 155px;
+    outline: 0;
     padding: 0 10px 0 34px;
     height: 33px;
     font-size: 14px;
     border: 0; }
+    #notebooks input:focus {
+      background-image: url(../img/book.svg); }
 
 #notes {
   width: 299px;

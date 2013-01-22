@@ -90,6 +90,10 @@ window.noted =
 				window.noted.listNotebooks()
 				$('#notebooks input').val("")
 
+				setTimeout ( ->
+					$('#notebooks input').blur()
+				), 50
+
 		# Notes Click
 		$("body").on "click", "#notes li", ->
 			# UI

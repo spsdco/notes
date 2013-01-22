@@ -114,12 +114,21 @@ body, input, textarea {
 		}
 	}
 	input {
-		background: $sidebar-color;
+		background-color: $sidebar-color;
+		background-image: url(../img/book_input.svg);
+		background-size: 33px;
+		background-repeat: no-repeat;
+		color: #222;
 		width: 155px;
+		outline: 0;
 		padding: 0 10px 0 34px;
 		height: 33px;
 		font-size: 14px;
 		border: 0;
+
+		&:focus {
+			background-image: url(../img/book.svg);
+		}
 	}
 }
 
