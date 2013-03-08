@@ -87,7 +87,7 @@ window.noted =
 				e.preventDefault()
 				fs.mkdir(path.join(storage_dir, "Notebooks", $('#notebooks input').val()))
 				# Reload Notebooks.
-				window.noted.listNotebooks()
+				# TODO: window.noted.listNotebooks()
 				$('#notebooks input').val("")
 
 				setTimeout ( ->
@@ -159,7 +159,7 @@ window.noted =
 					window.noted.selectedNote + '.txt'
 				), e.content)
 				# Reload to reveal new timestamp
-				window.noted.loadNotes(window.noted.selectedList)
+				# TODO: window.noted.loadNotes(window.noted.selectedList)
 
 		# Add note modal dialogue.
 		$('#new').click ->
@@ -183,6 +183,7 @@ window.noted =
 
 
 	listNotebooks: ->
+		console.log "NoteBooks Called"
 		# Clear & Add All Notes
 		$("#notebooks ul").html("").append "<li class='all'>All Notes</li>"
 		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
@@ -199,18 +200,8 @@ window.noted =
 				$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
 		# window.noted.listTags()
 
-	# listTags: ->
-	# 	fs.readdir path.join(storage_dir, "Tags"), (err, data) ->
-	# 		i = 0
-	# 		while i < data.length
-	# 			console.log(data[i])
-	# 			# Get tag name from inside the file.
-	# 			fs.readFile path.join(storage_dir, "Tags", data[i]), (err, data) ->
-	# 				tag = JSON.parse(data)
-	# 				$('#notebooks ul').append "<li class='tag' data-id='"+tag.name+"'>"+tag.name+"</li>"
-	# 			i++
-
 	loadNotes: (name, type) ->
+		console.log "Notes Called"
 		if name is "All Notes"
 			window.noted.selectedList = name
 			$("#notes ul").html("")
@@ -242,6 +233,7 @@ window.noted =
 					i++
 
 	loadNote: (selector) ->
+		console.log "Notes Called"
 		# Caches Selected Note and List
 		window.noted.selectedNote = $(selector).find("h2").text()
 
