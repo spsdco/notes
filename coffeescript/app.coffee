@@ -6,22 +6,15 @@ try
 	ncp = require('ncp').ncp
 	util = require 'util'
 
-	# OS Detection
-	OSName = "Unknown OS"
-	OSName = "Windows"  unless navigator.appVersion.indexOf("Win") is -1
-	OSName = "Mac"  unless navigator.appVersion.indexOf("Mac") is -1
-	OSName = "UNIX"  unless navigator.appVersion.indexOf("X11") is -1
-	OSName = "Linux"  unless navigator.appVersion.indexOf("Linux") is -1
-
 	node = true
 	home_dir = process.env.HOME
 
 	# Set Up Storage - are there env variables for these?
-	if OSName is "Mac"
+	if process.platform is "darwin"
 		storage_dir = path.join(home_dir, "/Library/Application Support/Noted/")
-	if OSName is "Windows"
+	else if process.platform is "win32"
 		storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted")
-	if OSName is "Linux"
+	else if process.platform is "linux"
 		storage_dir = path.join(home_dir, "/.config/Noted/")
 
 

@@ -31,16 +31,14 @@
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 16
     },
-    "\/javascript\/lib\/jquery.min.js" : {
+    "\/index.html" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/javascript\/lib\/jquery.min.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/javascript\/lib\/jquery.min-ck.js",
-      "fileType" : 64
+      "inputAbbreviatedPath" : "\/index.html",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 2048
     },
     "\/img\/search.png" : {
       "ignoreWasSetByUser" : 0,
@@ -53,17 +51,16 @@
       "initialSize" : 1161,
       "fileType" : 8192
     },
-    "\/coffeescript\/app.coffee" : {
+    "\/javascript\/lib\/jquery.min.js" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
-      "outputPathIsSetByUser" : 1,
-      "inputAbbreviatedPath" : "\/coffeescript\/app.coffee",
-      "checkOutputStyle" : 0,
-      "minifyOutput" : 1,
-      "outputAbbreviatedPath" : "\/javascript\/app.js",
-      "outputStyle" : 0,
-      "fileType" : 32
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/javascript\/lib\/jquery.min.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/javascript\/lib\/jquery.min-ck.js",
+      "fileType" : 64
     },
     "\/javascript\/app.js" : {
       "ignoreWasSetByUser" : 0,
@@ -76,14 +73,26 @@
       "outputAbbreviatedPath" : "\/javascript\/app-ck.js",
       "fileType" : 64
     },
-    "\/index.html" : {
+    "\/coffeescript\/app.coffee" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 1,
+      "inputAbbreviatedPath" : "\/coffeescript\/app.coffee",
+      "checkOutputStyle" : 0,
+      "minifyOutput" : 0,
+      "outputAbbreviatedPath" : "\/javascript\/app.js",
+      "outputStyle" : 0,
+      "fileType" : 32
+    },
+    "\/epiceditor\/themes\/base\/epiceditor.css" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
       "hidden" : 0,
       "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/index.html",
+      "inputAbbreviatedPath" : "\/epiceditor\/themes\/base\/epiceditor.css",
       "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 2048
+      "fileType" : 16
     },
     "\/coffeescript\/app.js" : {
       "ignoreWasSetByUser" : 0,
@@ -96,15 +105,6 @@
       "outputAbbreviatedPath" : "\/coffeescript\/app-ck.js",
       "fileType" : 64
     },
-    "\/epiceditor\/themes\/base\/epiceditor.css" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/epiceditor\/themes\/base\/epiceditor.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
-    },
     "\/config.rb" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -113,6 +113,17 @@
       "inputAbbreviatedPath" : "\/config.rb",
       "outputAbbreviatedPath" : "No Output Path",
       "fileType" : 32768
+    },
+    "\/javascript\/lib\/epiceditor.js" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/javascript\/lib\/epiceditor.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/javascript\/lib\/epiceditor-ck.js",
+      "fileType" : 64
     },
     "\/sass\/screen.scss" : {
       "ignoreWasSetByUser" : 0,
@@ -125,17 +136,6 @@
       "outputAbbreviatedPath" : "\/css\/screen.css",
       "fileType" : 4,
       "debugStyle" : 0
-    },
-    "\/javascript\/lib\/epiceditor.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/javascript\/lib\/epiceditor.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/javascript\/lib\/epiceditor-ck.js",
-      "fileType" : 64
     },
     "\/img\/maximize.png" : {
       "ignoreWasSetByUser" : 0,
