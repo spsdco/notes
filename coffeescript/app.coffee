@@ -16,6 +16,9 @@ try
 		storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted")
 	else if process.platform is "linux"
 		storage_dir = path.join(home_dir, "/.config/Noted/")
+catch e
+	console.log "ERROR:\nType: #{e.type}\nArgs: #{e.arguments}\nMessage: #{e.message}"
+	console.log "\nSTACKTRACE:\n", e.stack
 
 
 # Proper Functions
@@ -156,10 +159,12 @@ window.noted =
 
 		# Add note modal dialogue.
 		$('#new').click ->
+			name = "Untitled Note"
 			if window.noted.selectedList isnt "All Notes"
-				$("#notes ul").append "<li data-id='Untitled Note' data-list='" + window.noted.selectedList + "'><h2>Untitled Note</h2><time></time></li>"
+				name = name+"_" while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
+				$("#notes ul").append "<li data-id='"+name+"' data-list='" + window.noted.selectedList + "'><h2>"+name+"</h2><time></time></li>"
 				defaultcontent = "Add some content!"
-				fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, 'Untitled Note.txt'), defaultcontent)
+				fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt'), defaultcontent)
 
 		$('#del').click ->
 			window.noted.editor.remove('file')
