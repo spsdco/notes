@@ -68,10 +68,19 @@
         window.noted.loadNotes($(this).text());
         return window.noted.deselectNote();
       });
+      $("body").on("contextarea", "#notebooks li", function() {
+        window.noted.editor.remove('file');
+        return fs.rmdir(path.join(storage_dir, "Notebooks", window.noted.selectedList), function(err) {
+          if (err) throw err;
+          window.noted.deselectNote();
+          return window.noted.loadNotebooks;
+        });
+      });
       $('body').on("keydown", "#notebooks input", function(e) {
         if (e.keyCode === 13) {
           e.preventDefault();
           fs.mkdir(path.join(storage_dir, "Notebooks", $('#notebooks input').val()));
+          window.noted.listNotebooks();
           $('#notebooks input').val("");
           return setTimeout((function() {
             return $('#notebooks input').blur();

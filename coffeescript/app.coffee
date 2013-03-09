@@ -77,13 +77,20 @@ window.noted =
 			window.noted.loadNotes($(this).text())
 			window.noted.deselectNote()
 
+		$("body").on "contextarea", "#notebooks li", ->
+			window.noted.editor.remove('file')
+			fs.rmdir path.join(storage_dir, "Notebooks", window.noted.selectedList), (err) ->
+				throw err if (err)
+				window.noted.deselectNote()
+				window.noted.loadNotebooks
+
 		$('body').on "keydown", "#notebooks input", (e) ->
 			# Deny the enter key
 			if e.keyCode is 13
 				e.preventDefault()
 				fs.mkdir(path.join(storage_dir, "Notebooks", $('#notebooks input').val()))
 				# Reload Notebooks.
-				# TODO: window.noted.listNotebooks()
+				window.noted.listNotebooks()
 				$('#notebooks input').val("")
 
 				setTimeout ( ->
