@@ -139,13 +139,15 @@
       });
       return $('#del').click(function() {
         window.noted.editor.remove('file');
-        return fs.unlink(path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), function(err) {
-          if (err) {
-            throw err;
-          }
-          window.noted.deselectNote();
-          return window.noted.loadNotes(window.noted.selectedList);
-        });
+        if (window.noted.selectedNote !== "") {
+          return fs.unlink(path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), function(err) {
+            if (err) {
+              throw err;
+            }
+            window.noted.deselectNote();
+            return window.noted.loadNotes(window.noted.selectedList);
+          });
+        }
       });
     },
     editMode: function(mode) {

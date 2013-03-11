@@ -178,10 +178,18 @@ window.noted =
 
 		$('#del').click ->
 			window.noted.editor.remove('file')
-			fs.unlink path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), (err) ->
-				throw err if (err)
-				window.noted.deselectNote()
-				window.noted.loadNotes(window.noted.selectedList)
+			if window.noted.selectedNote isnt ""
+				fs.unlink(
+					path.join(
+						storage_dir,
+						"Notebooks",
+						$("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"),
+						window.noted.selectedNote + '.txt'
+					), (err) ->
+						throw err if (err)
+						window.noted.deselectNote()
+						window.noted.loadNotes(window.noted.selectedList)
+				)
 
 	editMode: (mode) ->
 		el = $("#content .edit")

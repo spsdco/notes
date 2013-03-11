@@ -4,7 +4,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - Rename Notes
 - No Excerpts
 - Make Info Button do something
-- Delete Button crashes if no note selected
 - Delete Confirmation
 - Notebooks can't be deleted
 - Notebooks can't be renamed
@@ -23,5 +22,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - Date modified is updated even if not changed [2013-03-11 - consindo]
 - Adding a new note needs to put the user in edit mode [2013-03-11 - consindo]
 - Hard to see selected and not selected note. [2013-03-11 - consindo]
+- Delete Button crashes if no note selected [2013-03-11 - consindo]
 
 Add bugs to here so we can fix them.
