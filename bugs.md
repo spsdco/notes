@@ -1,7 +1,6 @@
 There's so many bugs. Lets not use the bugtracker just yet
 
 - Rename Notes
-- You can't have two notes called the same [FIXED 09/03/13 - mh0]
 - Dates is buggy
 - Date needs to be shown on new note
 - No Excerpts
@@ -13,9 +12,12 @@ There's so many bugs. Lets not use the bugtracker just yet
 - [Windows Only] Can't use the titlebar decorations.
 - Can't have two notebooks the same name.
 - Can't resize each panel - George might be writing a library to do this
-- No Note Selected looks like ass
 - There needs to be a distinction between edit mode & view mode
 - Adding a new note needs to put the user in edit mode
 - Adding a new note needs to be disable if in edit mode (stops from spamming the button)
+
+### Fixed Bugs
+- You can't have two notes called the same [2013-03-09 - mh0]
+- No Note Selected looks like ass [2013-03-11 - consindo]
 
 Add bugs to here so we can fix them.
