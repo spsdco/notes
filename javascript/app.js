@@ -266,6 +266,10 @@
 
   $(function() {
     window.noted.setupUI();
+    $('#panel, #notebooks, #notes').mousedown(function() {
+      $(this).css('cursor', 'default');
+      return false;
+    });
     if (node) {
       window.noted.setupPanel();
       return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {

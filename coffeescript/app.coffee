@@ -302,6 +302,11 @@ window.noted.timeControls =
 $ ->
 	window.noted.setupUI()
 
+	# Prevent I-Beam Cursor
+	$('#panel, #notebooks, #notes').mousedown ->
+		$(@).css('cursor','default')
+		return false
+
 	if node
 		window.noted.setupPanel()
 
