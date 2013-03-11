@@ -8,6 +8,12 @@ try
 
 	node = true
 	home_dir = process.env.HOME
+	reserved_chars = [	186,	# : ;
+						191,	# / ?
+						220,	# \ |
+						222,	# ' "
+						106,	# numpad *  
+						56 ]	# SHIFT-8 *
 
 	# Set Up Storage - are there env variables for these?
 	if process.platform is "darwin"
@@ -95,10 +101,14 @@ window.noted =
 
 		# Because we can't prevent default on keyup
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
+			console.log e.keyCode
 			# Deny the enter key
 			if e.keyCode is 13
 				e.preventDefault()
 				$(@).blur()
+			else if e.keyCode in reserved_chars
+				console.log "mh0, you're fired again."
+				e.preventDefault()
 
 		$("body").on "keyup", ".headerwrap .left h1", (e) ->
 			# We can't have "".txt
