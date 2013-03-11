@@ -10,7 +10,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - Can't have two notebooks the same name.
 - Can't resize each panel - George might be writing a library to do this
 - There needs to be a distinction between edit mode & view mode
-- Adding a new note needs to be disable if in edit mode (stops from spamming the button)
 - Use Templating (handlebars)
 - Renaming Something the same thing breaks itself
 - Protect against filesystem reserved chars in renaming
@@ -25,5 +24,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - Hard to see selected and not selected note. [2013-03-11 - consindo]
 - Delete Button crashes if no note selected [2013-03-11 - consindo]
 - Rename Notes [2013-03-11 - consindo]
+- Adding a new note needs to be disable if in edit mode [2013-03-11 - consindo]
 
 Add bugs to here so we can fix them.

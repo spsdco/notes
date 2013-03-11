@@ -159,7 +159,7 @@ window.noted =
 		# Add note modal dialogue.
 		$('#new').click ->
 			name = "Untitled Note"
-			if window.noted.selectedList isnt "All Notes"
+			if window.noted.selectedList isnt "All Notes" and window.noted.editor.eeState.edit is false
 				name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
 				# Write file to disk
 				fs.writeFile(
@@ -193,7 +193,7 @@ window.noted =
 
 	editMode: (mode) ->
 		el = $("#content .edit")
-		if mode is "preview" or el.text() is "save" and mode isnt "editor"
+		if mode is "preview" or window.noted.editor.eeState.edit is true and mode isnt "editor"
 
 			el.text "edit"
 			$('#content .left h1').attr('contenteditable', 'false')

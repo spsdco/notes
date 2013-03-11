@@ -125,7 +125,7 @@
       $('#new').click(function() {
         var name;
         name = "Untitled Note";
-        if (window.noted.selectedList !== "All Notes") {
+        if (window.noted.selectedList !== "All Notes" && window.noted.editor.eeState.edit === false) {
           while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
             name = name + "_";
           }
@@ -153,7 +153,7 @@
     editMode: function(mode) {
       var el;
       el = $("#content .edit");
-      if (mode === "preview" || el.text() === "save" && mode !== "editor") {
+      if (mode === "preview" || window.noted.editor.eeState.edit === true && mode !== "editor") {
         el.text("edit");
         $('#content .left h1').attr('contenteditable', 'false');
         $('#contentbody');
