@@ -584,11 +584,13 @@ body, input, textarea {
     line-height: 16px;
     overflow: hidden; }
     #notes li.selected {
-      background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f4f4f3), color-stop(100%, #ffffff));
-      background: -webkit-linear-gradient(#f4f4f3, #ffffff);
-      background: -moz-linear-gradient(#f4f4f3, #ffffff);
-      background: -o-linear-gradient(#f4f4f3, #ffffff);
-      background: linear-gradient(#f4f4f3, #ffffff); }
+      box-shadow: 0 -1px 3px rgba(0, 0, 0, 0.1) inset;
+      border-top: 1px solid rgba(0, 0, 0, 0.1);
+      background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #f9f9f8), color-stop(100%, #ffffff));
+      background: -webkit-linear-gradient(#f9f9f8, #ffffff);
+      background: -moz-linear-gradient(#f9f9f8, #ffffff);
+      background: -o-linear-gradient(#f9f9f8, #ffffff);
+      background: linear-gradient(#f9f9f8, #ffffff); }
   #notes h2 {
     margin: 8px 0 4px;
     font-size: 15px;
