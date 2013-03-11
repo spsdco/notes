@@ -220,15 +220,15 @@ window.noted =
 				$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
 
 	loadNotes: (list, type, callback) ->
-		if list is "All Notes"
-			window.noted.selectedList = list
-			$("#notes ul").html("I broke all notes because of the shitty implementation")
-			callback() if callback
-		else
-			window.noted.selectedList = list
-			$("#notes header h1").html(list)
-			$("#notes ul").html("")
+		window.noted.selectedList = list
+		$("#notes header h1").html(list)
+		$("#notes ul").html("")
+		htmlstr = ""
 
+		if list is "All Notes"
+			# There will be some proper code in here soon
+			htmlstr = "I broke all notes because of the shitty implementation"
+		else
 			# It's easier doing this without Async.
 			data = fs.readdirSync path.join(storage_dir, "Notebooks", list)
 			order = []
@@ -248,15 +248,14 @@ window.noted =
 				return new Date(a.time) - new Date(b.time)
 
 			# Appends to DOM
-			htmlstr = ""
 			for note in order
 				htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2></li>" + htmlstr
 
 				# I'll do some templating
 				# htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2><time>"+ note.time.getDate() +"/"+(note.time.getMonth()+1)+"/"+note.time.getFullYear()+"</time></li>" + htmlstr
 
-			$("#notes ul").html(htmlstr)
-			callback() if callback
+		$("#notes ul").html(htmlstr)
+		callback() if callback
 
 	loadNote: (selector) ->
 

@@ -187,16 +187,13 @@
     },
     loadNotes: function(list, type, callback) {
       var data, htmlstr, i, name, note, order, time, _i, _len;
+      window.noted.selectedList = list;
+      $("#notes header h1").html(list);
+      $("#notes ul").html("");
+      htmlstr = "";
       if (list === "All Notes") {
-        window.noted.selectedList = list;
-        $("#notes ul").html("I broke all notes because of the shitty implementation");
-        if (callback) {
-          return callback();
-        }
+        htmlstr = "I broke all notes because of the shitty implementation";
       } else {
-        window.noted.selectedList = list;
-        $("#notes header h1").html(list);
-        $("#notes ul").html("");
         data = fs.readdirSync(path.join(storage_dir, "Notebooks", list));
         order = [];
         i = 0;
@@ -215,15 +212,14 @@
         order.sort(function(a, b) {
           return new Date(a.time) - new Date(b.time);
         });
-        htmlstr = "";
         for (_i = 0, _len = order.length; _i < _len; _i++) {
           note = order[_i];
           htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2></li>" + htmlstr;
         }
-        $("#notes ul").html(htmlstr);
-        if (callback) {
-          return callback();
-        }
+      }
+      $("#notes ul").html(htmlstr);
+      if (callback) {
+        return callback();
       }
     },
     loadNote: function(selector) {
