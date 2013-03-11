@@ -167,10 +167,15 @@ window.noted =
 		$('#new').click ->
 			name = "Untitled Note"
 			if window.noted.selectedList isnt "All Notes"
-				name = name+"_" while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
-				$("#notes ul").append "<li data-id='"+name+"' data-list='" + window.noted.selectedList + "'><h2>"+name+"</h2><time></time></li>"
-				defaultcontent = "Add some content!"
-				fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt'), defaultcontent)
+				name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
+				# Write file to disk
+				fs.writeFile(
+					path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt'),
+					"Add some content!",
+					->
+						window.noted.loadNotes(window.noted.selectedList)
+
+				)
 
 		$('#del').click ->
 			window.noted.editor.remove('file')
@@ -204,37 +209,40 @@ window.noted =
 				$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
 		# window.noted.listTags()
 
-	loadNotes: (name, type) ->
-		console.log "Notes Called"
-		if name is "All Notes"
-			window.noted.selectedList = name
-			$("#notes ul").html("")
-			fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
-				i = 0
-				while i < data.length
-					if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
-						window.noted.loadNotes(data[i], "all")
-					i++
+	loadNotes: (list, type) ->
+		if list is "All Notes"
+			window.noted.selectedList = list
+			$("#notes ul").html("I broke all notes because of the shitty implementation")
 		else
-			# Clear list while we load.
-			if type isnt "all"
-				window.noted.selectedList = name
-				$("#notes header h1").html(name)
-				$("#notes ul").html("")
-			else
-				$("#notes header h1").html("All Notes")
+			window.noted.selectedList = list
+			$("#notes header h1").html(list)
+			$("#notes ul").html("")
 
-			fs.readdir path.join(storage_dir, "Notebooks", name), (err, data) ->
+			fs.readdir path.join(storage_dir, "Notebooks", list), (err, data) ->
 				i = 0
+				order = []
 				while i < data.length
 					# Makes sure that it is a text file
 					if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
 						# Removes txt extension
-						noteName = data[i].substr(0, data[i].length - 4)
-						noteTime = fs.statSync(path.join(storage_dir,"Notebooks",name,noteName+'.txt'))['ctime']
-						time = new Date(Date.parse(noteTime))
-						$("#notes ul").append "<li data-id='" + noteName + "' data-list='" + name + "'><h2>" + noteName + "</h2><time>"+time.getDate()+"/"+(time.getMonth()+1)+"/"+time.getFullYear()+"</time></li>"
+						name = data[i].substr(0, data[i].length - 4)
+						time = new Date fs.statSync(path.join(storage_dir, "Notebooks", list, name + '.txt'))['mtime']
+						order.push {id: i, time: time, name: name}
 					i++
+
+				# Sorts all the notes by time
+				order.sort (a, b) ->
+					return new Date(a.time) - new Date(b.time)
+
+				# Appends to DOM
+				htmlstr = ""
+				for note in order
+					htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2></li>" + htmlstr
+
+					# I'll do some templating
+					# htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2><time>"+ note.time.getDate() +"/"+(note.time.getMonth()+1)+"/"+note.time.getFullYear()+"</time></li>" + htmlstr
+
+				$("#notes ul").html(htmlstr)
 
 	loadNote: (selector) ->
 		console.log "Notes Called"

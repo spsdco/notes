@@ -1,7 +1,8 @@
 There's so many bugs. Lets not use the bugtracker just yet
 
+- All Notes doesn't work
 - Rename Notes
-- Dates is buggy
+- Date modified is updated even if not changed
 - Date needs to be shown on new note
 - No Excerpts
 - Make Info Button do something
@@ -19,5 +20,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 ### Fixed Bugs
 - You can't have two notes called the same [2013-03-09 - mh0]
 - No Note Selected looks like ass [2013-03-11 - consindo]
+- Notes need to be sorted by date [2013-03-11 - consindo]
 
 Add bugs to here so we can fix them.
