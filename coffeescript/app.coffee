@@ -68,25 +68,30 @@ window.noted =
 			window.noted.loadNotes($(@).text())
 			window.noted.deselectNote()
 
-		$("body").on "contextarea", "#notebooks li", ->
+		$("body").on "contextmenu", "#notebooks li", ->
+			name = $(this).text()
+			console.log name
 			window.noted.editor.remove('file')
-			fs.rmdir path.join(storage_dir, "Notebooks", window.noted.selectedList), (err) ->
-				throw err if (err)
-				window.noted.deselectNote()
-				window.noted.loadNotebooks
+			fs.unlink path.join(storage_dir, "Notebooks", name, '*'), (err) ->
+				fs.rmdir path.join(storage_dir, "Notebooks", name), (err) ->
+					throw err if (err)
+					window.noted.deselectNote()
+					window.noted.listNotebooks()
 
 		$('body').on "keydown", "#notebooks input", (e) ->
 			# Deny the enter key
+			name = $('#notebooks input').val()
 			if e.keyCode is 13
 				e.preventDefault()
-				fs.mkdir(path.join(storage_dir, "Notebooks", $('#notebooks input').val()))
+				name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", name+'.txt')) is true
+				fs.mkdir(path.join(storage_dir, "Notebooks", name+'.txt'))
 				# Reload Notebooks.
 				window.noted.listNotebooks()
 				$('#notebooks input').val("")
 
-				setTimeout ( ->
-					$('#notebooks input').blur()
-				), 50
+				#setTimeout ( ->
+				#	$('#notebooks input').blur()
+				#), 50
 
 		# Notes Click
 		$("body").on "click", "#notes li", ->
@@ -107,7 +112,6 @@ window.noted =
 				e.preventDefault()
 				$(@).blur()
 			else if e.keyCode in reserved_chars
-				console.log "mh0, you're fired again."
 				e.preventDefault()
 
 		$("body").on "keyup", ".headerwrap .left h1", (e) ->

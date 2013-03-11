@@ -59,23 +59,30 @@
         window.noted.loadNotes($(this).text());
         return window.noted.deselectNote();
       });
-      $("body").on("contextarea", "#notebooks li", function() {
+      $("body").on("contextmenu", "#notebooks li", function() {
+        var name;
+        name = $(this).text();
+        console.log(name);
         window.noted.editor.remove('file');
-        return fs.rmdir(path.join(storage_dir, "Notebooks", window.noted.selectedList), function(err) {
-          if (err) throw err;
-          window.noted.deselectNote();
-          return window.noted.loadNotebooks;
+        return fs.unlink(path.join(storage_dir, "Notebooks", name, '*'), function(err) {
+          return fs.rmdir(path.join(storage_dir, "Notebooks", name), function(err) {
+            if (err) throw err;
+            window.noted.deselectNote();
+            return window.noted.listNotebooks();
+          });
         });
       });
       $('body').on("keydown", "#notebooks input", function(e) {
+        var name;
+        name = $('#notebooks input').val();
         if (e.keyCode === 13) {
           e.preventDefault();
-          fs.mkdir(path.join(storage_dir, "Notebooks", $('#notebooks input').val()));
+          while (fs.existsSync(path.join(storage_dir, "Notebooks", name + '.txt')) === true) {
+            name = name + "_";
+          }
+          fs.mkdir(path.join(storage_dir, "Notebooks", name + '.txt'));
           window.noted.listNotebooks();
-          $('#notebooks input').val("");
-          return setTimeout((function() {
-            return $('#notebooks input').blur();
-          }), 50);
+          return $('#notebooks input').val("");
         }
       });
       $("body").on("click", "#notes li", function() {
@@ -91,7 +98,6 @@
           e.preventDefault();
           return $(this).blur();
         } else if (_ref = e.keyCode, __indexOf.call(reserved_chars, _ref) >= 0) {
-          console.log("mh0, you're fired again.");
           return e.preventDefault();
         }
       });
