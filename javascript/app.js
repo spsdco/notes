@@ -51,18 +51,7 @@
       });
     },
     setupUI: function() {
-      $("#content header .edit").click(function() {
-        if ($(this).text() === "save") {
-          $(this).text("edit");
-          $('.headerwrap .left h1').attr('contenteditable', 'false');
-          window.noted.editor.save();
-          return window.noted.editor.preview();
-        } else {
-          $(this).text("save");
-          $('.headerwrap .left h1').attr('contenteditable', 'true');
-          return window.noted.editor.edit();
-        }
-      });
+      $("#content .edit").click(window.noted.editMode);
       $("body").on("click", "#notebooks li", function() {
         $(this).parent().find(".selected").removeClass("selected");
         $(this).addClass("selected");
@@ -91,9 +80,10 @@
         }
       });
       $("body").on("click", "#notes li", function() {
+        this.el = $(this);
         $("#notes .selected").removeClass("selected");
-        $(this).addClass("selected");
-        return window.noted.loadNote($(this));
+        this.el.addClass("selected");
+        return window.noted.loadNote(this.el);
       });
       $("body").on("keydown", ".headerwrap .left h1", function(e) {
         if (e.keyCode === 13) {
@@ -140,7 +130,10 @@
             name = name + "_";
           }
           return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), "Add some content!", function() {
-            return window.noted.loadNotes(window.noted.selectedList);
+            return window.noted.loadNotes(window.noted.selectedList, "", function() {
+              console.log("hello");
+              return $("#notes ul li:first").addClass("edit").trigger("click");
+            });
           });
         }
       });
@@ -154,6 +147,21 @@
           return window.noted.loadNotes(window.noted.selectedList);
         });
       });
+    },
+    editMode: function(mode) {
+      var el;
+      el = $("#content .edit");
+      if (mode === "preview" || el.text() === "save" && mode !== "editor") {
+        el.text("edit");
+        $('#content .left h1').attr('contenteditable', 'false');
+        $('#contentbody');
+        window.noted.editor.save();
+        return window.noted.editor.preview();
+      } else {
+        el.text("save");
+        $('.headerwrap .left h1').attr('contenteditable', 'true');
+        return window.noted.editor.edit();
+      }
     },
     render: function() {
       return window.noted.listNotebooks();
@@ -177,44 +185,48 @@
         }
       });
     },
-    loadNotes: function(list, type) {
+    loadNotes: function(list, type, callback) {
+      var data, htmlstr, i, name, note, order, time, _i, _len;
       if (list === "All Notes") {
         window.noted.selectedList = list;
-        return $("#notes ul").html("I broke all notes because of the shitty implementation");
+        $("#notes ul").html("I broke all notes because of the shitty implementation");
+        if (callback) {
+          return callback();
+        }
       } else {
         window.noted.selectedList = list;
         $("#notes header h1").html(list);
         $("#notes ul").html("");
-        return fs.readdir(path.join(storage_dir, "Notebooks", list), function(err, data) {
-          var htmlstr, i, name, note, order, time, _i, _len;
-          i = 0;
-          order = [];
-          while (i < data.length) {
-            if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
-              name = data[i].substr(0, data[i].length - 4);
-              time = new Date(fs.statSync(path.join(storage_dir, "Notebooks", list, name + '.txt'))['mtime']);
-              order.push({
-                id: i,
-                time: time,
-                name: name
-              });
-            }
-            i++;
+        data = fs.readdirSync(path.join(storage_dir, "Notebooks", list));
+        order = [];
+        i = 0;
+        while (i < data.length) {
+          if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
+            name = data[i].substr(0, data[i].length - 4);
+            time = new Date(fs.statSync(path.join(storage_dir, "Notebooks", list, name + '.txt'))['mtime']);
+            order.push({
+              id: i,
+              time: time,
+              name: name
+            });
           }
-          order.sort(function(a, b) {
-            return new Date(a.time) - new Date(b.time);
-          });
-          htmlstr = "";
-          for (_i = 0, _len = order.length; _i < _len; _i++) {
-            note = order[_i];
-            htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2></li>" + htmlstr;
-          }
-          return $("#notes ul").html(htmlstr);
+          i++;
+        }
+        order.sort(function(a, b) {
+          return new Date(a.time) - new Date(b.time);
         });
+        htmlstr = "";
+        for (_i = 0, _len = order.length; _i < _len; _i++) {
+          note = order[_i];
+          htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2></li>" + htmlstr;
+        }
+        $("#notes ul").html(htmlstr);
+        if (callback) {
+          return callback();
+        }
       }
     },
     loadNote: function(selector) {
-      console.log("Notes Called");
       window.noted.selectedNote = $(selector).find("h2").text();
       return fs.readFile(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', function(err, data) {
         var noteTime, time;
@@ -223,11 +235,16 @@
         }
         $("#content").removeClass("deselected");
         $('.headerwrap .left h1').text(window.noted.selectedNote);
-        noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['ctime'];
+        noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['mtime'];
         time = new Date(Date.parse(noteTime));
         $('.headerwrap .left time').text(window.noted.timeControls.pad(time.getDate()) + "/" + (window.noted.timeControls.pad(time.getMonth() + 1)) + "/" + time.getFullYear() + " " + window.noted.timeControls.pad(time.getHours()) + ":" + window.noted.timeControls.pad(time.getMinutes()));
         window.noted.editor.importFile('file', data);
-        return window.noted.editor.preview();
+        if (selector.hasClass("edit")) {
+          window.noted.editMode("editor");
+          return selector.removeClass("edit");
+        } else {
+          return window.noted.editMode("preview");
+        }
       });
     },
     deselectNote: function() {
