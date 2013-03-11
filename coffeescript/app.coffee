@@ -154,12 +154,17 @@ window.noted =
 			list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
 			# Make sure a note is selected
 			if window.noted.selectedNote isnt ""
-				fs.writeFile(path.join(
+				# Check if there's actually a difference.
+				notePath = path.join(
 					storage_dir,
 					"Notebooks",
 					list,
 					window.noted.selectedNote + '.txt'
-				), e.content)
+				)
+
+				# Write file if something actually got modified
+				fs.writeFile(notePath, e.content) if e.content isnt fs.readFileSync(notePath).toString()
+
 				# Reload to reveal new timestamp
 				# TODO: window.noted.loadNotes(window.noted.selectedList)
 

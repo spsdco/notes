@@ -123,10 +123,13 @@
       });
       window.noted.editor.load();
       window.noted.editor.on("save", function(e) {
-        var list;
+        var list, notePath;
         list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list");
         if (window.noted.selectedNote !== "") {
-          return fs.writeFile(path.join(storage_dir, "Notebooks", list, window.noted.selectedNote + '.txt'), e.content);
+          notePath = path.join(storage_dir, "Notebooks", list, window.noted.selectedNote + '.txt');
+          if (e.content !== fs.readFileSync(notePath).toString()) {
+            return fs.writeFile(notePath, e.content);
+          }
         }
       });
       $('#new').click(function() {
