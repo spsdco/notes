@@ -17,12 +17,9 @@ body, input, textarea {
 }
 
 #notebooks, #panel, #notes {
-	-webkit-user-select: none;  /* Chrome all / Safari all */
-	-moz-user-select: none;     /* Firefox all */
-	-ms-user-select: none;      /* IE 10+ */
-
-	/* No support for these yet, use at own risk */
-	-o-user-select: none;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 	user-select: none;
 }
 
@@ -272,9 +269,20 @@ body, input, textarea {
 			font-weight: 300;
 			font-family: $light-font;
 			text-shadow: 0 1px 0 #fff;
+			outline: 0;
 			margin: 0;
 			letter-spacing: -1px;
 			color: #222;
+			-webkit-user-select: text;
+			-moz-user-select: text;
+			-ms-user-select: text;
+			user-select: text;
+
+			&[contenteditable=true] {
+				&:hover, &:focus {
+					outline: 1px solid #ccc;
+				}
+			}
 		}
 
 		time {

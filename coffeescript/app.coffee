@@ -57,9 +57,9 @@ window.noted =
 
 		# Notebooks Click
 		$("body").on "click", "#notebooks li", ->
-			$(this).parent().find(".selected").removeClass "selected"
-			$(this).addClass "selected"
-			window.noted.loadNotes($(this).text())
+			$(@).parent().find(".selected").removeClass "selected"
+			$(@).addClass "selected"
+			window.noted.loadNotes($(@).text())
 			window.noted.deselectNote()
 
 		$("body").on "contextarea", "#notebooks li", ->
@@ -98,13 +98,13 @@ window.noted =
 			# Deny the enter key
 			if e.keyCode is 13
 				e.preventDefault()
-				$(this).blur()
+				$(@).blur()
 
 		$("body").on "keyup", ".headerwrap .left h1", (e) ->
 			# We can't have "".txt
-			if $(this).text() isnt ""
+			if $(@).text() isnt ""
 				$("#notes [data-id='" + window.noted.selectedNote + "']")
-					.attr("data-id", $(this).text()).find("h2").text($(this).text())
+					.attr("data-id", $(@).text()).find("h2").text($(@).text())
 
 				# Renames the Note
 				fs.rename(
@@ -118,11 +118,11 @@ window.noted =
 						storage_dir,
 						"Notebooks",
 						window.noted.selectedList,
-						$(this).text() + '.txt'
+						$(@).text() + '.txt'
 					)
 				)
 
-				window.noted.selectedNote = $(this).text()
+				window.noted.selectedNote = $(@).text()
 
 		# Create Markdown Editor
 		window.noted.editor = new EpicEditor
@@ -170,7 +170,7 @@ window.noted =
 					),
 					"Add some content!",
 					->
-						# Function in a Function. Functionception (this is a bad idea).
+						# Function in a Function. Functionception (@ is a bad idea).
 						window.noted.loadNotes window.noted.selectedList, "", ->
 							console.log("hello")
 							$("#notes ul li:first").addClass("edit").trigger "click"
@@ -237,7 +237,7 @@ window.noted =
 			# There will be some proper code in here soon
 			htmlstr = "I broke all notes because of the shitty implementation"
 		else
-			# It's easier doing this without Async.
+			# It's easier doing @ without Async.
 			data = fs.readdirSync path.join(storage_dir, "Notebooks", list)
 			order = []
 			i = 0
@@ -280,7 +280,7 @@ window.noted =
 			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getDate())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getFullYear()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
 			window.noted.editor.importFile('file', data)
 
-			# Chucks it into the right mode - this was the best I could do.
+			# Chucks it into the right mode - @ was the best I could do.
 			if selector.hasClass("edit")
 				window.noted.editMode("editor")
 				selector.removeClass("edit")
@@ -300,12 +300,6 @@ window.noted.timeControls =
 
 # Document Ready Guff
 $ ->
-	# I'm too lazy to ⌘ + tab to reload
-	$(document).keyup (e) ->
-		# Only works on Mac. Someone patch this.
-		if e.keyCode is 91
-			window.location.reload()
-
 	window.noted.setupUI()
 
 	if node

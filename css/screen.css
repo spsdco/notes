@@ -436,13 +436,8 @@ body, input, textarea {
 
 #notebooks, #panel, #notes {
   -webkit-user-select: none;
-  /* Chrome all / Safari all */
   -moz-user-select: none;
-  /* Firefox all */
   -ms-user-select: none;
-  /* IE 10+ */
-  /* No support for these yet, use at own risk */
-  -o-user-select: none;
   user-select: none; }
 
 #panel {
@@ -655,9 +650,16 @@ body, input, textarea {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
       text-shadow: 0 1px 0 white;
+      outline: 0;
       margin: 0;
       letter-spacing: -1px;
-      color: #222; }
+      color: #222;
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text; }
+      #content header h1[contenteditable=true]:hover, #content header h1[contenteditable=true]:focus {
+        outline: 1px solid #cccccc; }
     #content header time {
       font-family: "Ubuntu Light", "Ubuntu";
       font-size: 13px;

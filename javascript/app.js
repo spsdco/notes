@@ -265,11 +265,6 @@
   };
 
   $(function() {
-    $(document).keyup(function(e) {
-      if (e.keyCode === 91) {
-        return window.location.reload();
-      }
-    });
     window.noted.setupUI();
     if (node) {
       window.noted.setupPanel();
