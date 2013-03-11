@@ -170,7 +170,7 @@ kbd,
 pre,
 samp {
   font-family: monospace, serif;
-  _font-family: "courier new", monospace;
+  _font-family: 'courier new', monospace;
   font-size: 1em; }
 
 /*
@@ -289,7 +289,7 @@ form {
  * Define consistent border, margin, and padding.
  */
 fieldset {
-  border: 1px solid silver;
+  border: 1px solid #c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
@@ -465,7 +465,7 @@ body, input, textarea {
   position: absolute;
   padding: 5px 4px;
   top: 0;
-  border-right: 1px solid #444444; }
+  border-right: 1px solid #444; }
   #noteControls img {
     height: 28px;
     margin-right: 6px;
@@ -492,7 +492,7 @@ body, input, textarea {
     color: #fff;
     border: 0;
     border-radius: 2px;
-    box-shadow: 0 0 1px #444444; }
+    box-shadow: 0 0 1px #444; }
 
 #notebooks {
   width: 199px;
@@ -512,7 +512,7 @@ body, input, textarea {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #bbbbbb;
+    border-bottom: 1px solid #bbb;
     padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
@@ -554,7 +554,7 @@ body, input, textarea {
   overflow: auto; }
   #notes header {
     padding: 10px 15px 8px;
-    border-bottom: 1px solid #bbbbbb;
+    border-bottom: 1px solid #bbb;
     background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #ebebe8));
     background: -webkit-linear-gradient(#ffffff, #ebebe8);
     background: -moz-linear-gradient(#ffffff, #ebebe8);
@@ -567,7 +567,7 @@ body, input, textarea {
       letter-spacing: -1px;
       font-family: "Ubuntu Light", "Ubuntu";
       font-weight: 300;
-      text-shadow: 0 1px 0 white;
+      text-shadow: 0 1px 0 #fff;
       cursor: default; }
   #notes ul {
     margin: 0;
@@ -576,7 +576,7 @@ body, input, textarea {
   #notes li {
     cursor: default;
     border-top: 1px solid #fefefe;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid #ccc;
     padding: 0 15px 8px;
     color: #444;
     font-size: 13px;
@@ -653,7 +653,7 @@ body, input, textarea {
     #content header h1 {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
-      text-shadow: 0 1px 0 white;
+      text-shadow: 0 1px 0 #fff;
       outline: 0;
       margin: 0;
       letter-spacing: -1px;
@@ -663,7 +663,7 @@ body, input, textarea {
       -ms-user-select: text;
       user-select: text; }
       #content header h1[contenteditable=true]:hover, #content header h1[contenteditable=true]:focus {
-        outline: 1px solid #cccccc; }
+        outline: 1px solid #ccc; }
     #content header time {
       font-family: "Ubuntu Light", "Ubuntu";
       font-size: 13px;
@@ -707,7 +707,7 @@ body, input, textarea {
       color: #522453;
       font-size: 13px;
       display: inline-block;
-      border: 1px solid #cccccc;
+      border: 1px solid #ccc;
       margin-left: 5px;
       padding: 2px 6px;
       cursor: default;

@@ -10,6 +10,7 @@ There's so many bugs. Lets not use the bugtracker just yet
 - There needs to be a distinction between edit mode & view mode
 - Use Templating (handlebars)
 - Renaming Something the same thing breaks itself
+- You can't select the "Add Notebook" or "Search" text boxes due to user-select or user-drag being false 
 
 ### Fixed Bugs
 - You can't have two notes called the same [2013-03-09 - mh0]

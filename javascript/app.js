@@ -46,8 +46,10 @@
         return $('#panel').removeClass('drag');
       });
       return $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(function() {
+        console.log("Enabling drag");
         return $('#panel').removeClass('drag');
       }).mouseleave(function() {
+        console.log("Disabling drag");
         return $('#panel').addClass('drag');
       });
     },

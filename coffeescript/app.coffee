@@ -53,8 +53,10 @@ window.noted =
 
 		# Disallows Dragging on Buttons
 		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
+			console.log "Enabling drag"
 			$('#panel').removeClass('drag')
 		).mouseleave ->
+			console.log "Disabling drag"
 			$('#panel').addClass('drag')
 
 	setupUI: ->
