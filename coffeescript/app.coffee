@@ -20,7 +20,6 @@ catch e
 	console.log "ERROR:\nType: #{e.type}\nArgs: #{e.arguments}\nMessage: #{e.message}"
 	console.log "\nSTACKTRACE:\n", e.stack
 
-
 # Proper Functions
 window.noted =
 
@@ -266,6 +265,12 @@ window.noted.timeControls =
 
 # Document Ready Guff
 $ ->
+	# I'm too lazy to ⌘ + tab to reload
+	$(document).keyup (e) ->
+		# Only works on Mac. Someone patch this.
+		if e.keyCode is 91
+			window.location.reload()
+
 	window.noted.setupUI()
 
 	if node
