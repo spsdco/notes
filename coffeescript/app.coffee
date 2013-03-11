@@ -293,6 +293,7 @@ window.noted =
 			# Chucks it into the right mode - @ was the best I could do.
 			if selector.hasClass("edit")
 				window.noted.editMode("editor")
+				$("#content .left h1").focus()
 				selector.removeClass("edit")
 			else
 				window.noted.editMode("preview")

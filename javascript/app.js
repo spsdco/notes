@@ -237,6 +237,7 @@
         window.noted.editor.importFile('file', data);
         if (selector.hasClass("edit")) {
           window.noted.editMode("editor");
+          $("#content .left h1").focus();
           return selector.removeClass("edit");
         } else {
           return window.noted.editMode("preview");
