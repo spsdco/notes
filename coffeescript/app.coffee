@@ -12,7 +12,7 @@ try
 						191,	# / ?
 						220,	# \ |
 						222,	# ' "
-						106,	# numpad *  
+						106,	# numpad *
 						56 ]	# SHIFT-8 *
 
 	# Set Up Storage - are there env variables for these?
@@ -53,10 +53,8 @@ window.noted =
 
 		# Disallows Dragging on Buttons
 		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
-			console.log "Enabling drag"
 			$('#panel').removeClass('drag')
 		).mouseleave ->
-			console.log "Disabling drag"
 			$('#panel').addClass('drag')
 
 	setupUI: ->
@@ -320,9 +318,10 @@ $ ->
 	window.noted.setupUI()
 
 	# Prevent I-Beam Cursor
-	$('#panel, #notebooks, #notes').mousedown ->
-		$(@).css('cursor','default')
-		return false
+	$('#panel, #notebooks, #notes').mousedown (e) ->
+		if e.target.tagName isnt "INPUT"
+			$(@).css('cursor','default')
+			return false
 
 	if node
 		window.noted.setupPanel()

@@ -3,3 +3,5 @@
 # mh0 uses gedit if on GUI, nano on CLI, backup files SHOULD be ignored by git.
 *~
 node_modules
+*.sublime-project
+*.sublime-workspace
