@@ -227,21 +227,23 @@ window.noted =
 		window.noted.listNotebooks()
 
 	listNotebooks: ->
-		console.log "NoteBooks Called"
+		# Yay! Templating
+		template = handlebars.compile($("#notebook-template").html())
+		htmlstr = template({name: "All Notes", class: "all"})
+
 		# Clear & Add All Notes
-		$("#notebooks ul").html("").append "<li class='all'>All Notes</li>"
+		# $("#notebooks ul").html("").append "<li class='all'>All Notes</li>"
+
 		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
 			i = 0
 			while i < data.length
 				if fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()
-					$("#notebooks ul").append "<li data-id='" + data[i] + "'>" + data[i] + "</li>"
+					htmlstr += template({name: data[i]})
 				i++
 
-			# Add Selected Class to the Right Notebook
-			if window.noted.selectedList is "all"
-				$("#notebooks .all").trigger("click")
-			else
-				$("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click")
+			# Append the string to the dom (perf matters.)
+			$("#notebooks ul").html(htmlstr)
+			$("#notebooks [data-id='" + window.noted.selectedList + "'], #notebooks ." + window.noted.selectedList).trigger("click")
 
 	loadNotes: (list, type, callback) ->
 		window.noted.selectedList = list

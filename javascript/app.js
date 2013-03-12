@@ -184,22 +184,25 @@
       return window.noted.listNotebooks();
     },
     listNotebooks: function() {
-      console.log("NoteBooks Called");
-      $("#notebooks ul").html("").append("<li class='all'>All Notes</li>");
+      var htmlstr, template;
+      template = handlebars.compile($("#notebook-template").html());
+      htmlstr = template({
+        name: "All Notes",
+        "class": "all"
+      });
       return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
         var i;
         i = 0;
         while (i < data.length) {
           if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
-            $("#notebooks ul").append("<li data-id='" + data[i] + "'>" + data[i] + "</li>");
+            htmlstr += template({
+              name: data[i]
+            });
           }
           i++;
         }
-        if (window.noted.selectedList === "all") {
-          return $("#notebooks .all").trigger("click");
-        } else {
-          return $("#notebooks [data-id='" + window.noted.selectedList + "']").addClass("selected").trigger("click");
-        }
+        $("#notebooks ul").html(htmlstr);
+        return $("#notebooks [data-id='" + window.noted.selectedList + "'], #notebooks ." + window.noted.selectedList).trigger("click");
       });
     },
     loadNotes: function(list, type, callback) {
