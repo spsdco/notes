@@ -85,15 +85,11 @@ window.noted =
 			name = $('#notebooks input').val()
 			if e.keyCode is 13
 				e.preventDefault()
-				name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", name+'.txt')) is true
-				fs.mkdir(path.join(storage_dir, "Notebooks", name+'.txt'))
-				# Reload Notebooks.
-				window.noted.listNotebooks()
-				$('#notebooks input').val("")
+				name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", name)) is true
+				fs.mkdir(path.join(storage_dir, "Notebooks", name))
 
-				#setTimeout ( ->
-				#	$('#notebooks input').blur()
-				#), 50
+				window.noted.listNotebooks()
+				$('#notebooks input').val("").blur()
 
 		# Notes Click
 		$("body").on "click", "#notes li", ->
@@ -231,9 +227,6 @@ window.noted =
 		template = handlebars.compile($("#notebook-template").html())
 		htmlstr = template({name: "All Notes", class: "all"})
 
-		# Clear & Add All Notes
-		# $("#notebooks ul").html("").append "<li class='all'>All Notes</li>"
-
 		fs.readdir path.join(storage_dir, "Notebooks"), (err, data) ->
 			i = 0
 			while i < data.length
@@ -248,7 +241,9 @@ window.noted =
 	loadNotes: (list, type, callback) ->
 		window.noted.selectedList = list
 		$("#notes header h1").html(list)
-		$("#notes ul").html("")
+
+		# Templates :)
+		template = handlebars.compile($("#note-template").html())
 		htmlstr = ""
 
 		if list is "All Notes"
@@ -272,6 +267,12 @@ window.noted =
 					buffer = new Buffer(100)
 					num = fs.readSync fd, buffer, 0, 100, 0
 					info = $(marked(buffer.toString("utf-8", 0, num))).text()
+					fs.close(fd)
+
+					# Makes a pretty Excerpt
+					if info.length > 90
+						lastIndex = info.lastIndexOf(" ")
+						info = info.substring(0, lastIndex) + "&hellip;"
 
 					order.push {id: i, time: time, name: name, info: info}
 				i++
@@ -282,10 +283,14 @@ window.noted =
 
 			# Appends to DOM
 			for note in order
-				htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2></li>" + htmlstr
-
-				# I'll do some templating
-				# htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2><time>"+ note.time.getDate() +"/"+(note.time.getMonth()+1)+"/"+note.time.getFullYear()+"</time></li>" + htmlstr
+				htmlstr = template({
+					name: note.name
+					list: list
+					year: note.time.getFullYear()
+					month: note.time.getMonth() + 1
+					day: note.time.getDate()
+					excerpt: note.info
+					}) + htmlstr
 
 		$("#notes ul").html(htmlstr)
 		callback() if callback
@@ -302,10 +307,11 @@ window.noted =
 			$('.headerwrap .left h1').text(window.noted.selectedNote)
 			noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['mtime']
 			time = new Date(Date.parse(noteTime))
-			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getDate())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getFullYear()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
+			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getDate()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
+			# ^ This code is fucking shit. What were you thinking mh0?
 			window.noted.editor.importFile('file', data)
 
-			# Chucks it into the right mode - @ was the best I could do.
+			# Chucks it into the right mode - this was the best I could do.
 			if selector.hasClass("edit")
 				window.noted.editMode("editor")
 				$("#content .left h1").focus()

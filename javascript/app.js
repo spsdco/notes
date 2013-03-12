@@ -82,12 +82,12 @@
         name = $('#notebooks input').val();
         if (e.keyCode === 13) {
           e.preventDefault();
-          while (fs.existsSync(path.join(storage_dir, "Notebooks", name + '.txt')) === true) {
+          while (fs.existsSync(path.join(storage_dir, "Notebooks", name)) === true) {
             name = name + "_";
           }
-          fs.mkdir(path.join(storage_dir, "Notebooks", name + '.txt'));
+          fs.mkdir(path.join(storage_dir, "Notebooks", name));
           window.noted.listNotebooks();
-          return $('#notebooks input').val("");
+          return $('#notebooks input').val("").blur();
         }
       });
       $("body").on("click", "#notes li", function() {
@@ -206,10 +206,10 @@
       });
     },
     loadNotes: function(list, type, callback) {
-      var data, fd, htmlstr, i, info, name, note, num, order, time, _i, _len;
+      var data, fd, htmlstr, i, info, lastIndex, name, note, num, order, template, time, _i, _len;
       window.noted.selectedList = list;
       $("#notes header h1").html(list);
-      $("#notes ul").html("");
+      template = handlebars.compile($("#note-template").html());
       htmlstr = "";
       if (list === "All Notes") {
         htmlstr = "I broke all notes because of the shitty implementation";
@@ -225,6 +225,11 @@
             buffer = new Buffer(100);
             num = fs.readSync(fd, buffer, 0, 100, 0);
             info = $(marked(buffer.toString("utf-8", 0, num))).text();
+            fs.close(fd);
+            if (info.length > 90) {
+              lastIndex = info.lastIndexOf(" ");
+              info = info.substring(0, lastIndex) + "&hellip;";
+            }
             order.push({
               id: i,
               time: time,
@@ -239,7 +244,14 @@
         });
         for (_i = 0, _len = order.length; _i < _len; _i++) {
           note = order[_i];
-          htmlstr = "<li data-id='" + note.name + "' data-list='" + list + "'><h2>" + note.name + "</h2></li>" + htmlstr;
+          htmlstr = template({
+            name: note.name,
+            list: list,
+            year: note.time.getFullYear(),
+            month: note.time.getMonth() + 1,
+            day: note.time.getDate(),
+            excerpt: note.info
+          }) + htmlstr;
         }
       }
       $("#notes ul").html(htmlstr);
@@ -258,7 +270,7 @@
         $('.headerwrap .left h1').text(window.noted.selectedNote);
         noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['mtime'];
         time = new Date(Date.parse(noteTime));
-        $('.headerwrap .left time').text(window.noted.timeControls.pad(time.getDate()) + "/" + (window.noted.timeControls.pad(time.getMonth() + 1)) + "/" + time.getFullYear() + " " + window.noted.timeControls.pad(time.getHours()) + ":" + window.noted.timeControls.pad(time.getMinutes()));
+        $('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear()) + "/" + (window.noted.timeControls.pad(time.getMonth() + 1)) + "/" + time.getDate() + " " + window.noted.timeControls.pad(time.getHours()) + ":" + window.noted.timeControls.pad(time.getMinutes()));
         window.noted.editor.importFile('file', data);
         if (selector.hasClass("edit")) {
           window.noted.editMode("editor");

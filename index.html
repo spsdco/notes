@@ -51,7 +51,10 @@
  <li class="{{class}}" data-id="{{name}}">{{name}}</li>
 </script>
 <script id="note-template" type="text/x-handlebars-template">
-  template content
+  <li data-id="{{name}}" data-list="{{list}}">
+  	<h2>{{name}}</h2>
+  	 <time>{{year}}/{{month}}/{{day}}</time><span>{{{excerpt}}}</span>
+  </li>
 </script>
 </body>
 </html>
