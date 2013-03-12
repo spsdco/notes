@@ -18,6 +18,7 @@
     "plugin": false
   },
   "dependencies": {
-    "ncp": "0.2.x"
+    "ncp": "0.2.x",
+    "handlebars": "1.0.x"
   }
 }

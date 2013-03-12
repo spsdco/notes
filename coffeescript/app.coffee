@@ -6,6 +6,7 @@ try
 	path 		= require 'path'
 	ncp 		= require('ncp').ncp
 	util 		= require 'util'
+	handlebars	= require 'handlebars'
 
 	node = true
 	home_dir = process.env.HOME
