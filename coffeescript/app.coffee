@@ -1,10 +1,11 @@
 # Node Webkit Stuff
 try
-	gui = require 'nw.gui'
-	fs = require 'fs'
-	path = require 'path'
-	ncp = require('ncp').ncp
-	util = require 'util'
+	gui 		= require 'nw.gui'
+	fs 			= require 'fs'
+	buffer 		= require 'buffer'
+	path 		= require 'path'
+	ncp 		= require('ncp').ncp
+	util 		= require 'util'
 
 	node = true
 	home_dir = process.env.HOME
@@ -262,7 +263,14 @@ window.noted =
 					# Removes txt extension
 					name = data[i].substr(0, data[i].length - 4)
 					time = new Date fs.statSync(path.join(storage_dir, "Notebooks", list, name + '.txt'))['mtime']
-					order.push {id: i, time: time, name: name}
+
+					# Gets an excerpt
+					fd = fs.openSync(path.join(storage_dir, "Notebooks", list, name + '.txt'), 'r')
+					buffer = new Buffer(100)
+					num = fs.readSync fd, buffer, 0, 100, 0
+					info = $(marked(buffer.toString("utf-8", 0, num))).text()
+
+					order.push {id: i, time: time, name: name, info: info}
 				i++
 
 			# Sorts all the notes by time
