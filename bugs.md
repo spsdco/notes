@@ -7,7 +7,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - [Windows Only] Can't use the titlebar decorations.
 - Can't resize each panel - George is writing a library to do this :)
 - There needs to be a distinction between edit mode & view mode
-- Renaming Something the same thing breaks itself
 
 ### Fixed Bugs
 - You can't have two notes called the same [2013-03-09 - mh0]
@@ -26,5 +25,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - You can't select the "Add Notebook" or "Search" text boxes [2013-03-11 - consindo]
 - No Excerpts [2013-03-11 - consindo]
 - Use Templating (handlebars) [2013-03-11 - consindo]
+- Renaming Something the same thing breaks itself [2013-03-12 - mh0]
 
 Add bugs to here so we can fix them.

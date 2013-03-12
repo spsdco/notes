@@ -114,9 +114,11 @@ window.noted =
 
 		$("body").on "keyup", ".headerwrap .left h1", (e) ->
 			# We can't have "".txt
-			if $(@).text() isnt ""
+			if $(@).text() isnt "" and fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, $(@).text()+'.txt')) is false
 				$("#notes [data-id='" + window.noted.selectedNote + "']")
 					.attr("data-id", $(@).text()).find("h2").text($(@).text())
+
+				console.log "renaming note"
 
 				# Renames the Note
 				fs.rename(
