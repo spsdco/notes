@@ -2,6 +2,7 @@
 @import "normalize";
 
 $white-color: #f9f9f8;
+$red-color: #E15556;
 $border-color: #b4b3b1;
 $sidebar-color: #e7e5e4;
 $light-font: "Ubuntu Light", "Ubuntu";
@@ -366,5 +367,73 @@ body, input, textarea {
 		margin: 0 auto;
 		display: block;
 		height: 100% !important;
+	}
+}
+
+
+.modal {
+	display: none;
+	font-size: 14px;
+	color: hsl(0,0,30%);
+	width: 100%;
+	height: 100%;
+	background-color: rgba(255,255,255,0.7);
+	opacity: 0;
+	z-index: 10;
+	position: absolute;
+	-webkit-transform: translate3d(0, 0, 0);
+	-webkit-transition: .3s opacity ease;
+	-webkit-user-select: none;
+	-webkit-tap-highlight-color: rgba(0,0,0,0);
+
+	&.show {
+		opacity: 1;
+
+		& > div {
+			-webkit-transform: scale(1) translate3d(0, 0, 0);
+		}
+	}
+
+	& > div {
+		position: absolute;
+		top: 15%;
+		left: 50%;
+		-webkit-transition: .3s -webkit-transform ease;
+		-webkit-transform: scale(0.75) translate3d(0, 0, 0);
+		background: #fff;
+		font-size: 16px;
+	}
+
+	.delete-container {
+		width: 400px;
+		margin-left: -228px;
+		padding: 25px;
+		text-align: center;
+		font-size: 16px;
+		color: #222;
+		border: 3px solid $red-color;
+	}
+
+	span {
+		display: inline-block;
+		margin: 5px 0;
+	}
+
+	button.special, a.special {
+		display: inline-block;
+		text-decoration: none;
+		border: 2px solid $red-color;
+		background: #fff;
+		font-size: 16px;
+		color: #222;
+		margin-top: 15px;
+		padding: 8px 15px;
+		font-family: "Ubuntu", sans-serif;
+		cursor: default;
+
+		&:active {
+			background: $red-color;
+			color: #fff;
+		}
 	}
 }
