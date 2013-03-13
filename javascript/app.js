@@ -107,8 +107,9 @@
         }
       });
       $("body").on("keyup", ".headerwrap .left h1", function(e) {
-        if ($(this).text() !== "") {
+        if ($(this).text() !== "" && fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt')) === false) {
           $("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", $(this).text()).find("h2").text($(this).text());
+          console.log("renaming note");
           fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'));
           return window.noted.selectedNote = $(this).text();
         }
