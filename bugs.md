@@ -2,12 +2,12 @@ There's so many bugs. Lets not use the bugtracker just yet
 
 - All Notes doesn't work
 - Make Info Button do something
-- Delete Confirmation
 - Notebooks can't be renamed
 - [Windows Only] Can't use the titlebar decorations.
 - Can't resize each panel - George is writing a library to do this :)
 - There needs to be a distinction between edit mode & view mode
 - Renaming Something the same thing breaks itself
+- Modal Plugin Breaks node-webkit
 
 ### Fixed Bugs
 - You can't have two notes called the same [2013-03-09 - mh0]
@@ -23,8 +23,9 @@ There's so many bugs. Lets not use the bugtracker just yet
 - Protect against filesystem reserved chars in renaming [2013-03-11 - mh0]
 - Can't have two notebooks the same name. [2013-03-11 - mh0]
 - Notebooks can't be deleted [2013-03-11 - mh0]
-- You can't select the "Add Notebook" or "Search" text boxes [2013-03-11 - consindo]
-- No Excerpts [2013-03-11 - consindo]
-- Use Templating (handlebars) [2013-03-11 - consindo]
+- You can't select the "Add Notebook" or "Search" text boxes [2013-03-12 - consindo]
+- No Excerpts [2013-03-12 - consindo]
+- Use Templating (handlebars) [2013-03-12 - consindo]
+- Delete Confirmation [2013-03-13 - consindo]
 
 Add bugs to here so we can fix them.

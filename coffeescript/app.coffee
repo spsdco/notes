@@ -182,13 +182,17 @@ window.noted =
 					),
 					"Add some content!",
 					->
-						# Function in a Function. Functionception (@ is a bad idea).
+						# Function in a Function. Functionception (this is a bad idea).
 						window.noted.loadNotes window.noted.selectedList, "", ->
 							console.log("hello")
 							$("#notes ul li:first").addClass("edit").trigger "click"
 				)
 
 		$('#del').click ->
+			$(".modal.delete").modal()
+
+		$(".modal.delete .true").click ->
+			$(".modal.delete").modal "hide"
 			window.noted.editor.remove('file')
 			if window.noted.selectedNote isnt ""
 				fs.unlink(
@@ -202,6 +206,9 @@ window.noted =
 						window.noted.deselectNote()
 						window.noted.loadNotes(window.noted.selectedList)
 				)
+
+		$(".modal.delete .false").click ->
+			$(".modal.delete").modal "hide"
 
 	editMode: (mode) ->
 		el = $("#content .edit")

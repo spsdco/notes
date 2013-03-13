@@ -152,7 +152,11 @@
           });
         }
       });
-      return $('#del').click(function() {
+      $('#del').click(function() {
+        return $(".modal.delete").modal();
+      });
+      $(".modal.delete .true").click(function() {
+        $(".modal.delete").modal("hide");
         window.noted.editor.remove('file');
         if (window.noted.selectedNote !== "") {
           return fs.unlink(path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), function(err) {
@@ -163,6 +167,9 @@
             return window.noted.loadNotes(window.noted.selectedList);
           });
         }
+      });
+      return $(".modal.delete .false").click(function() {
+        return $(".modal.delete").modal("hide");
       });
     },
     editMode: function(mode) {
