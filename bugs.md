@@ -6,11 +6,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - [Windows Only] Can't use the titlebar decorations.
 - Can't resize each panel - George is writing a library to do this :)
 - There needs to be a distinction between edit mode & view mode
-<<<<<<< HEAD
-- Renaming Something the same thing breaks itself
-- Modal Plugin Breaks node-webkit
-=======
->>>>>>> 6508a54699e8554a72772989c552769e6285e246
 
 ### Fixed Bugs
 - You can't have two notes called the same [2013-03-09 - mh0]
@@ -31,5 +26,6 @@ There's so many bugs. Lets not use the bugtracker just yet
 - Use Templating (handlebars) [2013-03-12 - consindo]
 - Renaming Something the same thing breaks itself [2013-03-12 - mh0]
 - Delete Confirmation [2013-03-13 - consindo]
+- Modal Plugin Breaks node-webkit [2013-03-13 - consindo]
 
 Add bugs to here so we can fix them.

@@ -741,20 +741,15 @@ body, input, textarea {
   opacity: 0;
   z-index: 10;
   position: absolute;
-  -webkit-transform: translate3d(0, 0, 0);
   -webkit-transition: 0.3s opacity ease;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
   .modal.show {
     opacity: 1; }
-    .modal.show > div {
-      -webkit-transform: scale(1) translate3d(0, 0, 0); }
   .modal > div {
     position: absolute;
     top: 15%;
     left: 50%;
-    -webkit-transition: 0.3s -webkit-transform ease;
-    -webkit-transform: scale(0.75) translate3d(0, 0, 0);
     background: #fff;
     font-size: 16px; }
   .modal .delete-container {
