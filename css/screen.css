@@ -453,9 +453,12 @@ body, input, textarea {
 #decor {
   display: inline-block;
   height: 19px;
-  margin: 11px 13px; }
+  margin: 11px 9px; }
   #decor img {
-    margin-right: 8px; }
+    padding: 4px;
+    opacity: 0.7; }
+    #decor img:active {
+      opacity: 1; }
 
 #noteControls {
   display: inline-block;
@@ -552,23 +555,6 @@ body, input, textarea {
   bottom: 0;
   background: #f7f7f5;
   overflow: auto; }
-  #notes header {
-    padding: 10px 15px 8px;
-    border-bottom: 1px solid #bbbbbb;
-    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #ebebe8));
-    background: -webkit-linear-gradient(#ffffff, #ebebe8);
-    background: -moz-linear-gradient(#ffffff, #ebebe8);
-    background: -o-linear-gradient(#ffffff, #ebebe8);
-    background: linear-gradient(#ffffff, #ebebe8); }
-    #notes header h1 {
-      color: #333;
-      margin: 0;
-      font-size: 24px;
-      letter-spacing: -1px;
-      font-family: "Ubuntu Light", "Ubuntu";
-      font-weight: 300;
-      text-shadow: 0 1px 0 white;
-      cursor: default; }
   #notes ul {
     margin: 0;
     padding: 0;
