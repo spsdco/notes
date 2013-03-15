@@ -85,7 +85,12 @@ window.noted =
 			name = $('#notebooks input').val()
 			if e.keyCode is 13
 				e.preventDefault()
-				name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", name)) is true
+				while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
+					regexp = /\(\s*(\d+)\s*\)$/
+					if regexp.exec(name) is null
+						name = name+" (1)"
+					else
+						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
 				fs.mkdir(path.join(storage_dir, "Notebooks", name))
 
 				window.noted.listNotebooks()

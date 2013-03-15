@@ -75,12 +75,17 @@
         });
       });
       $('body').on("keydown", "#notebooks input", function(e) {
-        var name;
+        var name, regexp;
         name = $('#notebooks input').val();
         if (e.keyCode === 13) {
           e.preventDefault();
-          while (fs.existsSync(path.join(storage_dir, "Notebooks", name)) === true) {
-            name = name + "_";
+          while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
+            regexp = /\(\s*(\d+)\s*\)$/;
+            if (regexp.exec(name) === null) {
+              name = name + " (1)";
+            } else {
+              name = name.replace(" (" + regexp.exec(name)[1] + ")", " (" + (parseInt(regexp.exec(name)[1]) + 1) + ")");
+            }
           }
           fs.mkdir(path.join(storage_dir, "Notebooks", name));
           window.noted.listNotebooks();
@@ -217,7 +222,6 @@
     loadNotes: function(list, type, callback) {
       var data, fd, htmlstr, i, info, lastIndex, name, note, num, order, template, time, _i, _len;
       window.noted.selectedList = list;
-      $("#notes header h1").html(list);
       template = handlebars.compile($("#note-template").html());
       htmlstr = "";
       if (list === "All Notes") {
