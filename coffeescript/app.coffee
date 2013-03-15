@@ -174,7 +174,13 @@ window.noted =
 		$('#new').click ->
 			name = "Untitled Note"
 			if window.noted.selectedList isnt "All Notes" and window.noted.editor.eeState.edit is false
-				name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
+				while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
+					regexp = /\(\s*(\d+)\s*\)$/
+					if regexp.exec(name) is null
+						name = name+" (1)"
+					else
+						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
+						console.log regexp.exec(name)[1]
 				# Write file to disk
 				fs.writeFile(
 					path.join(
