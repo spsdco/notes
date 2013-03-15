@@ -16,28 +16,30 @@
 			<input type="text" placeholder="Search">
 		</div>
 	</header>
-	<aside id="notebooks">
-		<ul><!-- This gets filled by JS --></ul>
-		<input type="text" placeholder="New notebook..."></input>
-	</aside>
-	<section id="notes">
-		<ul></ul>
-	</section>
-	<section id="content" class="deselected">
-		<header>
-			<div class="headerwrap">
-				<div class="left">
-					<h1><!-- Filled By JS --></h1>
-					<time><!-- Filled By JS --></time>
+	<div id="parent">
+		<aside id="notebooks" class="panel">
+			<ul><!-- This gets filled by JS --></ul>
+			<input type="text" placeholder="New notebook..."></input>
+		</aside>
+		<section id="notes" class="panel">
+			<ul></ul>
+		</section>
+		<section id="content" class="panel deselected">
+			<header>
+				<div class="headerwrap">
+					<div class="left">
+						<h1><!-- Filled By JS --></h1>
+						<time><!-- Filled By JS --></time>
+					</div>
+					<div class="right">
+						<button class="toggle edit">edit</button><span class="dot">&middot;</span><button class="toggle">info</button>s
+						<ul><!-- Filled By JS --></ul>
+					</div>
 				</div>
-				<div class="right">
-					<button class="toggle edit">edit</button><span class="dot">&middot;</span><button class="toggle">info</button>
-					<ul><!-- Filled By JS --></ul>
-				</div>
-			</div>
-		</header>
-		<section id="contentbody"></section>
-	</section>
+			</header>
+			<section id="contentbody"></section>
+		</section>
+	</div>
 </div>
 <section class="modal delete">
 	<div class="delete-container">

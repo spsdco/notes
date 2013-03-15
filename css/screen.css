@@ -431,6 +431,10 @@ body, input, textarea {
   font-family: "Ubuntu", sans-serif;
   overflow: hidden; }
 
+/* Set cursor to horizontal resize while resizing */
+body.resizing {
+  cursor: ew-resize; }
+
 .drag {
   -webkit-app-region: drag; }
 
@@ -497,14 +501,52 @@ body, input, textarea {
     border-radius: 2px;
     box-shadow: 0 0 1px #444444; }
 
+/* THE PARENT */
+#parent {
+  /* Must be positioned absolutely */
+  position: absolute;
+  /* Hides ugly scrollbars */
+  overflow: hidden;
+  /* Make parent fill up the entire screen */
+  top: 40px;
+  bottom: 0;
+  left: 0;
+  right: 0; }
+
+/* THE PANELS */
+.panel {
+  /* Must be position absolutely */
+  position: absolute;
+  /* Take up full height of parent */
+  top: 0;
+  bottom: 0;
+  /* Stop content breaking out */
+  overflow: hidden;
+  /* Prevent padding messing with width */
+  box-sizing: border-box; }
+
+/* THE SPLITTERS */
+.splitter {
+  /* So you can easily grab the splitter with a mouse */
+  width: 5px;
+  /* Must be positioned absolutely */
+  position: absolute;
+  /* Take up full parent height */
+  top: 0;
+  bottom: 0;
+  /* Use resize cursor */
+  cursor: ew-resize;
+  /* So you can see the splitters above the panels */
+  z-index: 2;
+  background: transparent;
+  border-left: 1px solid white;
+  box-shadow: -1px 0 #666666; }
+
 #notebooks {
-  width: 199px;
   border-right: 1px solid #b4b3b1;
   background: #f00;
   position: absolute;
-  top: 40px;
   left: 0;
-  bottom: 0;
   background: #e7e5e4;
   overflow: auto; }
   #notebooks ul {
@@ -550,9 +592,6 @@ body, input, textarea {
   width: 299px;
   border-right: 1px solid #b4b3b1;
   position: absolute;
-  left: 200px;
-  top: 40px;
-  bottom: 0;
   background: #f7f7f5;
   overflow: auto; }
   #notes ul {
@@ -587,10 +626,7 @@ body, input, textarea {
 
 #content {
   position: absolute;
-  left: 500px;
   right: 0;
-  top: 40px;
-  bottom: 0;
   background: #f9f9f8; }
   #content.deselected {
     background-color: #ededea;

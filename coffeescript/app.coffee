@@ -1,32 +1,32 @@
-# Node Webkit Stuff
-try
-	gui 		= require 'nw.gui'
-	fs 			= require 'fs'
-	buffer 		= require 'buffer'
-	path 		= require 'path'
-	ncp 		= require('ncp').ncp
-	util 		= require 'util'
-	handlebars	= require 'handlebars'
 
-	node = true
-	home_dir = process.env.HOME
-	reserved_chars = [	186,	# : ;
-						191,	# / ?
-						220,	# \ |
-						222,	# ' "
-						106,	# numpad *
-						56 ]	# SHIFT-8 *
 
-	# Set Up Storage - are there env variables for these?
-	if process.platform is "darwin"
-		storage_dir = path.join(home_dir, "/Library/Application Support/Noted/")
-	else if process.platform is "win32"
-		storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted")
-	else if process.platform is "linux"
-		storage_dir = path.join(home_dir, "/.config/Noted/")
-catch e
-	console.log "ERROR:\nType: #{e.type}\nArgs: #{e.arguments}\nMessage: #{e.message}"
-	console.log "\nSTACKTRACE:\n", e.stack
+# Node Webkit Stuff\
+gui = global.gui 		= require 'nw.gui'
+fs 			= require 'fs'
+buffer 		= require 'buffer'
+path 		= require 'path'
+ncp 		= require('ncp').ncp
+util 		= require 'util'
+handlebars	= require 'handlebars'
+global.document = document
+Splitter = require './javascript/lib/splitter'
+
+node = true
+home_dir = process.env.HOME
+reserved_chars = [	186,	# : ;
+					191,	# / ?
+					220,	# \ |
+					222,	# ' "
+					106,	# numpad *
+					56 ]	# SHIFT-8 *
+
+# Set Up Storage - are there env variables for these?
+if process.platform is "darwin"
+	storage_dir = path.join(home_dir, "/Library/Application Support/Noted/")
+else if process.platform is "win32"
+	storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted")
+else if process.platform is "linux"
+	storage_dir = path.join(home_dir, "/.config/Noted/")
 
 # Proper Functions
 window.noted =
@@ -60,6 +60,25 @@ window.noted =
 			$('#panel').addClass('drag')
 
 	setupUI: ->
+		Splitter.init
+			parent: $("#parent")[0],
+			panels:
+				left:
+					el: $("#notebooks")[0]
+					min: 150
+					width: 150
+					max: 400
+				center:
+					el: $("#notes")[0]
+					min: 250
+					width: 250
+					max: 850
+				right:
+					el: $("#content")[0]
+					min: 550
+					width: 550
+					max: Infinity
+
 		# Event Handlers
 		$("#content .edit").click window.noted.editMode
 
@@ -120,7 +139,7 @@ window.noted =
 						name = name+" (1)"
 					else
 						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
-						
+
 					fs.rename(
 						path.join(
 							storage_dir,
@@ -383,10 +402,10 @@ $ ->
 	window.noted.setupUI()
 
 	# Prevent I-Beam Cursor
-	$('#panel, #notebooks, #notes').mousedown (e) ->
-		if e.target.tagName isnt "INPUT"
-			$(@).css('cursor','default')
-			return false
+	# $('#panel, #notebooks, #notes').mousedown (e) ->
+	# 	if e.target.tagName isnt "INPUT"
+	# 		$(@).css('cursor','default')
+	# 		return false
 
 	if node
 		window.noted.setupPanel()
