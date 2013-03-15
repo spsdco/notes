@@ -99,21 +99,40 @@
         return window.noted.loadNote(this.el);
       });
       $("body").on("keydown", ".headerwrap .left h1", function(e) {
-        var _ref;
+        var name, regexp, _ref;
         console.log(e.keyCode);
         if (e.keyCode === 13) {
           e.preventDefault();
+          name = $(this).text();
+          while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
+            regexp = /\(\s*(\d+)\s*\)$/;
+            if (regexp.exec(name) === null) {
+              name = name + " (1)";
+            } else {
+              name = name.replace(" (" + regexp.exec(name)[1] + ")", " (" + (parseInt(regexp.exec(name)[1]) + 1) + ")");
+            }
+            fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'));
+            window.noted.selectedNote = name;
+          }
+          window.noted.loadNotes(window.noted.selectedList);
           return $(this).blur();
         } else if (_ref = e.keyCode, __indexOf.call(reserved_chars, _ref) >= 0) {
           return e.preventDefault();
         }
       });
       $("body").on("keyup", ".headerwrap .left h1", function(e) {
-        if ($(this).text() !== "" && fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt')) === false) {
-          $("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", $(this).text()).find("h2").text($(this).text());
+        var name;
+        name = $(this).text();
+        while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
+          name = name + "_";
+        }
+        $("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", name).find("h2").text($(this).text());
+        if ($(this).text() !== "") {
           console.log("renaming note");
-          fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'));
-          return window.noted.selectedNote = $(this).text();
+          console.log(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'));
+          console.log(path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'));
+          fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'));
+          return window.noted.selectedNote = name;
         }
       });
       window.noted.editor = new EpicEditor({

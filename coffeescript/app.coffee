@@ -113,17 +113,46 @@ window.noted =
 			# Deny the enter key
 			if e.keyCode is 13
 				e.preventDefault()
+				name = $(@).text()
+				while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
+					regexp = /\(\s*(\d+)\s*\)$/
+					if regexp.exec(name) is null
+						name = name+" (1)"
+					else
+						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
+						
+					fs.rename(
+						path.join(
+							storage_dir,
+							"Notebooks",
+							window.noted.selectedList,
+							window.noted.selectedNote + '.txt'
+						),
+						path.join(
+							storage_dir,
+							"Notebooks",
+							window.noted.selectedList,
+							name + '.txt'
+						)
+					)
+					window.noted.selectedNote = name;
+				window.noted.loadNotes(window.noted.selectedList)
 				$(@).blur()
 			else if e.keyCode in reserved_chars
 				e.preventDefault()
 
 		$("body").on "keyup", ".headerwrap .left h1", (e) ->
 			# We can't have "".txt
-			if $(@).text() isnt "" and fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, $(@).text()+'.txt')) is false
-				$("#notes [data-id='" + window.noted.selectedNote + "']")
-					.attr("data-id", $(@).text()).find("h2").text($(@).text())
+			name = $(@).text()
+			name = name + "_" while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
+			$("#notes [data-id='" + window.noted.selectedNote + "']")
+				.attr("data-id", name).find("h2").text($(@).text())
+			if $(@).text() isnt ""
 
 				console.log "renaming note"
+
+				console.log path.join(storage_dir,"Notebooks",window.noted.selectedList,window.noted.selectedNote + '.txt')
+				console.log path.join(storage_dir,"Notebooks",window.noted.selectedList,$(@).text() + '.txt')
 
 				# Renames the Note
 				fs.rename(
@@ -137,11 +166,11 @@ window.noted =
 						storage_dir,
 						"Notebooks",
 						window.noted.selectedList,
-						$(@).text() + '.txt'
+						name + '.txt'
 					)
 				)
 
-				window.noted.selectedNote = $(@).text()
+				window.noted.selectedNote = name
 
 		# Create Markdown Editor
 		window.noted.editor = new EpicEditor
