@@ -255,7 +255,6 @@ window.noted =
 
 	loadNotes: (list, type, callback) ->
 		window.noted.selectedList = list
-		$("#notes header h1").html(list)
 
 		# Templates :)
 		template = handlebars.compile($("#note-template").html())

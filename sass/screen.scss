@@ -37,10 +37,15 @@ body, input, textarea {
 #decor {
 	display: inline-block;
 	height: 19px;
-	margin: 11px 13px;
+	margin: 11px 9px;
 
 	img {
-		margin-right: 8px;
+		padding: 4px;
+		opacity: 0.7;
+
+		&:active {
+			opacity: 1;
+		}
 	}
 }
 #noteControls {
@@ -159,22 +164,6 @@ body, input, textarea {
 	background: darken($white-color, 1%);
 	overflow: auto;
 
-	header {
-		padding: 10px 15px 8px;
-		border-bottom: 1px solid #bbb;
-		@include background(linear-gradient(lighten($white-color, 5%), darken($white-color, 6%)));
-
-		h1 {
-			color: #333;
-			margin: 0;
-			font-size: 24px;
-			letter-spacing: -1px;
-			font-family: $light-font;
-			font-weight: 300;
-			text-shadow: 0 1px 0 #fff;
-			cursor: default;
-		}
-	}
 	ul {
 		margin: 0;
 		padding: 0;

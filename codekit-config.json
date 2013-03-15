@@ -51,17 +51,6 @@
       "initialSize" : 1161,
       "fileType" : 8192
     },
-    "\/javascript\/app.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/javascript\/app.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/javascript\/app-ck.js",
-      "fileType" : 64
-    },
     "\/javascript\/lib\/jquery.min.js" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -71,6 +60,17 @@
       "outputStyle" : 1,
       "syntaxCheckerStyle" : 1,
       "outputAbbreviatedPath" : "\/javascript\/lib\/jquery.min-ck.js",
+      "fileType" : 64
+    },
+    "\/javascript\/app.js" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/javascript\/app.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/javascript\/app-ck.js",
       "fileType" : 64
     },
     "\/coffeescript\/app.coffee" : {
@@ -114,17 +114,6 @@
       "outputAbbreviatedPath" : "\/javascript\/lib\/epiceditor-ck.js",
       "fileType" : 64
     },
-    "\/javascript\/lib\/jquery.select.js" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 0,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/javascript\/lib\/jquery.select.js",
-      "outputStyle" : 1,
-      "syntaxCheckerStyle" : 1,
-      "outputAbbreviatedPath" : "\/javascript\/lib\/jquery.select-ck.js",
-      "fileType" : 64
-    },
     "\/sass\/screen.scss" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -137,6 +126,26 @@
       "fileType" : 4,
       "debugStyle" : 0
     },
+    "\/javascript\/lib\/modal.js" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 0,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/javascript\/lib\/modal.js",
+      "outputStyle" : 1,
+      "syntaxCheckerStyle" : 1,
+      "outputAbbreviatedPath" : "\/javascript\/lib\/modal-ck.js",
+      "fileType" : 64
+    },
+    "\/css\/normalize.css" : {
+      "ignoreWasSetByUser" : 0,
+      "ignore" : 1,
+      "hidden" : 0,
+      "outputPathIsSetByUser" : 0,
+      "inputAbbreviatedPath" : "\/css\/normalize.css",
+      "outputAbbreviatedPath" : "No Output Path",
+      "fileType" : 16
+    },
     "\/img\/maximize.png" : {
       "ignoreWasSetByUser" : 0,
       "ignore" : 0,
@@ -147,15 +156,6 @@
       "outputAbbreviatedPath" : "\/img\/maximize.png",
       "initialSize" : 2809,
       "fileType" : 8192
-    },
-    "\/css\/normalize.css" : {
-      "ignoreWasSetByUser" : 0,
-      "ignore" : 1,
-      "hidden" : 0,
-      "outputPathIsSetByUser" : 0,
-      "inputAbbreviatedPath" : "\/css\/normalize.css",
-      "outputAbbreviatedPath" : "No Output Path",
-      "fileType" : 16
     },
     "\/sass\/normalize.scss" : {
       "ignoreWasSetByUser" : 0,
