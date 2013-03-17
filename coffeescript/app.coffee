@@ -53,11 +53,11 @@ window.noted =
 		).mouseleave ->
 			$('#panel').removeClass('drag')
 
-		# Disallows Dragging on Buttons
-		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
-			$('#panel').removeClass('drag')
-		).mouseleave ->
-			$('#panel').addClass('drag')
+		# # Disallows Dragging on Buttons
+		# $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
+		# 	$('#panel').removeClass('drag')
+		# ).mouseleave ->
+		# 	$('#panel').addClass('drag')
 
 	setupUI: ->
 		Splitter.init
@@ -66,16 +66,16 @@ window.noted =
 				left:
 					el: $("#notebooks")[0]
 					min: 150
-					width: 150
-					max: 400
+					width: 200
+					max: 450
 				center:
 					el: $("#notes")[0]
 					min: 250
-					width: 250
+					width: 300
 					max: 850
 				right:
 					el: $("#content")[0]
-					min: 550
+					min: 450
 					width: 550
 					max: Infinity
 
