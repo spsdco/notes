@@ -760,12 +760,7 @@ body.resizing {
   left: 0;
   right: 0;
   margin: 0;
-  padding: 0;
-  color: #444;
-  font-size: 16px;
-  line-height: 1.4;
-  overflow: auto;
-  font-family: "Source Sans Pro"; }
+  padding: 0; }
   #contentbody iframe {
     margin: 0 auto;
     display: block;

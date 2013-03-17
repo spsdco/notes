@@ -54,10 +54,10 @@ window.noted =
 			$('#panel').removeClass('drag')
 
 		# # Disallows Dragging on Buttons
-		# $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
-		# 	$('#panel').removeClass('drag')
-		# ).mouseleave ->
-		# 	$('#panel').addClass('drag')
+		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
+			$('#panel').removeClass('drag')
+		).mouseleave ->
+			$('#panel').addClass('drag')
 
 	setupUI: ->
 		Splitter.init
@@ -92,7 +92,7 @@ window.noted =
 		$("body").on "contextmenu", "#notebooks li", ->
 			name = $(this).text()
 			console.log name
-			window.noted.editor.remove('file')
+			#window.noted.editor.remove('file')
 			fs.unlink path.join(storage_dir, "Notebooks", name, '*'), (err) ->
 				fs.rmdir path.join(storage_dir, "Notebooks", name), (err) ->
 					throw err if (err)
@@ -192,41 +192,47 @@ window.noted =
 				window.noted.selectedNote = name
 
 		# Create Markdown Editor
-		window.noted.editor = new EpicEditor
-			container: 'contentbody'
-			file:
-				name: 'epiceditor',
-				defaultContent: '',
-				autoSave: 2500
-			theme:
-				base:'/themes/base/epiceditor.css'
-				preview:'/themes/preview/style.css'
-				editor:'/themes/editor/style.css'
+		window.noted.editor = ace.edit("contentbody")
+		window.noted.editor.getSession().setUseWrapMode(true)
+		window.noted.editor.setHighlightActiveLine(false)
+		window.noted.editor.setShowPrintMargin(false)
 
-		window.noted.editor.load()
+		# window.noted.editor.setTheme("ace/theme/monokai")
+		# window.noted.editor = new EpicEditor
+		# 	container: 'contentbody'
+		# 	file:
+		# 		name: 'epiceditor',
+		# 		defaultContent: '',
+		# 		autoSave: 2500
+		# 	theme:
+		# 		base:'/themes/base/epiceditor.css'
+		# 		preview:'/themes/preview/style.css'
+		# 		editor:'/themes/editor/style.css'
 
-		window.noted.editor.on "save", (e) ->
-			list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
-			# Make sure a note is selected
-			if window.noted.selectedNote isnt ""
-				# Check if there's actually a difference.
-				notePath = path.join(
-					storage_dir,
-					"Notebooks",
-					list,
-					window.noted.selectedNote + '.txt'
-				)
+		# window.noted.editor.load()
 
-				# Write file if something actually got modified
-				fs.writeFile(notePath, e.content) if e.content isnt fs.readFileSync(notePath).toString()
+		# window.noted.editor.on "save", (e) ->
+		# 	list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
+		# 	# Make sure a note is selected
+		# 	if window.noted.selectedNote isnt ""
+		# 		# Check if there's actually a difference.
+		# 		notePath = path.join(
+		# 			storage_dir,
+		# 			"Notebooks",
+		# 			list,
+		# 			window.noted.selectedNote + '.txt'
+		# 		)
 
-				# Reload to reveal new timestamp
-				# TODO: window.noted.loadNotes(window.noted.selectedList)
+		# 		# Write file if something actually got modified
+		# 		fs.writeFile(notePath, e.content) if e.content isnt fs.readFileSync(notePath).toString()
+
+		# 		# Reload to reveal new timestamp
+		# 		# TODO: window.noted.loadNotes(window.noted.selectedList)
 
 		# Add note modal dialogue.
 		$('#new').click ->
 			name = "Untitled Note"
-			if window.noted.selectedList isnt "All Notes" and window.noted.editor.eeState.edit is false
+			if window.noted.selectedList isnt "All Notes" #and window.noted.editor.eeState.edit is false
 				while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
 					regexp = /\(\s*(\d+)\s*\)$/
 					if regexp.exec(name) is null
@@ -254,7 +260,7 @@ window.noted =
 
 		$(".modal.delete .true").click ->
 			$(".modal.delete").modal "hide"
-			window.noted.editor.remove('file')
+			# window.noted.editor.remove('file')
 			if window.noted.selectedNote isnt ""
 				fs.unlink(
 					path.join(
@@ -273,18 +279,18 @@ window.noted =
 
 	editMode: (mode) ->
 		el = $("#content .edit")
-		if mode is "preview" or window.noted.editor.eeState.edit is true and mode isnt "editor"
+		if mode is "preview" # or window.noted.editor.eeState.edit is true and mode isnt "editor"
 
 			el.text "edit"
 			$('#content .left h1').attr('contenteditable', 'false')
 			$('#contentbody')
 
-			window.noted.editor.save()
-			window.noted.editor.preview()
+			# window.noted.editor.save()
+			# window.noted.editor.preview()
 		else
 			el.text "save"
 			$('.headerwrap .left h1').attr('contenteditable', 'true')
-			window.noted.editor.edit()
+			# window.noted.editor.edit()
 
 	render: ->
 		# Lists the New Notebooks & Shows Selected
@@ -333,7 +339,7 @@ window.noted =
 					fd = fs.openSync(path.join(storage_dir, "Notebooks", list, name + '.txt'), 'r')
 					buffer = new Buffer(100)
 					num = fs.readSync fd, buffer, 0, 100, 0
-					info = $(marked(buffer.toString("utf-8", 0, num))).text()
+					info = "lorem ipsum" #$(marked(buffer.toString("utf-8", 0, num))).text()
 					fs.close(fd)
 
 					# Makes a pretty Excerpt
@@ -376,7 +382,7 @@ window.noted =
 			time = new Date(Date.parse(noteTime))
 			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getDate()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
 			# ^ This code is fucking shit. What were you thinking mh0?
-			window.noted.editor.importFile('file', data)
+			window.noted.editor.setValue(data)
 
 			# Chucks it into the right mode - this was the best I could do.
 			if selector.hasClass("edit")
@@ -390,8 +396,8 @@ window.noted =
 		$("#content").addClass("deselected")
 		$("#content .left h1, #content .left time").text("")
 		window.noted.selectedNote = ""
-		window.noted.editor.importFile('file', "")
-		window.noted.editor.preview()
+		# window.noted.editor.importFile('file', "")
+		# window.noted.editor.preview()
 
 window.noted.timeControls =
 	pad: (n) ->

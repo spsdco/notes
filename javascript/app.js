@@ -52,10 +52,15 @@
       $('#maximize').click(function() {
         return win.maximize();
       });
-      return $('#panel').mouseenter(function() {
+      $('#panel').mouseenter(function() {
         return $('#panel').addClass('drag');
       }).mouseleave(function() {
         return $('#panel').removeClass('drag');
+      });
+      return $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(function() {
+        return $('#panel').removeClass('drag');
+      }).mouseleave(function() {
+        return $('#panel').addClass('drag');
       });
     },
     setupUI: function() {
@@ -93,7 +98,6 @@
         var name;
         name = $(this).text();
         console.log(name);
-        window.noted.editor.remove('file');
         return fs.unlink(path.join(storage_dir, "Notebooks", name, '*'), function(err) {
           return fs.rmdir(path.join(storage_dir, "Notebooks", name), function(err) {
             if (err) {
@@ -165,34 +169,14 @@
           return window.noted.selectedNote = name;
         }
       });
-      window.noted.editor = new EpicEditor({
-        container: 'contentbody',
-        file: {
-          name: 'epiceditor',
-          defaultContent: '',
-          autoSave: 2500
-        },
-        theme: {
-          base: '/themes/base/epiceditor.css',
-          preview: '/themes/preview/style.css',
-          editor: '/themes/editor/style.css'
-        }
-      });
-      window.noted.editor.load();
-      window.noted.editor.on("save", function(e) {
-        var list, notePath;
-        list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list");
-        if (window.noted.selectedNote !== "") {
-          notePath = path.join(storage_dir, "Notebooks", list, window.noted.selectedNote + '.txt');
-          if (e.content !== fs.readFileSync(notePath).toString()) {
-            return fs.writeFile(notePath, e.content);
-          }
-        }
-      });
+      window.noted.editor = ace.edit("contentbody");
+      window.noted.editor.getSession().setUseWrapMode(true);
+      window.noted.editor.setHighlightActiveLine(false);
+      window.noted.editor.setShowPrintMargin(false);
       $('#new').click(function() {
         var name, regexp;
         name = "Untitled Note";
-        if (window.noted.selectedList !== "All Notes" && window.noted.editor.eeState.edit === false) {
+        if (window.noted.selectedList !== "All Notes") {
           while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
             regexp = /\(\s*(\d+)\s*\)$/;
             if (regexp.exec(name) === null) {
@@ -215,7 +199,6 @@
       });
       $(".modal.delete .true").click(function() {
         $(".modal.delete").modal("hide");
-        window.noted.editor.remove('file');
         if (window.noted.selectedNote !== "") {
           return fs.unlink(path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), function(err) {
             if (err) {
@@ -233,16 +216,13 @@
     editMode: function(mode) {
       var el;
       el = $("#content .edit");
-      if (mode === "preview" || window.noted.editor.eeState.edit === true && mode !== "editor") {
+      if (mode === "preview") {
         el.text("edit");
         $('#content .left h1').attr('contenteditable', 'false');
-        $('#contentbody');
-        window.noted.editor.save();
-        return window.noted.editor.preview();
+        return $('#contentbody');
       } else {
         el.text("save");
-        $('.headerwrap .left h1').attr('contenteditable', 'true');
-        return window.noted.editor.edit();
+        return $('.headerwrap .left h1').attr('contenteditable', 'true');
       }
     },
     render: function() {
@@ -288,7 +268,7 @@
             fd = fs.openSync(path.join(storage_dir, "Notebooks", list, name + '.txt'), 'r');
             buffer = new Buffer(100);
             num = fs.readSync(fd, buffer, 0, 100, 0);
-            info = $(marked(buffer.toString("utf-8", 0, num))).text();
+            info = "lorem ipsum";
             fs.close(fd);
             if (info.length > 90) {
               lastIndex = info.lastIndexOf(" ");
@@ -335,7 +315,7 @@
         noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['mtime'];
         time = new Date(Date.parse(noteTime));
         $('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear()) + "/" + (window.noted.timeControls.pad(time.getMonth() + 1)) + "/" + time.getDate() + " " + window.noted.timeControls.pad(time.getHours()) + ":" + window.noted.timeControls.pad(time.getMinutes()));
-        window.noted.editor.importFile('file', data);
+        window.noted.editor.setValue(data);
         if (selector.hasClass("edit")) {
           window.noted.editMode("editor");
           $("#content .left h1").focus();
@@ -348,9 +328,7 @@
     deselectNote: function() {
       $("#content").addClass("deselected");
       $("#content .left h1, #content .left time").text("");
-      window.noted.selectedNote = "";
-      window.noted.editor.importFile('file', "");
-      return window.noted.editor.preview();
+      return window.noted.selectedNote = "";
     }
   };
 
