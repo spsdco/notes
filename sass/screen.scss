@@ -8,6 +8,20 @@ $sidebar-color: #e7e5e4;
 $light-font: "Ubuntu Light", "Ubuntu";
 $purple: #522453;
 
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* line 61, ../sass/style.scss */
+::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.3);
+}
+
+/* line 66, ../sass/style.scss */
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.1);
+}
+
 body, input, textarea {
 	font-family: "Ubuntu", sans-serif;
 	overflow: hidden;
