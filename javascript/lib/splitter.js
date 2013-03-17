@@ -182,7 +182,6 @@
   var events = {
 
     mousedown: function(event) {
-      console.log("CLICKY")
       active = this.obj;
       offset = {
         left: 0,
@@ -201,7 +200,6 @@
     mousemove: function(event) {
       if (active) {
         var pos = getPos(event.clientX);
-        console.log(pos)
         active.resize(pos);
       }
     },

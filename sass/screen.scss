@@ -147,18 +147,14 @@ body.resizing { cursor: ew-resize; }
 
   background: transparent;
   border-left: 1px solid #fff;
-  box-shadow: -1px 0 #666;
+  box-shadow: -1px 0 $border-color;
 
 }
 
 #notebooks {
-	// width: 199px;
-	border-right: 1px solid $border-color;
 	background: #f00;
 	position: absolute;
-	//top: 40px;
 	left: 0;
-	//bottom: 0;
 	background: $sidebar-color;
 	overflow: auto;
 
@@ -200,7 +196,8 @@ body.resizing { cursor: ew-resize; }
 		background-size: 33px;
 		background-repeat: no-repeat;
 		color: #222;
-		width: 155px;
+		width: 100%;
+		box-sizing: border-box;
 		outline: 0;
 		padding: 0 10px 0 34px;
 		height: 33px;
@@ -214,12 +211,8 @@ body.resizing { cursor: ew-resize; }
 }
 
 #notes {
-	width: 299px;
 	border-right: 1px solid $border-color;
 	position: absolute;
-	//left: 200px;
-	//top: 40px;
-	//bottom: 0;
 	background: darken($white-color, 1%);
 	overflow: auto;
 
@@ -263,11 +256,11 @@ body.resizing { cursor: ew-resize; }
 
 #content {
 	position: absolute;
-	//left: 500px;
 	right: 0;
-	//top: 40px;
-	//bottom: 0;
 	background: $white-color;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
 
 	&.deselected {
 		background-color: #ededea;

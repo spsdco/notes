@@ -52,15 +52,10 @@
       $('#maximize').click(function() {
         return win.maximize();
       });
-      $('#panel').mouseenter(function() {
+      return $('#panel').mouseenter(function() {
         return $('#panel').addClass('drag');
       }).mouseleave(function() {
         return $('#panel').removeClass('drag');
-      });
-      return $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(function() {
-        return $('#panel').removeClass('drag');
-      }).mouseleave(function() {
-        return $('#panel').addClass('drag');
       });
     },
     setupUI: function() {
@@ -70,18 +65,18 @@
           left: {
             el: $("#notebooks")[0],
             min: 150,
-            width: 150,
-            max: 400
+            width: 200,
+            max: 450
           },
           center: {
             el: $("#notes")[0],
             min: 250,
-            width: 250,
+            width: 300,
             max: 850
           },
           right: {
             el: $("#content")[0],
-            min: 550,
+            min: 450,
             width: 550,
             max: Infinity
           }

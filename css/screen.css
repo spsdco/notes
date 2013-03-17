@@ -540,10 +540,9 @@ body.resizing {
   z-index: 2;
   background: transparent;
   border-left: 1px solid white;
-  box-shadow: -1px 0 #666666; }
+  box-shadow: -1px 0 #b4b3b1; }
 
 #notebooks {
-  border-right: 1px solid #b4b3b1;
   background: #f00;
   position: absolute;
   left: 0;
@@ -579,7 +578,8 @@ body.resizing {
     background-size: 33px;
     background-repeat: no-repeat;
     color: #222;
-    width: 155px;
+    width: 100%;
+    box-sizing: border-box;
     outline: 0;
     padding: 0 10px 0 34px;
     height: 33px;
@@ -589,7 +589,6 @@ body.resizing {
       background-image: url(../img/book.svg); }
 
 #notes {
-  width: 299px;
   border-right: 1px solid #b4b3b1;
   position: absolute;
   background: #f7f7f5;
@@ -627,7 +626,10 @@ body.resizing {
 #content {
   position: absolute;
   right: 0;
-  background: #f9f9f8; }
+  background: #f9f9f8;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none; }
   #content.deselected {
     background-color: #ededea;
     background-image: url(../img/page.svg);
