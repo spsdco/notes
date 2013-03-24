@@ -197,37 +197,17 @@ window.noted =
 		window.noted.editor.setHighlightActiveLine(false)
 		window.noted.editor.setShowPrintMargin(false)
 
+		window.noted.editor.on "change", ->
+			$this = $("#contentbody")
+			delay = 2000
+
+			clearTimeout $this.data('timer')
+			$this.data 'timer', setTimeout( ->
+				$this.removeData('timer')
+				window.noted.saveNote()
+			, delay)
+
 		# window.noted.editor.setTheme("ace/theme/monokai")
-		# window.noted.editor = new EpicEditor
-		# 	container: 'contentbody'
-		# 	file:
-		# 		name: 'epiceditor',
-		# 		defaultContent: '',
-		# 		autoSave: 2500
-		# 	theme:
-		# 		base:'/themes/base/epiceditor.css'
-		# 		preview:'/themes/preview/style.css'
-		# 		editor:'/themes/editor/style.css'
-
-		# window.noted.editor.load()
-
-		# window.noted.editor.on "save", (e) ->
-		# 	list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
-		# 	# Make sure a note is selected
-		# 	if window.noted.selectedNote isnt ""
-		# 		# Check if there's actually a difference.
-		# 		notePath = path.join(
-		# 			storage_dir,
-		# 			"Notebooks",
-		# 			list,
-		# 			window.noted.selectedNote + '.txt'
-		# 		)
-
-		# 		# Write file if something actually got modified
-		# 		fs.writeFile(notePath, e.content) if e.content isnt fs.readFileSync(notePath).toString()
-
-		# 		# Reload to reveal new timestamp
-		# 		# TODO: window.noted.loadNotes(window.noted.selectedList)
 
 		# Add note modal dialogue.
 		$('#new').click ->
@@ -279,18 +259,20 @@ window.noted =
 
 	editMode: (mode) ->
 		el = $("#content .edit")
-		if mode is "preview" # or window.noted.editor.eeState.edit is true and mode isnt "editor"
+		if mode is "preview" or window.noted.editor.getReadOnly() is false and mode isnt "editor"
 
 			el.text "edit"
 			$('#content .left h1').attr('contenteditable', 'false')
 			$('#contentbody')
 
-			# window.noted.editor.save()
-			# window.noted.editor.preview()
+			window.noted.editor.setReadOnly(true)
+			window.noted.editor.renderer.hideCursor(true)
+			window.noted.saveNote()
 		else
 			el.text "save"
 			$('.headerwrap .left h1').attr('contenteditable', 'true')
-			# window.noted.editor.edit()
+			window.noted.editor.setReadOnly(false)
+			window.noted.editor.renderer.hideCursor(false)
 
 	render: ->
 		# Lists the New Notebooks & Shows Selected
@@ -368,6 +350,24 @@ window.noted =
 		$("#notes ul").html(htmlstr)
 		callback() if callback
 
+	saveNote: ->
+		list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
+		# Make sure a note is selected
+		if window.noted.selectedNote isnt ""
+
+			notePath = path.join(
+				storage_dir,
+				"Notebooks",
+				list,
+				window.noted.selectedNote + '.txt'
+			)
+
+			# Write file
+			fs.writeFile(notePath, window.noted.editor.getValue())
+
+			# Reload to reveal new timestamp
+			# TODO: window.noted.loadNotes(window.noted.selectedList)
+
 	loadNote: (selector) ->
 
 		# Caches Selected Note and List
@@ -383,6 +383,8 @@ window.noted =
 			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getDate()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
 			# ^ This code is fucking shit. What were you thinking mh0?
 			window.noted.editor.setValue(data)
+			window.noted.editor.setReadOnly(true)
+			window.noted.editor.renderer.hideCursor(true)
 
 			# Chucks it into the right mode - this was the best I could do.
 			if selector.hasClass("edit")

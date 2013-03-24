@@ -173,6 +173,16 @@
       window.noted.editor.getSession().setUseWrapMode(true);
       window.noted.editor.setHighlightActiveLine(false);
       window.noted.editor.setShowPrintMargin(false);
+      window.noted.editor.on("change", function() {
+        var $this, delay;
+        $this = $("#contentbody");
+        delay = 2000;
+        clearTimeout($this.data('timer'));
+        return $this.data('timer', setTimeout(function() {
+          $this.removeData('timer');
+          return window.noted.saveNote();
+        }, delay));
+      });
       $('#new').click(function() {
         var name, regexp;
         name = "Untitled Note";
@@ -216,13 +226,18 @@
     editMode: function(mode) {
       var el;
       el = $("#content .edit");
-      if (mode === "preview") {
+      if (mode === "preview" || window.noted.editor.getReadOnly() === false && mode !== "editor") {
         el.text("edit");
         $('#content .left h1').attr('contenteditable', 'false');
-        return $('#contentbody');
+        $('#contentbody');
+        window.noted.editor.setReadOnly(true);
+        window.noted.editor.renderer.hideCursor(true);
+        return window.noted.saveNote();
       } else {
         el.text("save");
-        return $('.headerwrap .left h1').attr('contenteditable', 'true');
+        $('.headerwrap .left h1').attr('contenteditable', 'true');
+        window.noted.editor.setReadOnly(false);
+        return window.noted.editor.renderer.hideCursor(false);
       }
     },
     render: function() {
@@ -303,6 +318,14 @@
         return callback();
       }
     },
+    saveNote: function() {
+      var list, notePath;
+      list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list");
+      if (window.noted.selectedNote !== "") {
+        notePath = path.join(storage_dir, "Notebooks", list, window.noted.selectedNote + '.txt');
+        return fs.writeFile(notePath, window.noted.editor.getValue());
+      }
+    },
     loadNote: function(selector) {
       window.noted.selectedNote = $(selector).find("h2").text();
       return fs.readFile(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', function(err, data) {
@@ -316,6 +339,8 @@
         time = new Date(Date.parse(noteTime));
         $('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear()) + "/" + (window.noted.timeControls.pad(time.getMonth() + 1)) + "/" + time.getDate() + " " + window.noted.timeControls.pad(time.getHours()) + ":" + window.noted.timeControls.pad(time.getMinutes()));
         window.noted.editor.setValue(data);
+        window.noted.editor.setReadOnly(true);
+        window.noted.editor.renderer.hideCursor(true);
         if (selector.hasClass("edit")) {
           window.noted.editMode("editor");
           $("#content .left h1").focus();
