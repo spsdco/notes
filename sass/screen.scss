@@ -297,8 +297,8 @@ body.resizing { cursor: ew-resize; }
 			right: 0;
 		}
 
-		header {
-			display: none;
+		header, #contentread, #contentwrite {
+			display: none !important;
 		}
 	}
 
@@ -404,7 +404,7 @@ body.resizing { cursor: ew-resize; }
 	}
 }
 
-#contentbody {
+#contentread, #contentwrite {
 	position: absolute;
 	top:76px;
 	bottom: 0;
@@ -412,12 +412,13 @@ body.resizing { cursor: ew-resize; }
 	right: 0;
 	margin: 0;
 	padding: 0;
+	background: #fff;
+}
 
-	iframe {
-		margin: 0 auto;
-		display: block;
-		height: 100% !important;
-	}
+#contentread {
+	overflow-y: scroll;
+	display: none;
+	z-index:10;
 }
 
 

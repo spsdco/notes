@@ -664,8 +664,8 @@ body.resizing {
       text-align: center;
       left: 0;
       right: 0; }
-    #content.deselected header {
-      display: none; }
+    #content.deselected header, #content.deselected #contentread, #content.deselected #contentwrite {
+      display: none !important; }
   #content header {
     margin: 0;
     padding: 0;
@@ -753,18 +753,20 @@ body.resizing {
       cursor: default;
       border-radius: 2px; }
 
-#contentbody {
+#contentread, #contentwrite {
   position: absolute;
   top: 76px;
   bottom: 0;
   left: 0;
   right: 0;
   margin: 0;
-  padding: 0; }
-  #contentbody iframe {
-    margin: 0 auto;
-    display: block;
-    height: 100% !important; }
+  padding: 0;
+  background: #fff; }
+
+#contentread {
+  overflow-y: scroll;
+  display: none;
+  z-index: 10; }
 
 .modal {
   display: none;

@@ -1,13 +1,14 @@
 
 
-# Node Webkit Stuff\
-gui = global.gui 		= require 'nw.gui'
-fs 			= require 'fs'
-buffer 		= require 'buffer'
-path 		= require 'path'
+# Node Webkit Stuff
+gui = global.gui = require 'nw.gui'
+fs 			= require('fs')
+buffer 		= require('buffer')
+path 		= require('path')
 ncp 		= require('ncp').ncp
-util 		= require 'util'
-handlebars	= require 'handlebars'
+util 		= require('util')
+handlebars	= require('handlebars')
+marked		= require('marked')
 global.document = document
 Splitter = require './javascript/lib/splitter'
 
@@ -192,13 +193,14 @@ window.noted =
 				window.noted.selectedNote = name
 
 		# Create Markdown Editor
-		window.noted.editor = ace.edit("contentbody")
+		window.noted.editor = ace.edit("contentwrite")
 		window.noted.editor.getSession().setUseWrapMode(true)
 		window.noted.editor.setHighlightActiveLine(false)
 		window.noted.editor.setShowPrintMargin(false)
+		window.noted.editor.renderer.setShowGutter(false)
 
 		window.noted.editor.on "change", ->
-			$this = $("#contentbody")
+			$this = $("#contentwrite")
 			delay = 2000
 
 			clearTimeout $this.data('timer')
@@ -263,16 +265,15 @@ window.noted =
 
 			el.text "edit"
 			$('#content .left h1').attr('contenteditable', 'false')
-			$('#contentbody')
 
+			$("#contentread").html(marked(window.noted.editor.getValue())).show()
 			window.noted.editor.setReadOnly(true)
-			window.noted.editor.renderer.hideCursor(true)
 			window.noted.saveNote()
 		else
 			el.text "save"
 			$('.headerwrap .left h1').attr('contenteditable', 'true')
+			$("#contentread").hide()
 			window.noted.editor.setReadOnly(false)
-			window.noted.editor.renderer.hideCursor(false)
 
 	render: ->
 		# Lists the New Notebooks & Shows Selected
@@ -382,9 +383,10 @@ window.noted =
 			time = new Date(Date.parse(noteTime))
 			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getDate()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
 			# ^ This code is fucking shit. What were you thinking mh0?
+
+			$("#contentread").html(marked(data)).show()
 			window.noted.editor.setValue(data)
 			window.noted.editor.setReadOnly(true)
-			window.noted.editor.renderer.hideCursor(true)
 
 			# Chucks it into the right mode - this was the best I could do.
 			if selector.hasClass("edit")
@@ -396,10 +398,7 @@ window.noted =
 
 	deselectNote: ->
 		$("#content").addClass("deselected")
-		$("#content .left h1, #content .left time").text("")
 		window.noted.selectedNote = ""
-		# window.noted.editor.importFile('file', "")
-		# window.noted.editor.preview()
 
 window.noted.timeControls =
 	pad: (n) ->
