@@ -1,4 +1,14 @@
-# Noted Object
+global.document		= document
+gui = global.gui	= require 'nw.gui'
+fs 					= require 'fs'
+buffer 				= require 'buffer'
+path 				= require 'path'
+ncp 				= require('ncp').ncp
+util 				= require 'util'
+handlebars			= require 'handlebars'
+marked				= require 'marked'
+Splitter 			= require './javascript/lib/splitter'
+
 window.noted =
 
 	currentList: "all"
@@ -283,7 +293,7 @@ window.noted =
 						throw err if (err)
 						window.noted.deselect()
 						window.noted.load.notes(window.noted.currentList)
-				)		
+				)
 
 		clickDelNote: ->
 			$('.modal.delete').modal()
@@ -378,15 +388,4 @@ window.noted =
 			# pad a single-digit number to a 2-digit number for things such as times or dates.
 			(if (n < 10) then ("0" + n) else n)
 
-# Get the ball rolling.
-global.document		= document
-gui = global.gui	= require 'nw.gui'
-fs 					= require 'fs'
-buffer 				= require 'buffer'
-path 				= require 'path'
-ncp 				= require('ncp').ncp
-util 				= require 'util'
-handlebars			= require 'handlebars'
-marked				= require 'marked'
-Splitter 			= require './javascript/lib/splitter'
 window.noted.init()
