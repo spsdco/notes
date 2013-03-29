@@ -5,9 +5,11 @@ buffer 				= require 'buffer'
 path 				= require 'path'
 ncp 				= require('ncp').ncp
 util 				= require 'util'
+$					= require 'jQuery'
 handlebars			= require 'handlebars'
 marked				= require 'marked'
 Splitter 			= require './javascript/lib/splitter'
+modal 				= require './javascript/lib/modal'
 
 window.noted =
 
