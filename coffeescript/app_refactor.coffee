@@ -1,0 +1,392 @@
+# Noted Object
+window.noted =
+
+	currentList: "all"
+	currentNote: ""
+
+	init: ->
+		# Make variables. Do checks.
+		window.noted.homedir = process.env.HOME
+		window.noted.resvchar = [186, 191, 220, 222, 106, 56] # SHIFT-8 *] # : ; / ? \ | ' " *
+		window.noted.storagedir = window.noted.osdirs()
+
+		# Pass control onto the initUI function.
+		window.noted.initUI()
+
+	initUI: ->
+		Splitter.init
+			parent: $('#parent')[0],
+			panels:
+				left:
+					el: $("#notebooks")[0]
+					min: 150
+					width: 200
+					max: 450
+				center:
+					el: $("#notes")[0]
+					min: 250
+					width: 300
+					max: 850
+				right:
+					el: $("#content")[0]
+					min: 450
+					width: 550
+					max: Infinity
+
+		window.noted.window = gui.Window.get()
+		window.noted.window.show()
+		window.noted.window.showDevTools()
+		window.noted.load.notebooks()
+		window.noted.load.notes("All Notes")
+
+		window.noted.editor = ace.edit("contentwrite")
+		window.noted.editor.getSession().setUseWrapMode(true)
+		window.noted.editor.setHighlightActiveLine(false)
+		window.noted.editor.setShowPrintMargin(false)
+		window.noted.editor.renderer.setShowGutter(false)
+
+		window.noted.editor.on "change", ->
+			$this = $("#contentwrite")
+			delay = 2000
+
+			clearTimeout $this.data('timer')
+			$this.data 'timer', setTimeout( ->
+				$this.removeData('timer')
+				window.noted.save()
+			, delay)
+
+		$('#panel').mouseenter(->
+			$('#panel').addClass('drag')
+		).mouseleave ->
+			$('#panel').removeClass('drag')
+
+		# # Disallows Dragging on Buttons
+		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
+			$('#panel').removeClass('drag')
+		).mouseleave ->
+			$('#panel').addClass('drag')
+
+		$('#new').click ->
+			window.noted.UIEvents.clickNewNote()
+
+		$('#del').click ->
+			window.noted.UIEvents.clickDelNote()
+
+		$(".modal.delete .true").click ->
+			window.noted.UIEvents.modalclickDel()
+
+		$(".modal.delete .false").click ->
+			$(".modal.delete").modal "hide"
+
+		$('#close').click ->
+			window.noted.UIEvents.titlebarClose()
+
+		$('#minimize').click ->
+			window.noted.UIEvents.titlebarMinimize()
+
+		$('#maximize').click ->
+			window.noted.UIEvents.titlebarMaximize()
+
+		$('body').on "click", "#notebooks li", ->
+			window.noted.UIEvents.clickNotebook($(@))
+
+		$("body").on "keydown", ".headerwrap .left h1", (e) ->
+			window.noted.UIEvents.keydownTitle($(@))
+
+		$("body").on "keyup", ".headerwrap .left h1", ->
+			window.noted.UIEvents.keyupTitle($(@))
+
+		$('body').on "click", "#notes li", ->
+			window.noted.UIEvents.clickNote($(@))
+
+		$("#content .edit").click window.noted.editMode
+
+	deselect: ->
+		$("#content").addClass("deselected")
+		$("#content .left h1, #content .left time").text("")
+		window.noted.currentNote = ""
+
+	editMode: (mode) ->
+		el = $("#content .edit")
+		if mode is "preview" or window.noted.editor.getReadOnly() is false and mode isnt "editor"
+
+			el.text "edit"
+			$('#content .left h1').attr('contenteditable', 'false')
+
+			$("#contentread").html(marked(window.noted.editor.getValue())).show()
+			window.noted.editor.setReadOnly(true)
+			window.noted.save()
+		else
+			el.text "save"
+			$('.headerwrap .left h1').attr('contenteditable', 'true')
+			$("#contentread").hide()
+			window.noted.editor.setReadOnly(false)
+
+	save: ->
+		list = $("#notes li[data-id='" + window.noted.currentNote + "']").attr "data-list"
+		# Make sure a note is selected
+		if window.noted.currentNote isnt ""
+
+			notePath = path.join(
+				window.noted.storagedir,
+				"Notebooks",
+				list,
+				window.noted.currentNote + '.txt'
+			)
+
+			# Write file
+			fs.writeFile(notePath, window.noted.editor.getValue())
+
+			# Reload to reveal new timestamp
+			# TODO: window.noted.loadNotes(window.noted.currentList)
+
+	load:
+		notebooks: ->
+			template = handlebars.compile($("#notebook-template").html())
+			htmlstr = template({name: "All Notes", class: "all"})
+
+			fs.readdir path.join(window.noted.storagedir, "Notebooks"), (err, data) ->
+				i = 0
+				while i < data.length
+					if fs.statSync(path.join(window.noted.storagedir, "Notebooks", data[i])).isDirectory()
+						htmlstr += template({name: data[i]})
+					i++
+
+				# Append the string to the dom (perf matters.)
+				$("#notebooks ul").html(htmlstr)
+				$("#notebooks [data-id='" + window.noted.currentList + "'], #notebooks ." + window.noted.currentList).trigger("click")
+
+		notes: (list, type, callback) ->
+			window.noted.currentList = list
+
+			# Templates :)
+			template = handlebars.compile($("#note-template").html())
+			htmlstr = ""
+
+			if list is "All Notes"
+				# TODO: There will be some proper code in here soon
+				htmlstr = "I broke all notes because of the shitty implementation"
+			else
+				# It's easier doing @ without Async.
+				data = fs.readdirSync path.join(window.noted.storagedir, "Notebooks", list)
+				order = []
+				i = 0
+
+				while i < data.length
+					# Makes sure that it is a text file
+					if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
+						# Removes txt extension
+						name = data[i].substr(0, data[i].length - 4)
+						time = new Date fs.statSync(path.join(window.noted.storagedir, "Notebooks", list, name + '.txt'))['mtime']
+
+						# Gets an excerpt
+						fd = fs.openSync(path.join(window.noted.storagedir, "Notebooks", list, name + '.txt'), 'r')
+						buffer = new Buffer(100)
+						num = fs.readSync fd, buffer, 0, 100, 0
+						info = $(marked(buffer.toString("utf-8", 0, num))).text()
+						fs.close(fd)
+
+						# Makes a pretty Excerpt
+						if info.length > 90
+							lastIndex = info.lastIndexOf(" ")
+							info = info.substring(0, lastIndex) + "&hellip;"
+
+						order.push {id: i, time: time, name: name, info: info}
+					i++
+
+				# Sorts all the notes by time
+				order.sort (a, b) ->
+					return new Date(a.time) - new Date(b.time)
+
+				# Appends to DOM
+				for note in order
+					htmlstr = template({
+						name: note.name
+						list: list
+						year: note.time.getFullYear()
+						month: note.time.getMonth() + 1
+						day: note.time.getDate()
+						excerpt: note.info
+						}) + htmlstr
+
+			$("#notes ul").html(htmlstr)
+			callback() if callback
+
+		note: (selector) ->
+			# Caches Selected Note and List
+			window.noted.currentNote = $(selector).find("h2").text()
+
+			# Opens ze note
+			fs.readFile path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'), 'utf-8', (err, data) ->
+				throw err if (err)
+				$("#content").removeClass("deselected")
+				$('.headerwrap .left h1').text(window.noted.currentNote)
+				noteTime = fs.statSync(path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'))['mtime']
+				time = new Date(Date.parse(noteTime))
+				$('.headerwrap .left time').text(window.noted.util.pad(time.getFullYear())+"/"+(window.noted.util.pad(time.getMonth()+1))+"/"+time.getDate()+" "+window.noted.util.pad(time.getHours())+":"+window.noted.util.pad(time.getMinutes()))
+				# BAD CODE: TODO: ^ This code is fucking shit. What were you thinking mh0?
+				$("#contentread").html(marked(data)).show()
+				window.noted.editor.setValue(data)
+				window.noted.editor.setReadOnly(true)
+				# Chucks it into the right mode - this was the best I could do.
+				if selector.hasClass("edit")
+					window.noted.editMode("editor")
+					$("#content .left h1").focus()
+					selector.removeClass("edit")
+				else
+					window.noted.editMode("preview")
+
+	osdirs: ->
+		# Set up where we're going to store stuff.
+		if process.platform is 'darwin'
+			path.join(window.noted.homedir, "/Library/Application Support/Noted/")
+		else if process.platform is 'win32'
+			path.join(process.env.LOCALAPPDATA, "/Noted/")
+		else if process.platform is 'linux'
+			path.join(window.noted.homedir, '/.config/Noted/')
+
+	UIEvents:
+		# To make life simpler, have <action><element> as a fucntion name: example: clickEdit for when you click $('.edit')
+		clickNewNote: ->
+			name = "Untitled Note"
+			if window.noted.currentList isnt "All Notes"
+				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+".txt"))
+					r = /\(\s*(\d+)\s*\)$/
+					if r.exec(name) is null
+						name = name+" (1)"
+					else
+						name = name.replace(" ("+r.exec(name)[1]+")", " ("+(parseInt(r.exec(name)[1])+1)+")")
+				# Write to disk.
+				fs.writeFile(
+					path.join(
+						window.noted.storagedir,
+						"Notebooks",
+						window.noted.currentList, name + '.txt'
+					),
+					"This is your new blank note\n====\nAdd some content!",
+					->
+						# FIXME: Function in a Function. Functionception (this is a bad idea).
+						window.noted.load.notes window.noted.currentList, "", ->
+							$("#notes ul li:first").addClass("edit").trigger "click"
+				)
+
+		modalclickDel: ->
+			$('.modal.delete').modal "hide"
+			if window.noted.currentNote isnt ""
+				fs.unlink(
+					path.join(
+						window.noted.storagedir,
+						"Notebooks",
+						$("#notes li[data-id='" + window.noted.currentNote + "']").attr("data-list"),
+						window.noted.currentNote + '.txt'
+					), (err) ->
+						throw err if (err)
+						window.noted.deselect()
+						window.noted.load.notes(window.noted.currentList)
+				)		
+
+		clickDelNote: ->
+			$('.modal.delete').modal()
+
+		titlebarClose: ->
+			window.noted.window.close()
+
+		titlebarMinimize: ->
+			window.noted.window.minimize()
+
+		titlebarMaximize: ->
+			# TODO: Add unmaximizing
+			window.noted.window.maximize()
+
+		clickNotebook: (element) ->
+			element.parent().find(".selected").removeClass "selected"
+			element.addClass "selected"
+			window.noted.load.notes(element.text())
+			window.noted.deselect()
+
+		keydownTitle: (element) ->
+			if e.keyCode is 13
+				e.preventDefault()
+				name = element.text()
+				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt'))
+					r = /\(\s*(\d+)\s*\)$/
+					if r.exec(name) is null
+						name = name+" (1)"
+					else
+						name = name.replace(" ("+r.exec(name)[1]+")", " ("+(parseInt(r.exec(name)[1])+1)+")")
+
+					fs.rename(
+						path.join(
+							window.noted.storagedir,
+							"Notebooks",
+							window.noted.currentList,
+							window.noted.currentNote + '.txt'
+						),
+						path.join(
+							window.noted.storagedir,
+							"Notebooks",
+							window.noted.currentList,
+							name + '.txt'
+						)
+					)
+					window.noted.currentNote = name;
+				window.noted.loadNotes(window.noted.currentList)
+				element.blur()
+			else if e.keyCode in window.noted.reservedchars
+				e.preventDefault()
+
+		keyupTitle: (element) ->
+			# We can't have "".txt
+			name = element.text()
+			name = name + "_" while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt')) is true
+			$("#notes [data-id='" + window.noted.currentNote + "']")
+				.attr("data-id", name).find("h2").text(element.text())
+			if element.text() isnt ""
+
+				console.log "renaming note"
+
+				console.log path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,window.noted.currentNote + '.txt')
+				console.log path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,$(@).text() + '.txt')
+
+				# Renames the Note
+				fs.rename(
+					path.join(
+						window.noted.storagedir,
+						"Notebooks",
+						window.noted.currentList,
+						window.noted.currentNote + '.txt'
+					),
+					path.join(
+						window.noted.storagedir,
+						"Notebooks",
+						window.noted.currentList,
+						name + '.txt'
+					)
+				)
+
+				window.noted.currentNote = name
+
+		clickNote: (element) ->
+			$("#notes .selected").removeClass("selected")
+			element.addClass("selected")
+
+			# Loads Actual Note
+			window.noted.load.note(element)
+
+	util:
+		pad: (n) ->
+			# pad a single-digit number to a 2-digit number for things such as times or dates.
+			(if (n < 10) then ("0" + n) else n)
+
+# Get the ball rolling.
+global.document		= document
+gui = global.gui	= require 'nw.gui'
+fs 					= require 'fs'
+buffer 				= require 'buffer'
+path 				= require 'path'
+ncp 				= require('ncp').ncp
+util 				= require 'util'
+handlebars			= require 'handlebars'
+marked				= require 'marked'
+Splitter 			= require './javascript/lib/splitter'
+window.noted.init()

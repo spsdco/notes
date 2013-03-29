@@ -1,14 +1,11 @@
-
-
-# Node Webkit Stuff
-gui = global.gui = require 'nw.gui'
-fs 			= require('fs')
-buffer 		= require('buffer')
-path 		= require('path')
+# Node Webkit Stuff\
+gui = global.gui 		= require 'nw.gui'
+fs 			= require 'fs'
+buffer 		= require 'buffer'
+path 		= require 'path'
 ncp 		= require('ncp').ncp
-util 		= require('util')
-handlebars	= require('handlebars')
-marked		= require('marked')
+util 		= require 'util'
+handlebars	= require 'handlebars'
 global.document = document
 Splitter = require './javascript/lib/splitter'
 
@@ -55,10 +52,10 @@ window.noted =
 			$('#panel').removeClass('drag')
 
 		# # Disallows Dragging on Buttons
-		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
-			$('#panel').removeClass('drag')
-		).mouseleave ->
-			$('#panel').addClass('drag')
+		# $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
+		# 	$('#panel').removeClass('drag')
+		# ).mouseleave ->
+		# 	$('#panel').addClass('drag')
 
 	setupUI: ->
 		Splitter.init
@@ -88,16 +85,16 @@ window.noted =
 			$(@).parent().find(".selected").removeClass "selected"
 			$(@).addClass "selected"
 			window.noted.loadNotes($(@).text())
-			window.noted.deselectNote()
+			window.noted.deselect()
 
 		$("body").on "contextmenu", "#notebooks li", ->
 			name = $(this).text()
 			console.log name
-			#window.noted.editor.remove('file')
+			window.noted.editor.remove('file')
 			fs.unlink path.join(storage_dir, "Notebooks", name, '*'), (err) ->
 				fs.rmdir path.join(storage_dir, "Notebooks", name), (err) ->
 					throw err if (err)
-					window.noted.deselectNote()
+					window.noted.deselect()
 					window.noted.listNotebooks()
 
 		$('body').on "keydown", "#notebooks input", (e) ->
@@ -193,28 +190,41 @@ window.noted =
 				window.noted.selectedNote = name
 
 		# Create Markdown Editor
-		window.noted.editor = ace.edit("contentwrite")
-		window.noted.editor.getSession().setUseWrapMode(true)
-		window.noted.editor.setHighlightActiveLine(false)
-		window.noted.editor.setShowPrintMargin(false)
-		window.noted.editor.renderer.setShowGutter(false)
+		window.noted.editor = new EpicEditor
+			container: 'contentbody'
+			file:
+				name: 'epiceditor',
+				defaultContent: '',
+				autoSave: 2500
+			theme:
+				base:'/themes/base/epiceditor.css'
+				preview:'/themes/preview/style.css'
+				editor:'/themes/editor/style.css'
 
-		window.noted.editor.on "change", ->
-			$this = $("#contentwrite")
-			delay = 2000
+		window.noted.editor.load()
 
-			clearTimeout $this.data('timer')
-			$this.data 'timer', setTimeout( ->
-				$this.removeData('timer')
-				window.noted.saveNote()
-			, delay)
+		window.noted.editor.on "save", (e) ->
+			list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
+			# Make sure a note is selected
+			if window.noted.selectedNote isnt ""
+				# Check if there's actually a difference.
+				notePath = path.join(
+					storage_dir,
+					"Notebooks",
+					list,
+					window.noted.selectedNote + '.txt'
+				)
 
-		# window.noted.editor.setTheme("ace/theme/monokai")
+				# Write file if something actually got modified
+				fs.writeFile(notePath, e.content) if e.content isnt fs.readFileSync(notePath).toString()
+
+				# Reload to reveal new timestamp
+				# TODO: window.noted.loadNotes(window.noted.selectedList)
 
 		# Add note modal dialogue.
 		$('#new').click ->
 			name = "Untitled Note"
-			if window.noted.selectedList isnt "All Notes" #and window.noted.editor.eeState.edit is false
+			if window.noted.selectedList isnt "All Notes" and window.noted.editor.eeState.edit is false
 				while fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name+'.txt')) is true
 					regexp = /\(\s*(\d+)\s*\)$/
 					if regexp.exec(name) is null
@@ -242,7 +252,7 @@ window.noted =
 
 		$(".modal.delete .true").click ->
 			$(".modal.delete").modal "hide"
-			# window.noted.editor.remove('file')
+			window.noted.editor.remove('file')
 			if window.noted.selectedNote isnt ""
 				fs.unlink(
 					path.join(
@@ -252,7 +262,7 @@ window.noted =
 						window.noted.selectedNote + '.txt'
 					), (err) ->
 						throw err if (err)
-						window.noted.deselectNote()
+						window.noted.deselect()
 						window.noted.loadNotes(window.noted.selectedList)
 				)
 
@@ -261,19 +271,18 @@ window.noted =
 
 	editMode: (mode) ->
 		el = $("#content .edit")
-		if mode is "preview" or window.noted.editor.getReadOnly() is false and mode isnt "editor"
+		if mode is "preview" or window.noted.editor.eeState.edit is true and mode isnt "editor"
 
 			el.text "edit"
 			$('#content .left h1').attr('contenteditable', 'false')
+			$('#contentbody')
 
-			$("#contentread").html(marked(window.noted.editor.getValue())).show()
-			window.noted.editor.setReadOnly(true)
-			window.noted.saveNote()
+			window.noted.editor.save()
+			window.noted.editor.preview()
 		else
 			el.text "save"
 			$('.headerwrap .left h1').attr('contenteditable', 'true')
-			$("#contentread").hide()
-			window.noted.editor.setReadOnly(false)
+			window.noted.editor.edit()
 
 	render: ->
 		# Lists the New Notebooks & Shows Selected
@@ -322,7 +331,7 @@ window.noted =
 					fd = fs.openSync(path.join(storage_dir, "Notebooks", list, name + '.txt'), 'r')
 					buffer = new Buffer(100)
 					num = fs.readSync fd, buffer, 0, 100, 0
-					info = "lorem ipsum" #$(marked(buffer.toString("utf-8", 0, num))).text()
+					info = $(marked(buffer.toString("utf-8", 0, num))).text()
 					fs.close(fd)
 
 					# Makes a pretty Excerpt
@@ -351,24 +360,6 @@ window.noted =
 		$("#notes ul").html(htmlstr)
 		callback() if callback
 
-	saveNote: ->
-		list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr "data-list"
-		# Make sure a note is selected
-		if window.noted.selectedNote isnt ""
-
-			notePath = path.join(
-				storage_dir,
-				"Notebooks",
-				list,
-				window.noted.selectedNote + '.txt'
-			)
-
-			# Write file
-			fs.writeFile(notePath, window.noted.editor.getValue())
-
-			# Reload to reveal new timestamp
-			# TODO: window.noted.loadNotes(window.noted.selectedList)
-
 	loadNote: (selector) ->
 
 		# Caches Selected Note and List
@@ -383,10 +374,7 @@ window.noted =
 			time = new Date(Date.parse(noteTime))
 			$('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear())+"/"+(window.noted.timeControls.pad(time.getMonth()+1))+"/"+time.getDate()+" "+window.noted.timeControls.pad(time.getHours())+":"+window.noted.timeControls.pad(time.getMinutes()))
 			# ^ This code is fucking shit. What were you thinking mh0?
-
-			$("#contentread").html(marked(data)).show()
-			window.noted.editor.setValue(data)
-			window.noted.editor.setReadOnly(true)
+			window.noted.editor.importFile('file', data)
 
 			# Chucks it into the right mode - this was the best I could do.
 			if selector.hasClass("edit")
@@ -398,7 +386,10 @@ window.noted =
 
 	deselectNote: ->
 		$("#content").addClass("deselected")
+		$("#content .left h1, #content .left time").text("")
 		window.noted.selectedNote = ""
+		window.noted.editor.importFile('file', "")
+		window.noted.editor.preview()
 
 window.noted.timeControls =
 	pad: (n) ->
