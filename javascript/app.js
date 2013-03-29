@@ -1,65 +1,19 @@
 (function() {
-  var Splitter, buffer, fs, gui, handlebars, home_dir, ncp, node, path, reserved_chars, storage_dir, util,
+  var Splitter, buffer, fs, gui, handlebars, marked, ncp, path, util,
     __indexOf = Array.prototype.indexOf || function(item) { for (var i = 0, l = this.length; i < l; i++) { if (i in this && this[i] === item) return i; } return -1; };
 
-  gui = global.gui = require('nw.gui');
-
-  fs = require('fs');
-
-  buffer = require('buffer');
-
-  path = require('path');
-
-  ncp = require('ncp').ncp;
-
-  util = require('util');
-
-  handlebars = require('handlebars');
-
-  global.document = document;
-
-  Splitter = require('./javascript/lib/splitter');
-
-  node = true;
-
-  home_dir = process.env.HOME;
-
-  reserved_chars = [186, 191, 220, 222, 106, 56];
-
-  if (process.platform === "darwin") {
-    storage_dir = path.join(home_dir, "/Library/Application Support/Noted/");
-  } else if (process.platform === "win32") {
-    storage_dir = path.join(process.env.LOCALAPPDATA, "/Noted");
-  } else if (process.platform === "linux") {
-    storage_dir = path.join(home_dir, "/.config/Noted/");
-  }
-
   window.noted = {
-    selectedList: "all",
-    selectedNote: "",
-    setupPanel: function() {
-      var win;
-      win = gui.Window.get();
-      win.show();
-      win.showDevTools();
-      $('#close').click(function() {
-        return win.close();
-      });
-      $('#minimize').click(function() {
-        return win.minimize();
-      });
-      $('#maximize').click(function() {
-        return win.maximize();
-      });
-      return $('#panel').mouseenter(function() {
-        return $('#panel').addClass('drag');
-      }).mouseleave(function() {
-        return $('#panel').removeClass('drag');
-      });
+    currentList: "all",
+    currentNote: "",
+    init: function() {
+      window.noted.homedir = process.env.HOME;
+      window.noted.resvchar = [186, 191, 220, 222, 106, 56];
+      window.noted.storagedir = window.noted.osdirs();
+      return window.noted.initUI();
     },
-    setupUI: function() {
+    initUI: function() {
       Splitter.init({
-        parent: $("#parent")[0],
+        parent: $('#parent')[0],
         panels: {
           left: {
             el: $("#notebooks")[0],
@@ -81,298 +35,327 @@
           }
         }
       });
-      $("#content .edit").click(window.noted.editMode);
-      $("body").on("click", "#notebooks li", function() {
-        $(this).parent().find(".selected").removeClass("selected");
-        $(this).addClass("selected");
-        window.noted.loadNotes($(this).text());
-        return window.noted.deselect();
+      window.noted.window = gui.Window.get();
+      window.noted.window.show();
+      window.noted.window.showDevTools();
+      window.noted.load.notebooks();
+      window.noted.load.notes("All Notes");
+      window.noted.editor = ace.edit("contentwrite");
+      window.noted.editor.getSession().setUseWrapMode(true);
+      window.noted.editor.setHighlightActiveLine(false);
+      window.noted.editor.setShowPrintMargin(false);
+      window.noted.editor.renderer.setShowGutter(false);
+      window.noted.editor.on("change", function() {
+        var $this, delay;
+        $this = $("#contentwrite");
+        delay = 2000;
+        clearTimeout($this.data('timer'));
+        return $this.data('timer', setTimeout(function() {
+          $this.removeData('timer');
+          return window.noted.save();
+        }, delay));
       });
-      $("body").on("contextmenu", "#notebooks li", function() {
-        var name;
-        name = $(this).text();
-        console.log(name);
-        window.noted.editor.remove('file');
-        return fs.unlink(path.join(storage_dir, "Notebooks", name, '*'), function(err) {
-          return fs.rmdir(path.join(storage_dir, "Notebooks", name), function(err) {
-            if (err) throw err;
-            window.noted.deselect();
-            return window.noted.listNotebooks();
-          });
-        });
+      $('#panel').mouseenter(function() {
+        return $('#panel').addClass('drag');
+      }).mouseleave(function() {
+        return $('#panel').removeClass('drag');
       });
-      $('body').on("keydown", "#notebooks input", function(e) {
-        var name, regexp;
-        name = $('#notebooks input').val();
-        if (e.keyCode === 13) {
-          e.preventDefault();
-          while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
-            regexp = /\(\s*(\d+)\s*\)$/;
-            if (regexp.exec(name) === null) {
-              name = name + " (1)";
-            } else {
-              name = name.replace(" (" + regexp.exec(name)[1] + ")", " (" + (parseInt(regexp.exec(name)[1]) + 1) + ")");
-            }
-          }
-          fs.mkdir(path.join(storage_dir, "Notebooks", name));
-          window.noted.listNotebooks();
-          return $('#notebooks input').val("").blur();
-        }
-      });
-      $("body").on("click", "#notes li", function() {
-        this.el = $(this);
-        $("#notes .selected").removeClass("selected");
-        this.el.addClass("selected");
-        return window.noted.loadNote(this.el);
-      });
-      $("body").on("keydown", ".headerwrap .left h1", function(e) {
-        var name, regexp, _ref;
-        console.log(e.keyCode);
-        if (e.keyCode === 13) {
-          e.preventDefault();
-          name = $(this).text();
-          while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
-            regexp = /\(\s*(\d+)\s*\)$/;
-            if (regexp.exec(name) === null) {
-              name = name + " (1)";
-            } else {
-              name = name.replace(" (" + regexp.exec(name)[1] + ")", " (" + (parseInt(regexp.exec(name)[1]) + 1) + ")");
-            }
-            fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'));
-            window.noted.selectedNote = name;
-          }
-          window.noted.loadNotes(window.noted.selectedList);
-          return $(this).blur();
-        } else if (_ref = e.keyCode, __indexOf.call(reserved_chars, _ref) >= 0) {
-          return e.preventDefault();
-        }
-      });
-      $("body").on("keyup", ".headerwrap .left h1", function(e) {
-        var name;
-        name = $(this).text();
-        while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
-          name = name + "_";
-        }
-        $("#notes [data-id='" + window.noted.selectedNote + "']").attr("data-id", name).find("h2").text($(this).text());
-        if ($(this).text() !== "") {
-          console.log("renaming note");
-          console.log(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'));
-          console.log(path.join(storage_dir, "Notebooks", window.noted.selectedList, $(this).text() + '.txt'));
-          fs.rename(path.join(storage_dir, "Notebooks", window.noted.selectedList, window.noted.selectedNote + '.txt'), path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'));
-          return window.noted.selectedNote = name;
-        }
-      });
-      window.noted.editor = new EpicEditor({
-        container: 'contentbody',
-        file: {
-          name: 'epiceditor',
-          defaultContent: '',
-          autoSave: 2500
-        },
-        theme: {
-          base: '/themes/base/epiceditor.css',
-          preview: '/themes/preview/style.css',
-          editor: '/themes/editor/style.css'
-        }
-      });
-      window.noted.editor.load();
-      window.noted.editor.on("save", function(e) {
-        var list, notePath;
-        list = $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list");
-        if (window.noted.selectedNote !== "") {
-          notePath = path.join(storage_dir, "Notebooks", list, window.noted.selectedNote + '.txt');
-          if (e.content !== fs.readFileSync(notePath).toString()) {
-            return fs.writeFile(notePath, e.content);
-          }
-        }
+      $('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(function() {
+        return $('#panel').removeClass('drag');
+      }).mouseleave(function() {
+        return $('#panel').addClass('drag');
       });
       $('#new').click(function() {
-        var name, regexp;
-        name = "Untitled Note";
-        if (window.noted.selectedList !== "All Notes" && window.noted.editor.eeState.edit === false) {
-          while (fs.existsSync(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt')) === true) {
-            regexp = /\(\s*(\d+)\s*\)$/;
-            if (regexp.exec(name) === null) {
-              name = name + " (1)";
-            } else {
-              name = name.replace(" (" + regexp.exec(name)[1] + ")", " (" + (parseInt(regexp.exec(name)[1]) + 1) + ")");
-              console.log(regexp.exec(name)[1]);
-            }
-          }
-          return fs.writeFile(path.join(storage_dir, "Notebooks", window.noted.selectedList, name + '.txt'), "Add some content!", function() {
-            return window.noted.loadNotes(window.noted.selectedList, "", function() {
-              console.log("hello");
-              return $("#notes ul li:first").addClass("edit").trigger("click");
-            });
-          });
-        }
+        return window.noted.UIEvents.clickNewNote();
       });
       $('#del').click(function() {
-        return $(".modal.delete").modal();
+        return window.noted.UIEvents.clickDelNote();
       });
       $(".modal.delete .true").click(function() {
-        $(".modal.delete").modal("hide");
-        window.noted.editor.remove('file');
-        if (window.noted.selectedNote !== "") {
-          return fs.unlink(path.join(storage_dir, "Notebooks", $("#notes li[data-id='" + window.noted.selectedNote + "']").attr("data-list"), window.noted.selectedNote + '.txt'), function(err) {
-            if (err) throw err;
-            window.noted.deselect();
-            return window.noted.loadNotes(window.noted.selectedList);
-          });
-        }
+        return window.noted.UIEvents.modalclickDel();
       });
-      return $(".modal.delete .false").click(function() {
+      $(".modal.delete .false").click(function() {
         return $(".modal.delete").modal("hide");
       });
+      $('#close').click(function() {
+        return window.noted.UIEvents.titlebarClose();
+      });
+      $('#minimize').click(function() {
+        return window.noted.UIEvents.titlebarMinimize();
+      });
+      $('#maximize').click(function() {
+        return window.noted.UIEvents.titlebarMaximize();
+      });
+      $('body').on("click", "#notebooks li", function() {
+        return window.noted.UIEvents.clickNotebook($(this));
+      });
+      $("body").on("keydown", ".headerwrap .left h1", function(e) {
+        return window.noted.UIEvents.keydownTitle($(this));
+      });
+      $("body").on("keyup", ".headerwrap .left h1", function() {
+        return window.noted.UIEvents.keyupTitle($(this));
+      });
+      $('body').on("click", "#notes li", function() {
+        return window.noted.UIEvents.clickNote($(this));
+      });
+      return $("#content .edit").click(window.noted.editMode);
+    },
+    deselect: function() {
+      $("#content").addClass("deselected");
+      $("#content .left h1, #content .left time").text("");
+      return window.noted.currentNote = "";
     },
     editMode: function(mode) {
       var el;
       el = $("#content .edit");
-      if (mode === "preview" || window.noted.editor.eeState.edit === true && mode !== "editor") {
+      if (mode === "preview" || window.noted.editor.getReadOnly() === false && mode !== "editor") {
         el.text("edit");
         $('#content .left h1').attr('contenteditable', 'false');
-        $('#contentbody');
-        window.noted.editor.save();
-        return window.noted.editor.preview();
+        $("#contentread").html(marked(window.noted.editor.getValue())).show();
+        window.noted.editor.setReadOnly(true);
+        return window.noted.save();
       } else {
         el.text("save");
         $('.headerwrap .left h1').attr('contenteditable', 'true');
-        return window.noted.editor.edit();
+        $("#contentread").hide();
+        return window.noted.editor.setReadOnly(false);
       }
     },
-    render: function() {
-      return window.noted.listNotebooks();
+    save: function() {
+      var list, notePath;
+      list = $("#notes li[data-id='" + window.noted.currentNote + "']").attr("data-list");
+      if (window.noted.currentNote !== "") {
+        notePath = path.join(window.noted.storagedir, "Notebooks", list, window.noted.currentNote + '.txt');
+        return fs.writeFile(notePath, window.noted.editor.getValue());
+      }
     },
-    listNotebooks: function() {
-      var htmlstr, template;
-      template = handlebars.compile($("#notebook-template").html());
-      htmlstr = template({
-        name: "All Notes",
-        "class": "all"
-      });
-      return fs.readdir(path.join(storage_dir, "Notebooks"), function(err, data) {
-        var i;
-        i = 0;
-        while (i < data.length) {
-          if (fs.statSync(path.join(storage_dir, "Notebooks", data[i])).isDirectory()) {
-            htmlstr += template({
-              name: data[i]
-            });
-          }
-          i++;
-        }
-        $("#notebooks ul").html(htmlstr);
-        return $("#notebooks [data-id='" + window.noted.selectedList + "'], #notebooks ." + window.noted.selectedList).trigger("click");
-      });
-    },
-    loadNotes: function(list, type, callback) {
-      var data, fd, htmlstr, i, info, lastIndex, name, note, num, order, template, time, _i, _len;
-      window.noted.selectedList = list;
-      template = handlebars.compile($("#note-template").html());
-      htmlstr = "";
-      if (list === "All Notes") {
-        htmlstr = "I broke all notes because of the shitty implementation";
-      } else {
-        data = fs.readdirSync(path.join(storage_dir, "Notebooks", list));
-        order = [];
-        i = 0;
-        while (i < data.length) {
-          if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
-            name = data[i].substr(0, data[i].length - 4);
-            time = new Date(fs.statSync(path.join(storage_dir, "Notebooks", list, name + '.txt'))['mtime']);
-            fd = fs.openSync(path.join(storage_dir, "Notebooks", list, name + '.txt'), 'r');
-            buffer = new Buffer(100);
-            num = fs.readSync(fd, buffer, 0, 100, 0);
-            info = $(marked(buffer.toString("utf-8", 0, num))).text();
-            fs.close(fd);
-            if (info.length > 90) {
-              lastIndex = info.lastIndexOf(" ");
-              info = info.substring(0, lastIndex) + "&hellip;";
-            }
-            order.push({
-              id: i,
-              time: time,
-              name: name,
-              info: info
-            });
-          }
-          i++;
-        }
-        order.sort(function(a, b) {
-          return new Date(a.time) - new Date(b.time);
+    load: {
+      notebooks: function() {
+        var htmlstr, template;
+        template = handlebars.compile($("#notebook-template").html());
+        htmlstr = template({
+          name: "All Notes",
+          "class": "all"
         });
-        for (_i = 0, _len = order.length; _i < _len; _i++) {
-          note = order[_i];
-          htmlstr = template({
-            name: note.name,
-            list: list,
-            year: note.time.getFullYear(),
-            month: note.time.getMonth() + 1,
-            day: note.time.getDate(),
-            excerpt: note.info
-          }) + htmlstr;
-        }
-      }
-      $("#notes ul").html(htmlstr);
-      if (callback) return callback();
-    },
-    loadNote: function(selector) {
-      window.noted.selectedNote = $(selector).find("h2").text();
-      return fs.readFile(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'), 'utf-8', function(err, data) {
-        var noteTime, time;
-        if (err) throw err;
-        $("#content").removeClass("deselected");
-        $('.headerwrap .left h1').text(window.noted.selectedNote);
-        noteTime = fs.statSync(path.join(storage_dir, "Notebooks", $(selector).attr("data-list"), window.noted.selectedNote + '.txt'))['mtime'];
-        time = new Date(Date.parse(noteTime));
-        $('.headerwrap .left time').text(window.noted.timeControls.pad(time.getFullYear()) + "/" + (window.noted.timeControls.pad(time.getMonth() + 1)) + "/" + time.getDate() + " " + window.noted.timeControls.pad(time.getHours()) + ":" + window.noted.timeControls.pad(time.getMinutes()));
-        window.noted.editor.importFile('file', data);
-        if (selector.hasClass("edit")) {
-          window.noted.editMode("editor");
-          $("#content .left h1").focus();
-          return selector.removeClass("edit");
-        } else {
-          return window.noted.editMode("preview");
-        }
-      });
-    },
-    deselectNote: function() {
-      $("#content").addClass("deselected");
-      $("#content .left h1, #content .left time").text("");
-      window.noted.selectedNote = "";
-      window.noted.editor.importFile('file', "");
-      return window.noted.editor.preview();
-    }
-  };
-
-  window.noted.timeControls = {
-    pad: function(n) {
-      if (n < 10) {
-        return "0" + n;
-      } else {
-        return n;
-      }
-    }
-  };
-
-  $(function() {
-    window.noted.setupUI();
-    if (node) {
-      window.noted.setupPanel();
-      return fs.readdir(path.join(storage_dir, "/Notebooks/"), function(err, data) {
-        if (err) {
-          if (err.code === "ENOENT") {
-            return fs.mkdir(path.join(storage_dir, "/Notebooks/"), function() {
-              return ncp(path.join(window.location.pathname, "../default_notebooks"), path.join(storage_dir, "/Notebooks/"), function(err) {
-                return window.noted.render();
+        return fs.readdir(path.join(window.noted.storagedir, "Notebooks"), function(err, data) {
+          var i;
+          i = 0;
+          while (i < data.length) {
+            if (fs.statSync(path.join(window.noted.storagedir, "Notebooks", data[i])).isDirectory()) {
+              htmlstr += template({
+                name: data[i]
               });
-            });
+            }
+            i++;
           }
+          $("#notebooks ul").html(htmlstr);
+          return $("#notebooks [data-id='" + window.noted.currentList + "'], #notebooks ." + window.noted.currentList).trigger("click");
+        });
+      },
+      notes: function(list, type, callback) {
+        var buffer, data, fd, htmlstr, i, info, lastIndex, name, note, num, order, template, time, _i, _len;
+        window.noted.currentList = list;
+        template = handlebars.compile($("#note-template").html());
+        htmlstr = "";
+        if (list === "All Notes") {
+          htmlstr = "I broke all notes because of the shitty implementation";
         } else {
-          return window.noted.render();
+          data = fs.readdirSync(path.join(window.noted.storagedir, "Notebooks", list));
+          order = [];
+          i = 0;
+          while (i < data.length) {
+            if (data[i].substr(data[i].length - 4, data[i].length) === ".txt") {
+              name = data[i].substr(0, data[i].length - 4);
+              time = new Date(fs.statSync(path.join(window.noted.storagedir, "Notebooks", list, name + '.txt'))['mtime']);
+              fd = fs.openSync(path.join(window.noted.storagedir, "Notebooks", list, name + '.txt'), 'r');
+              buffer = new Buffer(100);
+              num = fs.readSync(fd, buffer, 0, 100, 0);
+              info = $(marked(buffer.toString("utf-8", 0, num))).text();
+              fs.close(fd);
+              if (info.length > 90) {
+                lastIndex = info.lastIndexOf(" ");
+                info = info.substring(0, lastIndex) + "&hellip;";
+              }
+              order.push({
+                id: i,
+                time: time,
+                name: name,
+                info: info
+              });
+            }
+            i++;
+          }
+          order.sort(function(a, b) {
+            return new Date(a.time) - new Date(b.time);
+          });
+          for (_i = 0, _len = order.length; _i < _len; _i++) {
+            note = order[_i];
+            htmlstr = template({
+              name: note.name,
+              list: list,
+              year: note.time.getFullYear(),
+              month: note.time.getMonth() + 1,
+              day: note.time.getDate(),
+              excerpt: note.info
+            }) + htmlstr;
+          }
         }
-      });
+        $("#notes ul").html(htmlstr);
+        if (callback) return callback();
+      },
+      note: function(selector) {
+        window.noted.currentNote = $(selector).find("h2").text();
+        return fs.readFile(path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'), 'utf-8', function(err, data) {
+          var noteTime, time;
+          if (err) throw err;
+          $("#content").removeClass("deselected");
+          $('.headerwrap .left h1').text(window.noted.currentNote);
+          noteTime = fs.statSync(path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'))['mtime'];
+          time = new Date(Date.parse(noteTime));
+          $('.headerwrap .left time').text(window.noted.util.pad(time.getFullYear()) + "/" + (window.noted.util.pad(time.getMonth() + 1)) + "/" + time.getDate() + " " + window.noted.util.pad(time.getHours()) + ":" + window.noted.util.pad(time.getMinutes()));
+          $("#contentread").html(marked(data)).show();
+          window.noted.editor.setValue(data);
+          window.noted.editor.setReadOnly(true);
+          if (selector.hasClass("edit")) {
+            window.noted.editMode("editor");
+            $("#content .left h1").focus();
+            return selector.removeClass("edit");
+          } else {
+            return window.noted.editMode("preview");
+          }
+        });
+      }
+    },
+    osdirs: function() {
+      if (process.platform === 'darwin') {
+        return path.join(window.noted.homedir, "/Library/Application Support/Noted/");
+      } else if (process.platform === 'win32') {
+        return path.join(process.env.LOCALAPPDATA, "/Noted/");
+      } else if (process.platform === 'linux') {
+        return path.join(window.noted.homedir, '/.config/Noted/');
+      }
+    },
+    UIEvents: {
+      clickNewNote: function() {
+        var name, r;
+        name = "Untitled Note";
+        if (window.noted.currentList !== "All Notes") {
+          while (fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + ".txt"))) {
+            r = /\(\s*(\d+)\s*\)$/;
+            if (r.exec(name) === null) {
+              name = name + " (1)";
+            } else {
+              name = name.replace(" (" + r.exec(name)[1] + ")", " (" + (parseInt(r.exec(name)[1]) + 1) + ")");
+            }
+          }
+          return fs.writeFile(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + '.txt'), "This is your new blank note\n====\nAdd some content!", function() {
+            return window.noted.load.notes(window.noted.currentList, "", function() {
+              return $("#notes ul li:first").addClass("edit").trigger("click");
+            });
+          });
+        }
+      },
+      modalclickDel: function() {
+        $('.modal.delete').modal("hide");
+        if (window.noted.currentNote !== "") {
+          return fs.unlink(path.join(window.noted.storagedir, "Notebooks", $("#notes li[data-id='" + window.noted.currentNote + "']").attr("data-list"), window.noted.currentNote + '.txt'), function(err) {
+            if (err) throw err;
+            window.noted.deselect();
+            return window.noted.load.notes(window.noted.currentList);
+          });
+        }
+      },
+      clickDelNote: function() {
+        return $('.modal.delete').modal();
+      },
+      titlebarClose: function() {
+        return window.noted.window.close();
+      },
+      titlebarMinimize: function() {
+        return window.noted.window.minimize();
+      },
+      titlebarMaximize: function() {
+        return window.noted.window.maximize();
+      },
+      clickNotebook: function(element) {
+        element.parent().find(".selected").removeClass("selected");
+        element.addClass("selected");
+        window.noted.load.notes(element.text());
+        return window.noted.deselect();
+      },
+      keydownTitle: function(element) {
+        var name, r, _ref;
+        if (e.keyCode === 13) {
+          e.preventDefault();
+          name = element.text();
+          while (fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + '.txt'))) {
+            r = /\(\s*(\d+)\s*\)$/;
+            if (r.exec(name) === null) {
+              name = name + " (1)";
+            } else {
+              name = name.replace(" (" + r.exec(name)[1] + ")", " (" + (parseInt(r.exec(name)[1]) + 1) + ")");
+            }
+            fs.rename(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, window.noted.currentNote + '.txt'), path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + '.txt'));
+            window.noted.currentNote = name;
+          }
+          window.noted.loadNotes(window.noted.currentList);
+          return element.blur();
+        } else if (_ref = e.keyCode, __indexOf.call(window.noted.reservedchars, _ref) >= 0) {
+          return e.preventDefault();
+        }
+      },
+      keyupTitle: function(element) {
+        var name;
+        name = element.text();
+        while (fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + '.txt')) === true) {
+          name = name + "_";
+        }
+        $("#notes [data-id='" + window.noted.currentNote + "']").attr("data-id", name).find("h2").text(element.text());
+        if (element.text() !== "") {
+          console.log("renaming note");
+          console.log(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, window.noted.currentNote + '.txt'));
+          console.log(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, $(this).text() + '.txt'));
+          fs.rename(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, window.noted.currentNote + '.txt'), path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + '.txt'));
+          return window.noted.currentNote = name;
+        }
+      },
+      clickNote: function(element) {
+        $("#notes .selected").removeClass("selected");
+        element.addClass("selected");
+        return window.noted.load.note(element);
+      }
+    },
+    util: {
+      pad: function(n) {
+        if (n < 10) {
+          return "0" + n;
+        } else {
+          return n;
+        }
+      }
     }
-  });
+  };
+
+  global.document = document;
+
+  gui = global.gui = require('nw.gui');
+
+  fs = require('fs');
+
+  buffer = require('buffer');
+
+  path = require('path');
+
+  ncp = require('ncp').ncp;
+
+  util = require('util');
+
+  handlebars = require('handlebars');
+
+  marked = require('marked');
+
+  Splitter = require('./javascript/lib/splitter');
+
+  window.noted.init();
 
 }).call(this);
