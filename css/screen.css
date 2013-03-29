@@ -550,13 +550,8 @@ body.resizing {
   /* So you can see the splitters above the panels */
   z-index: 2;
   background: transparent;
-<<<<<<< HEAD
   border-left: 1px solid #fff;
-  box-shadow: -1px 0 #666; }
-=======
-  border-left: 1px solid white;
   box-shadow: -1px 0 #b4b3b1; }
->>>>>>> 6a63abd3412d02715a345582025520173a8e3129
 
 #notebooks {
   background: #f00;
