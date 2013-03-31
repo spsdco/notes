@@ -19,7 +19,7 @@ window.noted =
 	init: ->
 		# Make variables. Do checks.
 		window.noted.homedir = process.env.HOME
-		window.noted.resvchar = [186, 191, 220, 222, 106, 56] # SHIFT-8 *] # : ; / ? \ | ' " *
+		window.noted.resvchar = [186, 191, 220, 222, 106, 56]
 		window.noted.storagedir = window.noted.osdirs()
 
 		# Pass control onto the initUI function.
@@ -106,7 +106,7 @@ window.noted =
 			window.noted.UIEvents.clickNotebook($(@))
 
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
-			window.noted.UIEvents.keydownTitle($(@))
+			window.noted.UIEvents.keydownTitle(e, $(@))
 
 		$("body").on "keyup", ".headerwrap .left h1", ->
 			window.noted.UIEvents.keyupTitle($(@))
@@ -337,7 +337,7 @@ window.noted =
 			window.noted.load.notes(element.text())
 			window.noted.deselect()
 
-		keydownTitle: (element) ->
+		keydownTitle: (e, element) ->
 			if e.keyCode is 13
 				e.preventDefault()
 				name = element.text()
@@ -348,22 +348,24 @@ window.noted =
 					else
 						name = name.replace(" ("+r.exec(name)[1]+")", " ("+(parseInt(r.exec(name)[1])+1)+")")
 
-					fs.rename(
-						path.join(
-							window.noted.storagedir,
-							"Notebooks",
-							window.noted.currentList,
-							window.noted.currentNote + '.txt'
-						),
-						path.join(
-							window.noted.storagedir,
-							"Notebooks",
-							window.noted.currentList,
-							name + '.txt'
-						)
+					console.log(name)
+
+				fs.rename(
+					path.join(
+						window.noted.storagedir,
+						"Notebooks",
+						window.noted.currentList,
+						window.noted.currentNote + '.txt'
+					),
+					path.join(
+						window.noted.storagedir,
+						"Notebooks",
+						window.noted.currentList,
+						name + '.txt'
 					)
-					window.noted.currentNote = name;
-				window.noted.loadNotes(window.noted.currentList)
+				)
+				window.noted.currentNote = name;
+				window.noted.load.notes(window.noted.currentList)
 				element.blur()
 			else if e.keyCode in window.noted.reservedchars
 				e.preventDefault()
@@ -374,12 +376,11 @@ window.noted =
 			name = name + "_" while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt')) is true
 			$("#notes [data-id='" + window.noted.currentNote + "']")
 				.attr("data-id", name).find("h2").text(element.text())
-			if element.text() isnt ""
+			if name isnt ""
 
 				console.log "renaming note"
-
 				console.log path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,window.noted.currentNote + '.txt')
-				console.log path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,$(@).text() + '.txt')
+				console.log path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,name + '.txt')
 
 				# Renames the Note
 				fs.rename(
