@@ -111,6 +111,9 @@
       $('#maximize').click(function() {
         return window.noted.UIEvents.titlebarMaximize();
       });
+      $('body').on("keydown", "#notebooks input", function(e) {
+        return window.noted.UIEvents.keydownNotebook(e);
+      });
       $('body').on("click", "#notebooks li", function() {
         return window.noted.UIEvents.clickNotebook($(this));
       });
@@ -307,6 +310,24 @@
       },
       titlebarMaximize: function() {
         return window.noted.window.maximize();
+      },
+      keydownNotebook: function(e) {
+        var name, regexp;
+        name = $('#notebooks input').val();
+        if (e.keyCode === 13) {
+          e.preventDefault();
+          while (fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + '.txt')) === true) {
+            regexp = /\(\s*(\d+)\s*\)$/;
+            if (regexp.exec(name) === null) {
+              name = name + " (1)";
+            } else {
+              name = name.replace(" (" + regexp.exec(name)[1] + ")", " (" + (parseInt(regexp.exec(name)[1]) + 1) + ")");
+            }
+          }
+          fs.mkdir(path.join(window.noted.storagedir, "Notebooks", name));
+          window.noted.load.notebooks();
+          return $('#notebooks input').val("").blur();
+        }
       },
       clickNotebook: function(element) {
         element.parent().find(".selected").removeClass("selected");

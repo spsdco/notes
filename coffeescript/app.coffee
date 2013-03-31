@@ -99,6 +99,9 @@ window.noted =
 		$('#maximize').click ->
 			window.noted.UIEvents.titlebarMaximize()
 
+		$('body').on "keydown", "#notebooks input", (e) ->
+			window.noted.UIEvents.keydownNotebook(e)
+
 		$('body').on "click", "#notebooks li", ->
 			window.noted.UIEvents.clickNotebook($(@))
 
@@ -309,6 +312,22 @@ window.noted =
 		titlebarMaximize: ->
 			# TODO: Add unmaximizing
 			window.noted.window.maximize()
+
+		# Deny the enter key
+		keydownNotebook: (e) ->
+			name = $('#notebooks input').val()
+			if e.keyCode is 13
+				e.preventDefault()
+				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt')) is true
+					regexp = /\(\s*(\d+)\s*\)$/
+					if regexp.exec(name) is null
+						name = name+" (1)"
+					else
+						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
+				fs.mkdir(path.join(window.noted.storagedir, "Notebooks", name))
+
+				window.noted.load.notebooks()
+				$('#notebooks input').val("").blur()
 
 		clickNotebook: (element) ->
 			element.parent().find(".selected").removeClass "selected"
