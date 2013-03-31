@@ -10,6 +10,34 @@ handlebars			= require 'handlebars'
 marked				= require 'marked'
 Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
+autogrow			= require './javascript/lib/autogrow'
+
+# Accepts a jQuery Selector
+class jonoeditor
+	constructor: (@el) ->
+		@el.prop("disabled", false)
+
+		# Add the editor to the dom
+		@el.html("<textarea></textarea>")
+		@el.find("textarea").autogrow()
+
+	getReadOnly: ->
+		@el.prop("disabled")
+
+	setReadOnly: (bool) ->
+		@el.prop("disabled", bool)
+
+	getValue: ->
+		@el.find("textarea").val()
+
+	setValue: (value) ->
+		@el.find("textarea").val(value)
+
+	hide: ->
+		@el.hide()
+
+	show: ->
+		@el.show()
 
 window.noted =
 
@@ -51,24 +79,17 @@ window.noted =
 		window.noted.load.notebooks()
 		window.noted.load.notes("All Notes")
 
-		window.noted.editor = ace.edit("contentwrite")
-		window.noted.editor.getSession().setUseWrapMode(true)
-		window.noted.editor.setHighlightActiveLine(false)
-		window.noted.editor.setShowPrintMargin(false)
-		window.noted.editor.renderer.setShowGutter(false)
-		window.noted.editor.setTheme("ace/theme/github")
-		window.noted.editor.getSession().setMode("ace/mode/markdown")
+		window.noted.editor = new jonoeditor($("#contentwrite"))
 
+		# window.noted.editor.on "change", ->
+		# 	$this = $("#contentwrite")
+		# 	delay = 2000
 
-		window.noted.editor.on "change", ->
-			$this = $("#contentwrite")
-			delay = 2000
-
-			clearTimeout $this.data('timer')
-			$this.data 'timer', setTimeout( ->
-				$this.removeData('timer')
-				window.noted.save()
-			, delay)
+		# 	clearTimeout $this.data('timer')
+		# 	$this.data 'timer', setTimeout( ->
+		# 		$this.removeData('timer')
+		# 		window.noted.save()
+		# 	, delay)
 
 		$('#panel').mouseenter(->
 			$('#panel').addClass('drag')
@@ -132,15 +153,18 @@ window.noted =
 			$('#content .left h1').attr('contenteditable', 'false')
 
 			$("#contentread").html(marked(window.noted.editor.getValue())).show()
-			$("#contentwrite").css("visibility", "hidden")
+			window.noted.editor.hide()
 			window.noted.editor.setReadOnly(true)
 			window.noted.save()
 		else
 			el.text "save"
 			$('.headerwrap .left h1').attr('contenteditable', 'true')
 			$("#contentread").hide()
-			$("#contentwrite").css("visibility", "visible")
+			window.noted.editor.show()
 			window.noted.editor.setReadOnly(false)
+
+			# So the autogrow thing works
+			$(window).trigger("resize")
 
 	save: ->
 		list = $("#notes li[data-id='" + window.noted.currentNote + "']").attr "data-list"

@@ -766,16 +766,32 @@ body.resizing {
   bottom: 0;
   left: 0;
   right: 0;
+  background: #fbfbfb;
+  margin: 35px auto;
+  max-width: 600px;
+  padding: 0 20px; }
+
+#contentwrite textarea {
+  font-family: "Lato", sans-serif;
+  outline: 0;
+  border: 0;
+  resize: none;
+  max-width: 600px;
+  width: 100%;
+  margin: 0 auto;
+  min-height: 200px;
+  font-size: 15px;
+  line-height: 1.1;
+  min-height: 100%;
+  padding: 0 0 25px;
+  color: #444;
   background: #fbfbfb; }
 
 #contentread {
-  padding: 0 20px;
-  max-width: 600px;
-  margin: 35px auto;
   bottom: auto;
   display: none;
   z-index: 4;
-  color: #444;
+  color: #333;
   font-family: "Lato", sans-serif;
   line-height: 1.3;
   font-size: 15px; }
