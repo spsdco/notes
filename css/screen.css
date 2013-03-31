@@ -169,8 +169,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: monospace, serif;
-  _font-family: "courier new", monospace;
+  font-family: "Source Code Pro", monospace;
   font-size: 1em; }
 
 /*
@@ -550,7 +549,6 @@ body.resizing {
   /* So you can see the splitters above the panels */
   z-index: 2;
   background: transparent;
-  border-left: 1px solid white;
   box-shadow: -1px 0 #b4b3b1; }
 
 #notebooks {
@@ -637,7 +635,7 @@ body.resizing {
 #content {
   position: absolute;
   right: 0;
-  background: #fefefd;
+  background: #fbfbfb;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none; }
@@ -768,16 +766,39 @@ body.resizing {
   bottom: 0;
   left: 0;
   right: 0;
-  background: #fefefd; }
+  background: #fbfbfb; }
 
 #contentread {
-  padding: 0 20px;
+  padding: 15px;
   max-width: 600px;
   margin: 0 auto;
   bottom: auto;
   display: none;
   z-index: 4;
-  font-family: "Avenir"; }
+  color: #444;
+  font-family: "Lato", sans-serif;
+  line-height: 1.3;
+  font-size: 15px; }
+  #contentread h1, #contentread h2, #contentread h3 {
+    margin-bottom: 0.2em;
+    color: #222; }
+  #contentread ul {
+    padding: 0 0 0 20px; }
+  #contentread hr {
+    border: 0;
+    border-top: 1px solid #cccccc;
+    margin: 2em 0; }
+  #contentread p {
+    margin-top: 0.4em; }
+  #contentread a {
+    color: #522453;
+    text-decoration: none; }
+    #contentread a:hover {
+      text-decoration: underline; }
+  #contentread code, #contentread pre {
+    font-size: 0.95em;
+    line-height: 1.1;
+    color: #222; }
 
 .modal {
   display: none;
