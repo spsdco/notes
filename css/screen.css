@@ -170,7 +170,7 @@ kbd,
 pre,
 samp {
   font-family: monospace, serif;
-  _font-family: 'courier new', monospace;
+  _font-family: "courier new", monospace;
   font-size: 1em; }
 
 /*
@@ -289,7 +289,7 @@ form {
  * Define consistent border, margin, and padding.
  */
 fieldset {
-  border: 1px solid #c0c0c0;
+  border: 1px solid silver;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
@@ -483,7 +483,7 @@ body.resizing {
   position: absolute;
   padding: 5px 4px;
   top: 0;
-  border-right: 1px solid #444; }
+  border-right: 1px solid #444444; }
   #noteControls img {
     height: 28px;
     margin-right: 6px;
@@ -510,7 +510,7 @@ body.resizing {
     color: #fff;
     border: 0;
     border-radius: 2px;
-    box-shadow: 0 0 1px #444; }
+    box-shadow: 0 0 1px #444444; }
 
 /* THE PARENT */
 #parent {
@@ -550,7 +550,7 @@ body.resizing {
   /* So you can see the splitters above the panels */
   z-index: 2;
   background: transparent;
-  border-left: 1px solid #fff;
+  border-left: 1px solid white;
   box-shadow: -1px 0 #b4b3b1; }
 
 #notebooks {
@@ -567,7 +567,7 @@ body.resizing {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #bbbbbb;
     padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
@@ -611,7 +611,7 @@ body.resizing {
   #notes li {
     cursor: default;
     border-top: 1px solid #fefefe;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #cccccc;
     padding: 0 15px 8px;
     color: #444;
     font-size: 13px;
@@ -637,7 +637,7 @@ body.resizing {
 #content {
   position: absolute;
   right: 0;
-  background: #f9f9f8;
+  background: #fefefd;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none; }
@@ -664,19 +664,22 @@ body.resizing {
   #content header {
     margin: 0;
     padding: 0;
-    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #ebebe8));
-    background: -webkit-linear-gradient(#ffffff, #ebebe8);
-    background: -moz-linear-gradient(#ffffff, #ebebe8);
-    background: -o-linear-gradient(#ffffff, #ebebe8);
-    background: linear-gradient(#ffffff, #ebebe8);
+    background: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(100%, #f0f0ed));
+    background: -webkit-linear-gradient(#ffffff, #f0f0ed);
+    background: -moz-linear-gradient(#ffffff, #f0f0ed);
+    background: -o-linear-gradient(#ffffff, #f0f0ed);
+    background: linear-gradient(#ffffff, #f0f0ed);
     border-bottom: 1px solid #b4b3b1;
     position: absolute;
     right: 0;
     left: 0;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    height: 76px; }
+    height: 76px;
+    z-index: 10; }
     #content header .headerwrap {
       max-width: 650px;
+      padding: 0 20px;
+      box-sizing: border-box;
       margin: 0 auto;
       position: absolute;
       left: 0;
@@ -688,7 +691,7 @@ body.resizing {
     #content header h1 {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
-      text-shadow: 0 1px 0 #fff;
+      text-shadow: 0 1px 0 white;
       outline: 0;
       margin: 0;
       letter-spacing: -1px;
@@ -698,7 +701,7 @@ body.resizing {
       -ms-user-select: text;
       user-select: text; }
       #content header h1[contenteditable=true]:hover, #content header h1[contenteditable=true]:focus {
-        outline: 1px solid #ccc; }
+        outline: 1px solid #cccccc; }
     #content header time {
       font-family: "Ubuntu Light", "Ubuntu";
       font-size: 13px;
@@ -742,26 +745,39 @@ body.resizing {
       color: #522453;
       font-size: 13px;
       display: inline-block;
-      border: 1px solid #ccc;
+      border: 1px solid #cccccc;
       margin-left: 5px;
       padding: 2px 6px;
       cursor: default;
       border-radius: 2px; }
 
-#contentread, #contentwrite {
+#contentscroller {
   position: absolute;
   top: 76px;
   bottom: 0;
   left: 0;
   right: 0;
-  margin: 0;
-  padding: 0;
-  background: #fff; }
+  overflow-y: auto; }
+
+#contentwrite {
+  visibility: "hidden"; }
+
+#contentread, #contentwrite {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: #fefefd; }
 
 #contentread {
-  overflow-y: scroll;
+  padding: 0 20px;
+  max-width: 600px;
+  margin: 0 auto;
+  bottom: auto;
   display: none;
-  z-index: 10; }
+  z-index: 4;
+  font-family: "Avenir"; }
 
 .modal {
   display: none;
@@ -773,7 +789,7 @@ body.resizing {
   opacity: 0;
   z-index: 10;
   position: absolute;
-  -webkit-transition: .3s opacity ease;
+  -webkit-transition: 0.3s opacity ease;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
   .modal.show {

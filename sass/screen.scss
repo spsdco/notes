@@ -271,7 +271,7 @@ body.resizing { cursor: ew-resize; }
 #content {
 	position: absolute;
 	right: 0;
-	background: $white-color;
+	background: lighten($white-color, 2%);
 	-webkit-user-select: none;
 	-moz-user-select: none;
 	-ms-user-select: none;
@@ -305,16 +305,19 @@ body.resizing { cursor: ew-resize; }
 	header {
 		margin: 0;
 		padding: 0;
-		@include background(linear-gradient(lighten($white-color, 5%), darken($white-color, 6%)));
+		@include background(linear-gradient(lighten($white-color, 4%), darken($white-color, 4%)));
 		border-bottom: 1px solid #b4b3b1;
 		position: absolute;
 		right: 0;
 		left: 0;
 		box-shadow: 0 1px 3px rgba(0,0,0,0.1);
 		height: 76px;
+		z-index: 10;
 
 		.headerwrap {
 			max-width: 650px;
+			padding: 0 20px;
+			box-sizing: border-box;
 			margin: 0 auto;
 			position: absolute;
 			left: 0;
@@ -404,21 +407,36 @@ body.resizing { cursor: ew-resize; }
 	}
 }
 
-#contentread, #contentwrite {
+#contentscroller {
 	position: absolute;
 	top:76px;
 	bottom: 0;
 	left: 0;
 	right: 0;
-	margin: 0;
-	padding: 0;
-	background: #fff;
+	overflow-y: auto;
+}
+
+#contentwrite {
+	visibility: "hidden"
+}
+
+#contentread, #contentwrite {
+	position: absolute;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: lighten($white-color, 2%);
 }
 
 #contentread {
-	overflow-y: scroll;
+	padding: 0 20px;
+	max-width: 600px;
+	margin: 0 auto;
+	bottom: auto;
 	display: none;
-	z-index:10;
+	z-index: 4;
+	font-family: "Avenir";
 }
 
 

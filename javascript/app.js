@@ -140,12 +140,14 @@
         el.text("edit");
         $('#content .left h1').attr('contenteditable', 'false');
         $("#contentread").html(marked(window.noted.editor.getValue())).show();
+        $("#contentwrite").css("visibility", "hidden");
         window.noted.editor.setReadOnly(true);
         return window.noted.save();
       } else {
         el.text("save");
         $('.headerwrap .left h1').attr('contenteditable', 'true');
         $("#contentread").hide();
+        $("#contentwrite").css("visibility", "visible");
         return window.noted.editor.setReadOnly(false);
       }
     },
