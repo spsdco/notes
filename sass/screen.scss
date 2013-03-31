@@ -429,9 +429,9 @@ body.resizing { cursor: ew-resize; }
 }
 
 #contentread {
-	padding: 15px;
+	padding: 0 20px;
 	max-width: 600px;
-	margin: 0 auto;
+	margin: 35px auto;
 	bottom: auto;
 	display: none;
 	z-index: 4;
@@ -439,6 +439,10 @@ body.resizing { cursor: ew-resize; }
 	font-family: "Lato", sans-serif;
 	line-height: 1.3;
 	font-size: 15px;
+
+	:first-child {
+		margin-top: 0;
+	}
 
 	h1, h2, h3 {
 		margin-bottom: 0.2em;

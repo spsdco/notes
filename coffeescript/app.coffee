@@ -56,6 +56,9 @@ window.noted =
 		window.noted.editor.setHighlightActiveLine(false)
 		window.noted.editor.setShowPrintMargin(false)
 		window.noted.editor.renderer.setShowGutter(false)
+		window.noted.editor.setTheme("ace/theme/github")
+		window.noted.editor.getSession().setMode("ace/mode/markdown")
+
 
 		window.noted.editor.on "change", ->
 			$this = $("#contentwrite")
