@@ -155,22 +155,23 @@
     },
     deselect: function() {
       $("#content").addClass("deselected");
-      $("#content .left h1, #content .left time").text("");
       return window.noted.currentNote = "";
     },
     editMode: function(mode) {
       var el;
       el = $("#content .edit");
       if (mode === "preview" || window.noted.editor.getReadOnly() === false && mode !== "editor") {
-        el.text("edit");
+        el.removeClass("save").text("edit");
         $('#content .left h1').attr('contenteditable', 'false');
+        $("#content .right time").show();
         $("#contentread").html(marked(window.noted.editor.getValue())).show();
         window.noted.editor.hide();
         window.noted.editor.setReadOnly(true);
         return window.noted.save();
       } else {
-        el.text("save");
+        el.addClass("save").text("save");
         $('.headerwrap .left h1').attr('contenteditable', 'true');
+        $("#content .right time").hide();
         $("#contentread").hide();
         window.noted.editor.show();
         window.noted.editor.setReadOnly(false);
@@ -272,7 +273,7 @@
           $('.headerwrap .left h1').text(window.noted.currentNote);
           noteTime = fs.statSync(path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'))['mtime'];
           time = new Date(Date.parse(noteTime));
-          $('.headerwrap .left time').text(window.noted.util.pad(time.getFullYear()) + "/" + (window.noted.util.pad(time.getMonth() + 1)) + "/" + time.getDate() + " " + window.noted.util.pad(time.getHours()) + ":" + window.noted.util.pad(time.getMinutes()));
+          $('.headerwrap .right time').text(window.noted.util.pad(time.getFullYear()) + "/" + (window.noted.util.pad(time.getMonth() + 1)) + "/" + time.getDate() + " " + window.noted.util.pad(time.getHours()) + ":" + window.noted.util.pad(time.getMinutes()));
           $("#contentread").html(marked(data)).show();
           window.noted.editor.setValue(data);
           window.noted.editor.setReadOnly(true);

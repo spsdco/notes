@@ -310,7 +310,7 @@ body.resizing { cursor: ew-resize; }
 		right: 0;
 		left: 0;
 		box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-		height: 76px;
+		height: 60px;
 		z-index: 10;
 
 		.headerwrap {
@@ -355,7 +355,7 @@ body.resizing { cursor: ew-resize; }
 
 		.left {
 			display: inline-block;
-			margin-top: 10px;
+			margin-top: 13px;
 		}
 
 		.right {
@@ -363,52 +363,48 @@ body.resizing { cursor: ew-resize; }
 			text-align: right;
 			vertical-align: top;
 			position: absolute;
-			right: 15px;
-			top: 10px;
+			right: 20px;
+			top: 8px;
 			color: #999;
 		}
 
-		.toggle, .dot {
+		.toggle {
 			color: #999;
 			display: inline-block;
 			border: 0;
 			font-size: 14px;
-			margin: 7px 0;
+			margin: 4px 0 1px;
+			padding: 0;
 			background: transparent;
 			cursor: default;
 			font-weight: bold;
-		}
-		.toggle:hover {
-			color: #444;
-		}
 
-		ul {
-			margin: 0;
-			padding: 0 0 0 20px;
-			list-style-type: none;
-			font-size: 0;
-			background: url(../img/tag.svg) 0 -1px no-repeat;
-			background-size: 24px;
-		}
+			&.save {
+				font-size: 15px;
+				border: 1px solid #ccc;
+				padding: 5px 10px;
+				border-radius: 3px;
+				box-shadow: 0 1px 1px #fff, 0 1px 1px #fff inset;
+				margin-top: 8px;
+				color: #888;
 
-		li {
-			@include background(linear-gradient(#fafafa, #f5f5f5));
-			box-shadow: 0 1px 1px #fcfcfc;
-			color: $purple;
-			font-size: 13px;
-			display: inline-block;
-			border: 1px solid #ccc;
-			margin-left: 5px;
-			padding: 2px 6px;
-			cursor: default;
-			border-radius: 2px;
+				&:active {
+					background: -webkit-linear-gradient(top,#fafafa,#fcfcfc);
+					border: 1px solid #bbb;
+					color: #444;
+				}
+			}
+
+			&:hover {
+				color: #444;
+			}
 		}
 	}
 }
 
 #contentscroller {
 	position: absolute;
-	top:76px;
+	top: 60px;
 	bottom: 0;
 	left: 0;
 	right: 0;
