@@ -130,7 +130,7 @@ window.noted =
 			window.noted.UIEvents.clickNotebook($(@))
 
 		$('body').on "contextmenu", "#notebooks li", (e) ->
-			window.noted.UIEvents.contextNotebook(e)
+			window.noted.UIEvents.contextNotebook(e, $(@))
 			false
 
 		$('body').on "click contextmenu", ".popover-mask", ->
@@ -144,6 +144,12 @@ window.noted =
 
 		$('body').on "click", "#notes li", ->
 			window.noted.UIEvents.clickNote($(@))
+			
+		$('body').on "click", "#deleteNotebook", ->
+			window.noted.UIEvents.deleteNotebook($(@))
+			
+		#$('body').on "click", "#renameNotebook", ->
+			#window.noted.UIEvents.renameNotebook()
 
 		$("#content .edit").click window.noted.editMode
 
@@ -373,9 +379,12 @@ window.noted =
 			window.noted.load.notes(element.text())
 			window.noted.deselect()
 
-		contextNotebook: (event) ->
+		contextNotebook: (event, element) ->
 			# Moves thing into correct position
 			$(".popover-mask").show()
+			# Probably very ugly, but add a data attribute of the Notebook that triggered this.
+			$(".popover-mask").attr("data-parent", element.text())
+			console.log element.text()
 			$(".delete-popover").css({left: $(event.target).outerWidth(), top: $(event.target).offset().top})
 
 
@@ -448,7 +457,18 @@ window.noted =
 
 			# Loads Actual Note
 			window.noted.load.note(element)
-
+			
+		deleteNotebook: (element) ->
+			name = $(".popover-mask").attr("data-parent")
+			console.log name
+			#window.noted.editor.remove('file')
+			fs.readdir path.join(window.noted.storagedir, "Notebooks", name), (err, files) ->		
+				files.forEach (file) ->
+					console.log file
+					fs.unlink(path.join(window.noted.storagedir, "Notebooks", name, file))
+					fs.rmdir path.join(window.noted.storagedir, "Notebooks", name), (err) ->
+						window.noted.deselect()
+						window.noted.load.notebooks()
 	util:
 		pad: (n) ->
 			# pad a single-digit number to a 2-digit number for things such as times or dates.
