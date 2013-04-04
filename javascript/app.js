@@ -139,7 +139,7 @@
       $('body').on("keydown", "#notebooks input", function(e) {
         return window.noted.UIEvents.keydownNotebook(e);
       });
-      $('body').on("click", "#notebooks li", function() {
+      $('body').on("click contextmenu", "#notebooks li", function() {
         return window.noted.UIEvents.clickNotebook($(this));
       });
       $('body').on("contextmenu", "#notebooks li", function(e) {

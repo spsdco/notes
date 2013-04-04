@@ -126,7 +126,7 @@ window.noted =
 		$('body').on "keydown", "#notebooks input", (e) ->
 			window.noted.UIEvents.keydownNotebook(e)
 
-		$('body').on "click", "#notebooks li", ->
+		$('body').on "click contextmenu", "#notebooks li", ->
 			window.noted.UIEvents.clickNotebook($(@))
 
 		$('body').on "contextmenu", "#notebooks li", (e) ->
