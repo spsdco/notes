@@ -114,6 +114,12 @@ window.noted =
 		$(".modal.delete .false").click ->
 			$(".modal.delete").modal "hide"
 
+		$(".modal.deleteNotebook .true").click ->
+			window.noted.UIEvents.modalclickDelNotebook()
+
+		$(".modal.deleteNotebook .false").click ->
+			$(".modal.deleteNotebook").modal "hide"
+
 		$('#close').click ->
 			window.noted.UIEvents.titlebarClose()
 
@@ -459,9 +465,12 @@ window.noted =
 			window.noted.load.note(element)
 			
 		deleteNotebook: (element) ->
+			$('.modal.deleteNotebook').modal()
+			
+		modalclickDelNotebook: ->
+			$('.modal.deleteNotebook').modal "hide"
 			name = $(".popover-mask").attr("data-parent")
 			console.log name
-			#window.noted.editor.remove('file')
 			fs.readdir path.join(window.noted.storagedir, "Notebooks", name), (err, files) ->		
 				files.forEach (file) ->
 					console.log file
@@ -469,6 +478,7 @@ window.noted =
 					fs.rmdir path.join(window.noted.storagedir, "Notebooks", name), (err) ->
 						window.noted.deselect()
 						window.noted.load.notebooks()
+			
 	util:
 		pad: (n) ->
 			# pad a single-digit number to a 2-digit number for things such as times or dates.

@@ -126,6 +126,12 @@
       $(".modal.delete .false").click(function() {
         return $(".modal.delete").modal("hide");
       });
+      $(".modal.deleteNotebook .true").click(function() {
+        return window.noted.UIEvents.modalclickDelNotebook();
+      });
+      $(".modal.deleteNotebook .false").click(function() {
+        return $(".modal.deleteNotebook").modal("hide");
+      });
       $('#close').click(function() {
         return window.noted.UIEvents.titlebarClose();
       });
@@ -435,8 +441,12 @@
         return window.noted.load.note(element);
       },
       deleteNotebook: function(element) {
+        return $('.modal.deleteNotebook').modal();
+      },
+      modalclickDelNotebook: function() {
         var name;
 
+        $('.modal.deleteNotebook').modal("hide");
         name = $(".popover-mask").attr("data-parent");
         console.log(name);
         return fs.readdir(path.join(window.noted.storagedir, "Notebooks", name), function(err, files) {
