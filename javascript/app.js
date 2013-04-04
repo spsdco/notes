@@ -142,6 +142,13 @@
       $('body').on("click", "#notebooks li", function() {
         return window.noted.UIEvents.clickNotebook($(this));
       });
+      $('body').on("contextmenu", "#notebooks li", function(e) {
+        window.noted.UIEvents.contextNotebook(e);
+        return false;
+      });
+      $('body').on("click contextmenu", ".popover-mask", function() {
+        return $(this).hide();
+      });
       $("body").on("keydown", ".headerwrap .left h1", function(e) {
         return window.noted.UIEvents.keydownTitle(e, $(this));
       });
@@ -363,6 +370,13 @@
         element.addClass("selected");
         window.noted.load.notes(element.text());
         return window.noted.deselect();
+      },
+      contextNotebook: function(event) {
+        $(".popover-mask").show();
+        return $(".delete-popover").css({
+          left: $(event.target).outerWidth(),
+          top: $(event.target).offset().top
+        });
       },
       keydownTitle: function(e, element) {
         var name, r, _ref;

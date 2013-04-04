@@ -129,6 +129,13 @@ window.noted =
 		$('body').on "click", "#notebooks li", ->
 			window.noted.UIEvents.clickNotebook($(@))
 
+		$('body').on "contextmenu", "#notebooks li", (e) ->
+			window.noted.UIEvents.contextNotebook(e)
+			false
+
+		$('body').on "click contextmenu", ".popover-mask", ->
+			$(@).hide()
+
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			window.noted.UIEvents.keydownTitle(e, $(@))
 
@@ -365,6 +372,12 @@ window.noted =
 			element.addClass "selected"
 			window.noted.load.notes(element.text())
 			window.noted.deselect()
+
+		contextNotebook: (event) ->
+			# Moves thing into correct position
+			$(".popover-mask").show()
+			$(".delete-popover").css({left: $(event.target).outerWidth(), top: $(event.target).offset().top})
+
 
 		keydownTitle: (e, element) ->
 			if e.keyCode is 13

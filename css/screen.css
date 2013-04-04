@@ -809,6 +809,52 @@ body.resizing {
     line-height: 1.1;
     color: #222; }
 
+.popover-mask {
+  display: none;
+  z-index: 100;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  top: 0; }
+
+.delete-popover {
+  display: inline-block;
+  width: 200px;
+  height: 34px;
+  position: absolute; }
+  .delete-popover .arrow {
+    display: inline-block;
+    width: 0;
+    height: 0;
+    border-top: 10px solid transparent;
+    border-bottom: 10px solid transparent;
+    border-right: 10px solid #222222;
+    margin-top: 7px;
+    margin-left: 5px;
+    vertical-align: top; }
+  .delete-popover .container {
+    display: inline-block;
+    background: #222;
+    height: 30px;
+    vertical-align: top;
+    margin-top: 2px;
+    padding: 0 5px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
+  .delete-popover button {
+    color: #ccc;
+    border: 0;
+    background: #222;
+    height: 22px;
+    font-size: 12px;
+    border-radius: 2px;
+    margin-top: 4px;
+    padding: 0 10px; }
+    .delete-popover button:hover {
+      color: #fff; }
+    .delete-popover button:active {
+      background: #333; }
+
 .modal {
   display: none;
   font-size: 14px;
