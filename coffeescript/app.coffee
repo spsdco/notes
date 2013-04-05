@@ -116,13 +116,13 @@ window.noted =
 
 		$(".modal.deleteNotebook .true").click ->
 			window.noted.UIEvents.modalclickDelNotebook()
-		
+
 		$(".modal.renameNotebook .true").click ->
 			window.noted.UIEvents.modalclickRenameNotebook()
 
 		$(".modal.deleteNotebook .false").click ->
 			$(".modal.deleteNotebook").modal "hide"
-			
+
 		$(".modal.renameNotebook .false").click ->
 			$(".modal.renameNotebook").modal "hide"
 
@@ -156,10 +156,10 @@ window.noted =
 
 		$('body').on "click", "#notes li", ->
 			window.noted.UIEvents.clickNote($(@))
-			
+
 		$('body').on "click", "#deleteNotebook", ->
 			window.noted.UIEvents.deleteNotebook($(@))
-			
+
 		$('body').on "click", "#renameNotebook", ->
 			window.noted.UIEvents.renameNotebook()
 
@@ -411,8 +411,6 @@ window.noted =
 					else
 						name = name.replace(" ("+r.exec(name)[1]+")", " ("+(parseInt(r.exec(name)[1])+1)+")")
 
-					console.log(name)
-
 				fs.rename(
 					path.join(
 						window.noted.storagedir,
@@ -430,20 +428,20 @@ window.noted =
 				window.noted.currentNote = name;
 				window.noted.load.notes(window.noted.currentList)
 				element.blur()
-			else if e.keyCode in window.noted.reservedchars
+			else if e.keyCode in window.noted.resvchar
 				e.preventDefault()
 
 		keyupTitle: (element) ->
 			# We can't have "".txt
 			name = element.text()
-			name = name + "_" while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt')) is true
-			$("#notes [data-id='" + window.noted.currentNote + "']")
-				.attr("data-id", name).find("h2").text(element.text())
+
 			if name isnt ""
 
-				console.log "renaming note"
-				console.log path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,window.noted.currentNote + '.txt')
-				console.log path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,name + '.txt')
+				$("#notes [data-id='" + window.noted.currentNote + "']")
+					.attr("data-id", name).find("h2").text(element.text())
+
+				path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,window.noted.currentNote + '.txt')
+				path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,name + '.txt')
 
 				# Renames the Note
 				fs.rename(
@@ -469,27 +467,27 @@ window.noted =
 
 			# Loads Actual Note
 			window.noted.load.note(element)
-			
+
 		deleteNotebook: (element) ->
 			$('.modal.deleteNotebook').modal()
-			
+
 		renameNotebook: ->
 			name = $(".popover-mask").attr("data-parent")
 			$('.modal.renameNotebook .delete-container h1').text(name)
 			$('.modal.renameNotebook').modal()
-			
+
 		modalclickDelNotebook: ->
 			$('.modal.deleteNotebook').modal "hide"
 			name = $(".popover-mask").attr("data-parent")
 			console.log name
-			fs.readdir path.join(window.noted.storagedir, "Notebooks", name), (err, files) ->		
+			fs.readdir path.join(window.noted.storagedir, "Notebooks", name), (err, files) ->
 				files.forEach (file) ->
 					console.log file
 					fs.unlink(path.join(window.noted.storagedir, "Notebooks", name, file))
 					fs.rmdir path.join(window.noted.storagedir, "Notebooks", name), (err) ->
 						window.noted.deselect()
 						window.noted.load.notebooks()
-						
+
 		modalclickRenameNotebook: ->
 			$('.modal.renameNotebook').modal "hide"
 			origname = $(".popover-mask").attr("data-parent")
@@ -501,10 +499,10 @@ window.noted =
 						name = name+" (1)"
 					else
 						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
-						
+
 				fs.rename(path.join(window.noted.storagedir,"Notebooks",origname),path.join(window.noted.storagedir,"Notebooks",name))
 				window.noted.load.notebooks()
-			
+
 	util:
 		pad: (n) ->
 			# pad a single-digit number to a 2-digit number for things such as times or dates.
