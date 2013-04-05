@@ -401,7 +401,7 @@ window.noted =
 
 
 		keydownTitle: (e, element) ->
-			if e.keyCode is 13
+			if e.keyCode is 13 and element.text() isnt ""
 				e.preventDefault()
 				name = element.text()
 				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt'))
@@ -494,15 +494,16 @@ window.noted =
 			$('.modal.renameNotebook').modal "hide"
 			origname = $(".popover-mask").attr("data-parent")
 			name = $('.modal.renameNotebook .delete-container h1').text()
-			while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", name)) is true
+			if name isnt ""
+				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", name)) is true
 					regexp = /\(\s*(\d+)\s*\)$/
 					if regexp.exec(name) is null
 						name = name+" (1)"
 					else
 						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
 						
-			fs.rename(path.join(window.noted.storagedir,"Notebooks",origname),path.join(window.noted.storagedir,"Notebooks",name))
-			window.noted.load.notebooks()
+				fs.rename(path.join(window.noted.storagedir,"Notebooks",origname),path.join(window.noted.storagedir,"Notebooks",name))
+				window.noted.load.notebooks()
 			
 	util:
 		pad: (n) ->
