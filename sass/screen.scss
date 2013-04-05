@@ -587,6 +587,12 @@ body.resizing { cursor: ew-resize; }
 		font-size: 16px;
 		color: #222;
 		border: 3px solid $red-color;
+		h1 {
+			-webkit-user-select: text;
+			-moz-user-select: text;
+			-ms-user-select: text;
+			user-select: text;
+		}
 	}
 
 	span {

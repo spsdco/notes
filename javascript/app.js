@@ -129,8 +129,14 @@
       $(".modal.deleteNotebook .true").click(function() {
         return window.noted.UIEvents.modalclickDelNotebook();
       });
+      $(".modal.renameNotebook .true").click(function() {
+        return window.noted.UIEvents.modalclickRenameNotebook();
+      });
       $(".modal.deleteNotebook .false").click(function() {
         return $(".modal.deleteNotebook").modal("hide");
+      });
+      $(".modal.renameNotebook .false").click(function() {
+        return $(".modal.renameNotebook").modal("hide");
       });
       $('#close').click(function() {
         return window.noted.UIEvents.titlebarClose();
@@ -165,6 +171,9 @@
       });
       $('body').on("click", "#deleteNotebook", function() {
         return window.noted.UIEvents.deleteNotebook($(this));
+      });
+      $('body').on("click", "#renameNotebook", function() {
+        return window.noted.UIEvents.renameNotebook();
       });
       return $("#content .edit").click(window.noted.editMode);
     },
@@ -443,6 +452,13 @@
       deleteNotebook: function(element) {
         return $('.modal.deleteNotebook').modal();
       },
+      renameNotebook: function() {
+        var name;
+
+        name = $(".popover-mask").attr("data-parent");
+        $('.modal.renameNotebook .delete-container h1').text(name);
+        return $('.modal.renameNotebook').modal();
+      },
       modalclickDelNotebook: function() {
         var name;
 
@@ -459,6 +475,23 @@
             });
           });
         });
+      },
+      modalclickRenameNotebook: function() {
+        var name, origname, regexp;
+
+        $('.modal.renameNotebook').modal("hide");
+        origname = $(".popover-mask").attr("data-parent");
+        name = $('.modal.renameNotebook .delete-container h1').text();
+        while (fs.existsSync(path.join(window.noted.storagedir, "Notebooks", name)) === true) {
+          regexp = /\(\s*(\d+)\s*\)$/;
+          if (regexp.exec(name) === null) {
+            name = name + " (1)";
+          } else {
+            name = name.replace(" (" + regexp.exec(name)[1] + ")", " (" + (parseInt(regexp.exec(name)[1]) + 1) + ")");
+          }
+        }
+        fs.rename(path.join(window.noted.storagedir, "Notebooks", origname), path.join(window.noted.storagedir, "Notebooks", name));
+        return window.noted.load.notebooks();
       }
     },
     util: {

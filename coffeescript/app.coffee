@@ -116,9 +116,15 @@ window.noted =
 
 		$(".modal.deleteNotebook .true").click ->
 			window.noted.UIEvents.modalclickDelNotebook()
+		
+		$(".modal.renameNotebook .true").click ->
+			window.noted.UIEvents.modalclickRenameNotebook()
 
 		$(".modal.deleteNotebook .false").click ->
 			$(".modal.deleteNotebook").modal "hide"
+			
+		$(".modal.renameNotebook .false").click ->
+			$(".modal.renameNotebook").modal "hide"
 
 		$('#close').click ->
 			window.noted.UIEvents.titlebarClose()
@@ -154,8 +160,8 @@ window.noted =
 		$('body').on "click", "#deleteNotebook", ->
 			window.noted.UIEvents.deleteNotebook($(@))
 			
-		#$('body').on "click", "#renameNotebook", ->
-			#window.noted.UIEvents.renameNotebook()
+		$('body').on "click", "#renameNotebook", ->
+			window.noted.UIEvents.renameNotebook()
 
 		$("#content .edit").click window.noted.editMode
 
@@ -467,6 +473,11 @@ window.noted =
 		deleteNotebook: (element) ->
 			$('.modal.deleteNotebook').modal()
 			
+		renameNotebook: ->
+			name = $(".popover-mask").attr("data-parent")
+			$('.modal.renameNotebook .delete-container h1').text(name)
+			$('.modal.renameNotebook').modal()
+			
 		modalclickDelNotebook: ->
 			$('.modal.deleteNotebook').modal "hide"
 			name = $(".popover-mask").attr("data-parent")
@@ -478,6 +489,20 @@ window.noted =
 					fs.rmdir path.join(window.noted.storagedir, "Notebooks", name), (err) ->
 						window.noted.deselect()
 						window.noted.load.notebooks()
+						
+		modalclickRenameNotebook: ->
+			$('.modal.renameNotebook').modal "hide"
+			origname = $(".popover-mask").attr("data-parent")
+			name = $('.modal.renameNotebook .delete-container h1').text()
+			while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", name)) is true
+					regexp = /\(\s*(\d+)\s*\)$/
+					if regexp.exec(name) is null
+						name = name+" (1)"
+					else
+						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
+						
+			fs.rename(path.join(window.noted.storagedir,"Notebooks",origname),path.join(window.noted.storagedir,"Notebooks",name))
+			window.noted.load.notebooks()
 			
 	util:
 		pad: (n) ->
