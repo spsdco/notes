@@ -5,12 +5,13 @@ buffer 				= require 'buffer'
 path 				= require 'path'
 ncp 				= require('ncp').ncp
 util 				= require 'util'
-$					= require 'jQuery'
+global.jQuery = $	= require 'jQuery'
 handlebars			= require 'handlebars'
 marked				= require 'marked'
 Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
+rangyinputs			= require './javascript/lib/rangyinputs'
 
 # Accepts a jQuery Selector
 class jonoeditor
@@ -165,6 +166,15 @@ window.noted =
 
 		$("#content .edit").click window.noted.editMode
 
+		$("body").on "click", ".editorbuttons button", ->
+			window.noted.editorAction $(@).attr('data-action')
+
+	editorAction: (action) ->
+		if action is 'bold'
+			$('#contentwrite textarea').surroundSelectedText("**","**")
+		else if action is 'italics'
+			$('#contentwrite textarea').surroundSelectedText("*","*")
+
 	deselect: ->
 		$("#content").addClass("deselected")
 		window.noted.currentNote = ""
@@ -178,6 +188,7 @@ window.noted =
 			$("#content .right time").show()
 
 			$("#contentread").html(marked(window.noted.editor.getValue())).show()
+			$("#content .editorbuttons").hide()
 			window.noted.editor.hide()
 			window.noted.editor.setReadOnly(true)
 			window.noted.save()
@@ -187,6 +198,7 @@ window.noted =
 			$("#content .right time").hide()
 
 			$("#contentread").hide()
+			$("#content .editorbuttons").show()
 			window.noted.editor.show()
 			window.noted.editor.setReadOnly(false)
 
