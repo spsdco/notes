@@ -645,3 +645,28 @@ body.resizing { cursor: ew-resize; }
 		}
 	}
 }
+
+.settings-container {
+	width: 400px;
+	margin-left: -228px;
+	padding: 25px;
+	text-align: center;
+	font-size: 16px;
+	color: #222;
+	border: 2px solid $border-color;
+	input {
+		font-size: 14px;
+		border: 2px solid $border-color;
+		padding: 5px 10px;
+		outline: 0;
+	}
+
+	button.special, a.special {
+		border: 2px solid $border-color;
+
+		&:active {
+			background-color: $border-color;
+		}
+
+	}
+}

@@ -923,3 +923,21 @@ body.resizing {
     .modal button.special:active, .modal a.special:active {
       background: #e15556;
       color: #fff; }
+
+.settings-container {
+  width: 400px;
+  margin-left: -228px;
+  padding: 25px;
+  text-align: center;
+  font-size: 16px;
+  color: #222;
+  border: 2px solid #b4b3b1; }
+  .settings-container input {
+    font-size: 14px;
+    border: 2px solid #b4b3b1;
+    padding: 5px 10px;
+    outline: 0; }
+  .settings-container button.special, .settings-container a.special {
+    border: 2px solid #b4b3b1; }
+    .settings-container button.special:active, .settings-container a.special:active {
+      background-color: #b4b3b1; }
