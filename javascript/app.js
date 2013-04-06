@@ -441,8 +441,8 @@
       renameNotebook: function() {
         var name;
         name = $(".popover-mask").attr("data-parent");
-        $('.modal.renameNotebook .delete-container h1').text(name);
-        return $('.modal.renameNotebook').modal();
+        $('.modal.renameNotebook').modal();
+        return $('.modal.renameNotebook input').val(name).focus();
       },
       modalclickDelNotebook: function() {
         var name;

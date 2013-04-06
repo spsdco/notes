@@ -473,8 +473,8 @@ window.noted =
 
 		renameNotebook: ->
 			name = $(".popover-mask").attr("data-parent")
-			$('.modal.renameNotebook .delete-container h1').text(name)
 			$('.modal.renameNotebook').modal()
+			$('.modal.renameNotebook input').val(name).focus()
 
 		modalclickDelNotebook: ->
 			$('.modal.deleteNotebook').modal "hide"
