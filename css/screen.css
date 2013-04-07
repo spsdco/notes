@@ -169,7 +169,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: 'Source Code Pro', monospace;
+  font-family: "Source Code Pro", monospace;
   font-size: 1em; }
 
 /*
@@ -288,7 +288,7 @@ form {
  * Define consistent border, margin, and padding.
  */
 fieldset {
-  border: 1px solid #c0c0c0;
+  border: 1px solid silver;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
@@ -477,15 +477,15 @@ body.resizing {
 #noteControls {
   display: inline-block;
   left: 200px;
-  width: 291px;
+  width: 295px;
   text-align: right;
   position: absolute;
-  padding: 5px 4px;
+  padding: 5px 0px 5px 4px;
   top: 0;
-  border-right: 1px solid #444; }
+  border-right: 1px solid #444444; }
   #noteControls img {
     height: 28px;
-    margin-right: 6px;
+    margin-right: 9px;
     opacity: 0.7;
     -webkit-user-drag: none;
     -moz-user-drag: none;
@@ -509,7 +509,7 @@ body.resizing {
     color: #fff;
     border: 0;
     border-radius: 2px;
-    box-shadow: 0 0 1px #444; }
+    box-shadow: 0 0 1px #444444; }
 
 /* THE PARENT */
 #parent {
@@ -565,7 +565,7 @@ body.resizing {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #bbb;
+    border-bottom: 1px solid #bbbbbb;
     padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
@@ -609,7 +609,7 @@ body.resizing {
   #notes li {
     cursor: default;
     border-top: 1px solid #fefefe;
-    border-bottom: 1px solid #ccc;
+    border-bottom: 1px solid #cccccc;
     padding: 0 15px 8px;
     color: #444;
     font-size: 13px;
@@ -689,7 +689,7 @@ body.resizing {
     #content header h1 {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
-      text-shadow: 0 1px 0 #fff;
+      text-shadow: 0 1px 0 white;
       outline: 0;
       margin: 0;
       letter-spacing: -1px;
@@ -699,7 +699,7 @@ body.resizing {
       -ms-user-select: text;
       user-select: text; }
       #content header h1[contenteditable=true]:hover, #content header h1[contenteditable=true]:focus {
-        outline: 1px solid #ccc; }
+        outline: 1px solid #cccccc; }
     #content header time {
       font-family: "Ubuntu Light", "Ubuntu";
       font-size: 13px;
@@ -727,15 +727,15 @@ body.resizing {
       font-weight: bold; }
       #content header .toggle.save {
         font-size: 15px;
-        border: 1px solid #ccc;
+        border: 1px solid #cccccc;
         padding: 5px 10px;
         border-radius: 3px;
-        box-shadow: 0 1px 1px #fff, 0 1px 1px #fff inset;
+        box-shadow: 0 1px 1px white, 0 1px 1px white inset;
         margin-top: 8px;
         color: #888; }
         #content header .toggle.save:active {
           background: -webkit-linear-gradient(top, #fafafa, #fcfcfc);
-          border: 1px solid #bbb;
+          border: 1px solid #bbbbbb;
           color: #444; }
       #content header .toggle:hover {
         color: #444; }
@@ -816,6 +816,21 @@ body.resizing {
   height: 100%;
   position: absolute;
   top: 0; }
+  .popover-mask > div {
+    display: none; }
+    .popover-mask > div button {
+      color: #ccc;
+      border: 0;
+      background: #222;
+      height: 22px;
+      font-size: 12px;
+      border-radius: 2px;
+      margin-top: 4px;
+      padding: 0 10px; }
+      .popover-mask > div button:hover {
+        color: #fff; }
+      .popover-mask > div button:active {
+        background: #333; }
 
 .delete-popover {
   display: inline-block;
@@ -828,7 +843,7 @@ body.resizing {
     height: 0;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    border-right: 10px solid #222;
+    border-right: 10px solid #222222;
     margin-top: 7px;
     margin-left: 5px;
     vertical-align: top; }
@@ -841,19 +856,30 @@ body.resizing {
     padding: 0 5px;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
-  .delete-popover button {
-    color: #ccc;
-    border: 0;
+
+.share-popover {
+  display: inline-block;
+  width: 200px;
+  height: 34px;
+  position: absolute; }
+  .share-popover .arrow {
+    width: 0;
+    height: 0;
+    border-right: 10px solid transparent;
+    margin-top: 7px;
+    margin-left: 5px;
+    vertical-align: top;
+    border-bottom: 10px solid #222222;
+    border-left: 10px solid transparent; }
+  .share-popover .container {
+    display: inline-block;
     background: #222;
-    height: 22px;
-    font-size: 12px;
-    border-radius: 2px;
-    margin-top: 4px;
-    padding: 0 10px; }
-    .delete-popover button:hover {
-      color: #fff; }
-    .delete-popover button:active {
-      background: #333; }
+    height: 30px;
+    vertical-align: top;
+    margin-top: 0px;
+    padding: 0 5px;
+    border-radius: 3px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4); }
 
 .modal {
   display: none;
@@ -865,7 +891,7 @@ body.resizing {
   opacity: 0;
   z-index: 10;
   position: absolute;
-  -webkit-transition: .3s opacity ease;
+  -webkit-transition: 0.3s opacity ease;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
   .modal.show {

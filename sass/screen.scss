@@ -68,16 +68,16 @@ body.resizing { cursor: ew-resize; }
 #noteControls {
 	display: inline-block;
 	left: 200px;
-	width: 291px;
+	width: 295px;
 	text-align: right;
 	position: absolute;
-	padding: 5px 4px;
+	padding: 5px 0px 5px 4px;
 	top: 0;
 	border-right: 1px solid #444;
 
 	img {
 		height: 28px;
-		margin-right: 6px;
+		margin-right: 9px;
 		opacity: 0.7;
 		-webkit-user-drag: none;
 		-moz-user-drag: none;
@@ -497,6 +497,28 @@ body.resizing { cursor: ew-resize; }
 	height: 100%;
 	position: absolute;
 	top: 0;
+
+	& > div {
+		display: none;
+
+		button {
+			color: #ccc;
+			border: 0;
+			background: #222;
+			height: 22px;
+			font-size: 12px;
+			border-radius: 2px;
+			margin-top: 4px;
+			padding: 0 10px;
+
+			&:hover {
+				color: #fff;
+			}
+			&:active {
+				background: #333;
+			}
+		}
+	}
 }
 
 .delete-popover {
@@ -526,22 +548,33 @@ body.resizing { cursor: ew-resize; }
 		border-radius: 3px;
 		box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 	}
-	button {
-		color: #ccc;
-		border: 0;
-		background: #222;
-		height: 22px;
-		font-size: 12px;
-		border-radius: 2px;
-		margin-top: 4px;
-		padding: 0 10px;
+}
 
-		&:hover {
-			color: #fff;
-		}
-		&:active {
-			background: #333;
-		}
+.share-popover {
+	display: inline-block;
+	width: 200px;
+	height: 34px;
+	position: absolute;
+
+	.arrow {
+		width: 0;
+		height: 0;
+		border-right: 10px solid transparent;
+		margin-top: 7px;
+		margin-left: 5px;
+		vertical-align: top;
+		border-bottom: 10px solid #222;
+		border-left: 10px solid transparent;
+	}
+	.container {
+		display: inline-block;
+		background: #222;
+		height: 30px;
+		vertical-align: top;
+		margin-top: 0px;
+		padding: 0 5px;
+		border-radius: 3px;
+		box-shadow: 0 1px 3px rgba(0,0,0,0.4);
 	}
 }
 

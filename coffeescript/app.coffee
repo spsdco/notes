@@ -94,7 +94,7 @@ window.noted =
 		# 	, delay)
 
 		# Key bindings
-		$(document).bind 'keydown', "Ctrl+n", (e) -> 
+		$(document).bind 'keydown', "Ctrl+n", (e) ->
 			window.noted.UIEvents.clickNewNote()
 		$(document).bind 'keydown', "Alt+s",(e) ->
 			$(".modal.settings").modal()
@@ -115,6 +115,9 @@ window.noted =
 
 		$('#new').click ->
 			window.noted.UIEvents.clickNewNote()
+
+		$('#share').click ->
+			window.noted.UIEvents.clickShareNote()
 
 		$('#del').click ->
 			window.noted.UIEvents.clickDelNote()
@@ -157,7 +160,7 @@ window.noted =
 			false
 
 		$('body').on "click contextmenu", ".popover-mask", ->
-			$(@).hide()
+			$(@).hide().children().hide()
 
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			window.noted.UIEvents.keydownTitle(e, $(@))
@@ -363,6 +366,11 @@ window.noted =
 							$("#notes ul li:first").addClass("edit").trigger "click"
 				)
 
+		clickShareNote: ->
+			# Moves thing into correct position
+			$(".popover-mask").show()
+			$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
+
 		modalclickDel: ->
 			$('.modal.delete').modal "hide"
 			if window.noted.currentNote isnt ""
@@ -419,7 +427,7 @@ window.noted =
 			# Probably very ugly, but add a data attribute of the Notebook that triggered this.
 			$(".popover-mask").attr("data-parent", element.text())
 			console.log element.text()
-			$(".delete-popover").css({left: $(event.target).outerWidth(), top: $(event.target).offset().top})
+			$(".delete-popover").css({left: $(event.target).outerWidth(), top: $(event.target).offset().top}).show()
 
 
 		keydownTitle: (e, element) ->
