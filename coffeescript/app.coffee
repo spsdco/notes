@@ -176,6 +176,50 @@ window.noted =
 		$("body").on "click", ".editorbuttons button", ->
 			window.noted.editorAction $(@).attr('data-action')
 
+	rename: (oldfile, newfile) ->
+		while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", newfile + '.txt'))
+			r = /\(\s*(\d+)\s*\)$/
+			if r.exec(newfile) is null
+				newfile = newfile + " (1)"
+			else
+				newfile = newfile.replace(" ("+r.exec(newfile)[1]+")", " ("+(parseInt(r.exec(newfile)[1])+1)+")")
+
+		fs.rename(
+			path.join(
+				window.noted.storagedir,
+				"Notebooks",
+				oldfile+'.txt'
+			),
+			path.join(
+				window.noted.storagedir,
+				"Notebooks",
+				newfile + '.txt'
+			)
+		)
+		path.join(window.noted.storagedir, "Notebooks", newfile + '.txt')
+		
+	renameNotebook: (oldfile, newfile) ->
+		while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", newfile))
+			r = /\(\s*(\d+)\s*\)$/
+			if r.exec(newfile) is null
+				newfile = newfile + " (1)"
+			else
+				newfile = newfile.replace(" ("+r.exec(newfile)[1]+")", " ("+(parseInt(r.exec(newfile)[1])+1)+")")
+
+		fs.rename(
+			path.join(
+				window.noted.storagedir,
+				"Notebooks",
+				oldfile
+			),
+			path.join(
+				window.noted.storagedir,
+				"Notebooks",
+				newfile
+			)
+		)
+		path.join(window.noted.storagedir, "Notebooks", newfile)
+
 	editorAction: (action) ->
 		if action is 'bold'
 			$('#contentwrite textarea').surroundSelectedText("**","**")
@@ -429,27 +473,7 @@ window.noted =
 			if e.keyCode is 13 and element.text() isnt ""
 				e.preventDefault()
 				name = element.text()
-				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt'))
-					r = /\(\s*(\d+)\s*\)$/
-					if r.exec(name) is null
-						name = name+" (1)"
-					else
-						name = name.replace(" ("+r.exec(name)[1]+")", " ("+(parseInt(r.exec(name)[1])+1)+")")
-
-				fs.rename(
-					path.join(
-						window.noted.storagedir,
-						"Notebooks",
-						window.noted.currentList,
-						window.noted.currentNote + '.txt'
-					),
-					path.join(
-						window.noted.storagedir,
-						"Notebooks",
-						window.noted.currentList,
-						name + '.txt'
-					)
-				)
+				window.noted.rename(window.noted.currentList+'/'+window.noted.currentNote, window.noted.currentList+'/'+name)
 				window.noted.currentNote = name;
 				window.noted.load.notes(window.noted.currentList)
 				element.blur()
@@ -517,16 +541,9 @@ window.noted =
 		modalclickRenameNotebook: ->
 			$('.modal.renameNotebook').modal "hide"
 			origname = $(".popover-mask").attr("data-parent")
-			name = $('.modal.renameNotebook .delete-container h1').text()
+			name = $('.modal.renameNotebook input').val()
 			if name isnt ""
-				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", name)) is true
-					regexp = /\(\s*(\d+)\s*\)$/
-					if regexp.exec(name) is null
-						name = name+" (1)"
-					else
-						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
-
-				fs.rename(path.join(window.noted.storagedir,"Notebooks",origname),path.join(window.noted.storagedir,"Notebooks",name))
+				window.noted.renameNotebook(origname,name)
 				window.noted.load.notebooks()
 
 	util:
