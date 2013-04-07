@@ -483,14 +483,17 @@ body.resizing {
   padding: 5px 0px 5px 4px;
   top: 0;
   border-right: 1px solid #444444; }
+  #noteControls.disabled #share, #noteControls.disabled #del {
+    opacity: 0.35; }
   #noteControls img {
     height: 28px;
     margin-right: 9px;
-    opacity: 0.7;
+    opacity: 0.75;
     -webkit-user-drag: none;
     -moz-user-drag: none;
     -ms-user-drag: none;
-    user-drag: none; }
+    user-drag: none;
+    -webkit-transition: 150ms ease opacity; }
     #noteControls img:active {
       opacity: 1; }
 

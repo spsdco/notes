@@ -75,14 +75,21 @@ body.resizing { cursor: ew-resize; }
 	top: 0;
 	border-right: 1px solid #444;
 
+	&.disabled {
+		#share, #del {
+			opacity: 0.35;
+		}
+	}
+
 	img {
 		height: 28px;
 		margin-right: 9px;
-		opacity: 0.7;
+		opacity: 0.75;
 		-webkit-user-drag: none;
 		-moz-user-drag: none;
 		-ms-user-drag: none;
 		user-drag: none;
+		-webkit-transition: 150ms ease opacity;
 
 		&:active {
 			opacity: 1;

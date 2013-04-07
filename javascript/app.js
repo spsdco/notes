@@ -128,14 +128,8 @@
       }).mouseleave(function() {
         return $('#panel').addClass('drag');
       });
-      $('#new').click(function() {
-        return window.noted.UIEvents.clickNewNote();
-      });
-      $('#share').click(function() {
-        return window.noted.UIEvents.clickShareNote();
-      });
-      $('#del').click(function() {
-        return window.noted.UIEvents.clickDelNote();
+      $('#noteControls img').click(function() {
+        return window.noted.UIEvents.clickNoteControls($(this).attr("id"));
       });
       $(".modal.delete .true").click(function() {
         return window.noted.UIEvents.modalclickDel();
@@ -350,10 +344,10 @@
       }
     },
     UIEvents: {
-      clickNewNote: function() {
+      clickNoteControls: function(id) {
         var name, r;
-        name = "Untitled Note";
-        if (window.noted.currentList !== "All Notes") {
+        if (id === "new" && window.noted.currentList !== "All Notes" && window.noted.editor.getReadOnly() === true) {
+          name = "Untitled Note";
           while (fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name + ".txt"))) {
             r = /\(\s*(\d+)\s*\)$/;
             if (r.exec(name) === null) {
@@ -367,14 +361,17 @@
               return $("#notes ul li:first").addClass("edit").trigger("click");
             });
           });
+        } else if (!$("#noteControls").hasClass("disabled")) {
+          if (id === "share") {
+            $(".popover-mask").show();
+            return $(".share-popover").css({
+              left: ($(event.target).offset().left) - 3,
+              top: "28px"
+            }).show();
+          } else if (id === "del") {
+            return $('.modal.delete').modal();
+          }
         }
-      },
-      clickShareNote: function() {
-        $(".popover-mask").show();
-        return $(".share-popover").css({
-          left: ($(event.target).offset().left) - 3,
-          top: "28px"
-        }).show();
       },
       modalclickDel: function() {
         $('.modal.delete').modal("hide");
@@ -387,9 +384,6 @@
             return window.noted.load.notes(window.noted.currentList);
           });
         }
-      },
-      clickDelNote: function() {
-        return $('.modal.delete').modal();
       },
       titlebarClose: function() {
         return window.noted.window.close();
@@ -419,6 +413,7 @@
         }
       },
       clickNotebook: function(element) {
+        $("#noteControls").addClass("disabled");
         element.parent().find(".selected").removeClass("selected");
         element.addClass("selected");
         window.noted.load.notes(element.text());
@@ -466,6 +461,7 @@
         }
       },
       clickNote: function(element) {
+        $("#noteControls").removeClass("disabled");
         $("#notes .selected").removeClass("selected");
         element.addClass("selected");
         return window.noted.load.note(element);

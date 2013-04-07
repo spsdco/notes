@@ -113,14 +113,8 @@ window.noted =
 		).mouseleave ->
 			$('#panel').addClass('drag')
 
-		$('#new').click ->
-			window.noted.UIEvents.clickNewNote()
-
-		$('#share').click ->
-			window.noted.UIEvents.clickShareNote()
-
-		$('#del').click ->
-			window.noted.UIEvents.clickDelNote()
+		$('#noteControls img').click ->
+			window.noted.UIEvents.clickNoteControls($(@).attr("id"))
 
 		$(".modal.delete .true").click ->
 			window.noted.UIEvents.modalclickDel()
@@ -343,9 +337,9 @@ window.noted =
 
 	UIEvents:
 		# To make life simpler, have <action><element> as a fucntion name: example: clickEdit for when you click $('.edit')
-		clickNewNote: ->
-			name = "Untitled Note"
-			if window.noted.currentList isnt "All Notes"
+		clickNoteControls: (id) ->
+			if id is "new" and window.noted.currentList isnt "All Notes" and window.noted.editor.getReadOnly() is true
+				name = "Untitled Note"
 				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+".txt"))
 					r = /\(\s*(\d+)\s*\)$/
 					if r.exec(name) is null
@@ -365,11 +359,14 @@ window.noted =
 						window.noted.load.notes window.noted.currentList, "", ->
 							$("#notes ul li:first").addClass("edit").trigger "click"
 				)
+			else if !$("#noteControls").hasClass("disabled")
+				if id is "share"
+					# Moves thing into correct position
+					$(".popover-mask").show()
+					$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
 
-		clickShareNote: ->
-			# Moves thing into correct position
-			$(".popover-mask").show()
-			$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
+				else if id is "del"
+					$('.modal.delete').modal()
 
 		modalclickDel: ->
 			$('.modal.delete').modal "hide"
@@ -385,9 +382,6 @@ window.noted =
 						window.noted.deselect()
 						window.noted.load.notes(window.noted.currentList)
 				)
-
-		clickDelNote: ->
-			$('.modal.delete').modal()
 
 		titlebarClose: ->
 			window.noted.window.close()
@@ -416,6 +410,7 @@ window.noted =
 				$('#notebooks input').val("").blur()
 
 		clickNotebook: (element) ->
+			$("#noteControls").addClass("disabled")
 			element.parent().find(".selected").removeClass "selected"
 			element.addClass "selected"
 			window.noted.load.notes(element.text())
@@ -492,6 +487,7 @@ window.noted =
 				window.noted.currentNote = name
 
 		clickNote: (element) ->
+			$("#noteControls").removeClass("disabled")
 			$("#notes .selected").removeClass("selected")
 			element.addClass("selected")
 
