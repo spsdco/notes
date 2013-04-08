@@ -239,7 +239,7 @@ window.noted =
 			$("#content .right time").show()
 
 			$("#contentread").html(marked(window.noted.editor.getValue())).show()
-			$("#content .editorbuttons").hide()
+			$("#content .editorbuttons").removeClass("show")
 			window.noted.editor.hide()
 			window.noted.editor.setReadOnly(true)
 			window.noted.save()
@@ -249,7 +249,7 @@ window.noted =
 			$("#content .right time").hide()
 
 			$("#contentread").hide()
-			$("#content .editorbuttons").show()
+			$("#content .editorbuttons").addClass("show")
 			window.noted.editor.show()
 			window.noted.editor.setReadOnly(false)
 

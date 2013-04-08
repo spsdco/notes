@@ -236,7 +236,7 @@
         $('#content .left h1').attr('contenteditable', 'false');
         $("#content .right time").show();
         $("#contentread").html(marked(window.noted.editor.getValue())).show();
-        $("#content .editorbuttons").hide();
+        $("#content .editorbuttons").removeClass("show");
         window.noted.editor.hide();
         window.noted.editor.setReadOnly(true);
         return window.noted.save();
@@ -245,7 +245,7 @@
         $('.headerwrap .left h1').attr('contenteditable', 'true');
         $("#content .right time").hide();
         $("#contentread").hide();
-        $("#content .editorbuttons").show();
+        $("#content .editorbuttons").addClass("show");
         window.noted.editor.show();
         window.noted.editor.setReadOnly(false);
         return $(window).trigger("resize");

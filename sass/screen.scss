@@ -289,6 +289,10 @@ body.resizing { cursor: ew-resize; }
 		background-position: 50% 100px;
 		background-size: 140px;
 
+		.editorbuttons {
+			display: none;
+		}
+
 		&::after {
 			position: absolute;
 			top: 240px;
@@ -429,12 +433,12 @@ body.resizing { cursor: ew-resize; }
 	left: 0;
 	right: 0;
 	background: lighten($white-color, 1%);
-	margin: 35px auto;
 	max-width: 600px;
 	padding: 0 20px;
 }
 
 #contentwrite {
+	margin: 65px auto 35px;
 
 	textarea {
 		font-family: "Lato", sans-serif;
@@ -454,7 +458,24 @@ body.resizing { cursor: ew-resize; }
 	}
 }
 
+.editorbuttons {
+	z-index: 9;
+	position: absolute;
+	margin-top: 60px;
+	height: 29px;
+	width: 100%;
+	background: #eee;
+	border-bottom: 1px solid #ccc;
+	top: -30px;
+	-webkit-transition: 200ms ease all;
+
+	&.show {
+		top: 0;
+	}
+}
+
 #contentread {
+	margin: 35px auto;
 	bottom: auto;
 	display: none;
 	z-index: 4;
