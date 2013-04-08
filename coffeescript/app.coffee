@@ -197,7 +197,7 @@ window.noted =
 			)
 		)
 		path.join(window.noted.storagedir, "Notebooks", newfile + '.txt')
-		
+
 	renameNotebook: (oldfile, newfile) ->
 		while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", newfile))
 			r = /\(\s*(\d+)\s*\)$/
@@ -408,6 +408,8 @@ window.noted =
 					# Moves thing into correct position
 					$(".popover-mask").show()
 					$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
+					mailto = "mailto:?subject=" + encodeURI(window.noted.currentNote) + "&body=" + encodeURI(window.noted.editor.getValue())
+					$("#emailNote").parent().attr("href", mailto)
 
 				else if id is "del"
 					$('.modal.delete').modal()
