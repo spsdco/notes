@@ -93,12 +93,6 @@ window.noted =
 		# 		window.noted.save()
 		# 	, delay)
 
-		# Key bindings
-		$(document).bind 'keydown', "Ctrl+n", (e) ->
-			window.noted.UIEvents.clickNewNote()
-		$(document).bind 'keydown', "Alt+s",(e) ->
-			$(".modal.settings").modal()
-
 		$('.modal.settings .false').click ->
 			$('.modal.settings').modal "hide"
 

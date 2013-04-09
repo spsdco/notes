@@ -109,12 +109,6 @@
       window.noted.load.notebooks();
       window.noted.load.notes("All Notes");
       window.noted.editor = new jonoeditor($("#contentwrite"));
-      $(document).bind('keydown', "Ctrl+n", function(e) {
-        return window.noted.UIEvents.clickNewNote();
-      });
-      $(document).bind('keydown', "Alt+s", function(e) {
-        return $(".modal.settings").modal();
-      });
       $('.modal.settings .false').click(function() {
         return $('.modal.settings').modal("hide");
       });
