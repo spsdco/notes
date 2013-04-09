@@ -12,7 +12,6 @@ Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
-hotkeys				= require './javascript/lib/hotkeys'
 
 # Accepts a jQuery Selector
 class jonoeditor
@@ -92,12 +91,6 @@ window.noted =
 		# 		$this.removeData('timer')
 		# 		window.noted.save()
 		# 	, delay)
-
-		# Key bindings
-		$(document).bind 'keydown', "Ctrl+n", (e) ->
-			window.noted.UIEvents.clickNewNote()
-		$(document).bind 'keydown', "Alt+s",(e) ->
-			$(".modal.settings").modal()
 
 		$('.modal.settings .false').click ->
 			$('.modal.settings').modal "hide"
