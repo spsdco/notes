@@ -330,9 +330,7 @@ window.noted =
 					htmlstr = template({
 						name: note.name
 						list: list
-						year: note.time.getFullYear()
-						month: note.time.getMonth() + 1
-						day: note.time.getDate()
+						date: window.noted.util.date(note.time)
 						excerpt: note.info
 						}) + htmlstr
 
@@ -350,7 +348,7 @@ window.noted =
 				$('.headerwrap .left h1').text(window.noted.currentNote)
 				noteTime = fs.statSync(path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'))['mtime']
 				time = new Date(Date.parse(noteTime))
-				$('.headerwrap .right time').text(window.noted.util.pad(time.getFullYear())+"/"+(window.noted.util.pad(time.getMonth()+1))+"/"+time.getDate()+" "+window.noted.util.pad(time.getHours())+":"+window.noted.util.pad(time.getMinutes()))
+				$('.headerwrap .right time').text(window.noted.util.date(time)+" "+window.noted.util.pad(time.getHours())+":"+window.noted.util.pad(time.getMinutes()))
 				# BAD CODE: TODO: ^ This code is fucking shit. What were you thinking mh0?
 				$("#contentread").html(marked(data)).show()
 				window.noted.editor.setValue(data)
@@ -542,6 +540,55 @@ window.noted =
 				window.noted.load.notebooks()
 
 	util:
+		date: (date) ->
+			date = new Date(date)
+
+			month = [
+				"Jan"
+				"Feb"
+				"Mar"
+				"Apr"
+				"May"
+				"Jun"
+				"Jul"
+				"Aug"
+				"Sep"
+				"Oct"
+				"Nov"
+				"Dec"
+			]
+
+			now = new Date()
+			difference = 0
+			oneDay = 86400000; # 1000*60*60*24 - one day in milliseconds
+			words = ''
+
+			# Find difference between days
+			difference = Math.ceil((date.getTime() - now.getTime()) / oneDay)
+			console.log difference
+
+			# Show difference nicely
+			if difference is 0
+				words = "Today"
+
+			else if difference is -1
+				words = "Yesterday"
+
+			else if difference > 0
+				# If the user has a TARDIS
+				words = "In " + difference + " days"
+
+			else if difference > -15
+				words = Math.abs(difference) + " days ago"
+
+			else if difference > -365
+				words = month[date.getMonth()] + " " + date.getDate()
+
+			else
+				words = window.noted.util.pad(date.getFullYear())+"-"+(window.noted.util.pad(date.getMonth()+1))+"-"+window.noted.util.pad(date.getDate())
+
+			words #return
+
 		pad: (n) ->
 			# pad a single-digit number to a 2-digit number for things such as times or dates.
 			(if (n < 10) then ("0" + n) else n)
