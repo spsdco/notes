@@ -237,6 +237,9 @@ window.noted =
 			else
 				$('#contentwrite textarea').setSelection(sel.start, sel.end)
 				$('#contentwrite textarea').surroundSelectedText("*","*")
+		else if action is 'hyperlink'
+			url = prompt("Enter your URL here:","")
+			$('#contentwrite textarea').surroundSelectedText("[","]("+url+")")
 
 	deselect: ->
 		$("#content").addClass("deselected")
