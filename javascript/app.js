@@ -237,7 +237,7 @@
           return $('#contentwrite textarea').surroundSelectedText("*", "*");
         }
       } else if (action === 'hyperlink') {
-        url = prompt("Enter your URL here:", "");
+        url = prompt("Enter the URLof the hyperlink", "");
         return $('#contentwrite textarea').surroundSelectedText("[", "](" + url + ")");
       } else if (action === 'h1') {
         sel = $('#contentwrite textarea').getSelection();
@@ -283,6 +283,11 @@
           $('#contentwrite textarea').setSelection(sel.start, sel.end);
           return $('#contentwrite textarea').surroundSelectedText("#### ", "");
         }
+      } else if (action === 'hr') {
+        return $('#contentwrite textarea').surroundSelectedText("----\n", "");
+      } else if (action === 'img') {
+        url = prompt("Enter the URL of the image", "");
+        return $('#contentwrite textarea').surroundSelectedText("![", "](" + url + ")");
       }
     },
     deselect: function() {

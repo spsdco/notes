@@ -238,7 +238,7 @@ window.noted =
 				$('#contentwrite textarea').setSelection(sel.start, sel.end)
 				$('#contentwrite textarea').surroundSelectedText("*","*")
 		else if action is 'hyperlink'
-			url = prompt("Enter your URL here:","")
+			url = prompt("Enter the URLof the hyperlink","")
 			$('#contentwrite textarea').surroundSelectedText("[","]("+url+")")
 		else if action is 'h1'
 			sel = $('#contentwrite textarea').getSelection()
@@ -280,6 +280,12 @@ window.noted =
 			else
 				$('#contentwrite textarea').setSelection(sel.start, sel.end)
 				$('#contentwrite textarea').surroundSelectedText("#### ","")
+		else if action is 'hr'
+			$('#contentwrite textarea').surroundSelectedText("----\n","")
+		else if action is 'img'
+			url = prompt("Enter the URL of the image","")
+			$('#contentwrite textarea').surroundSelectedText("![","]("+url+")")
+
 
 	deselect: ->
 		$("#content").addClass("deselected")
