@@ -12,6 +12,7 @@ Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
+S				= require 'string'
 
 # Accepts a jQuery Selector
 class jonoeditor
@@ -215,9 +216,27 @@ window.noted =
 
 	editorAction: (action) ->
 		if action is 'bold'
-			$('#contentwrite textarea').surroundSelectedText("**","**")
+			sel = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 2, sel.end + 2) # Surround the "**".
+			newsel = $('#contentwrite textarea').getSelection()
+			if S(newsel.text).endsWith("**") and S(newsel.text).startsWith("**")
+				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+2)
+				$('#contentwrite textarea').deleteText(newsel.end-4, newsel.end-2)
+				$('#contentwrite textarea').setSelection(sel.start-2, sel.end-2)
+			else
+				$('#contentwrite textarea').setSelection(sel.start, sel.end)
+				$('#contentwrite textarea').surroundSelectedText("**","**")
 		else if action is 'italics'
-			$('#contentwrite textarea').surroundSelectedText("*","*")
+			sel = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 1, sel.end + 1) # Surround the "**".
+			newsel = $('#contentwrite textarea').getSelection()
+			if S(newsel.text).endsWith("*") and S(newsel.text).startsWith("*")
+				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+1)
+				$('#contentwrite textarea').deleteText(newsel.end-2, newsel.end-1)
+				$('#contentwrite textarea').setSelection(sel.start-1, sel.end-1)
+			else
+				$('#contentwrite textarea').setSelection(sel.start, sel.end)
+				$('#contentwrite textarea').surroundSelectedText("*","*")
 
 	deselect: ->
 		$("#content").addClass("deselected")
