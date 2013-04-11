@@ -240,6 +240,46 @@ window.noted =
 		else if action is 'hyperlink'
 			url = prompt("Enter your URL here:","")
 			$('#contentwrite textarea').surroundSelectedText("[","]("+url+")")
+		else if action is 'h1'
+			sel = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 2, sel.end) # Surround the "**".
+			newsel = $('#contentwrite textarea').getSelection()
+			if S(newsel.text).startsWith("# ")
+				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+2)
+				$('#contentwrite textarea').setSelection(sel.start-2, sel.end-2)
+			else
+				$('#contentwrite textarea').setSelection(sel.start, sel.end)
+				$('#contentwrite textarea').surroundSelectedText("# ","")
+		else if action is 'h2'
+			sel = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 3, sel.end) # Surround the "**".
+			newsel = $('#contentwrite textarea').getSelection()
+			if S(newsel.text).startsWith("## ")
+				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+3)
+				$('#contentwrite textarea').setSelection(sel.start-3, sel.end-3)
+			else
+				$('#contentwrite textarea').setSelection(sel.start, sel.end)
+				$('#contentwrite textarea').surroundSelectedText("## ","")
+		else if action is 'h3'
+			sel = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 4, sel.end) # Surround the "**".
+			newsel = $('#contentwrite textarea').getSelection()
+			if S(newsel.text).startsWith("### ")
+				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+4)
+				$('#contentwrite textarea').setSelection(sel.start-4, sel.end-4)
+			else
+				$('#contentwrite textarea').setSelection(sel.start, sel.end)
+				$('#contentwrite textarea').surroundSelectedText("### ","")
+		else if action is 'h4'
+			sel = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 5, sel.end) # Surround the "**".
+			newsel = $('#contentwrite textarea').getSelection()
+			if S(newsel.text).startsWith("#### ")
+				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+5)
+				$('#contentwrite textarea').setSelection(sel.start-5, sel.end-5)
+			else
+				$('#contentwrite textarea').setSelection(sel.start, sel.end)
+				$('#contentwrite textarea').surroundSelectedText("#### ","")
 
 	deselect: ->
 		$("#content").addClass("deselected")

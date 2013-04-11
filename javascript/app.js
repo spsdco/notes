@@ -239,6 +239,50 @@
       } else if (action === 'hyperlink') {
         url = prompt("Enter your URL here:", "");
         return $('#contentwrite textarea').surroundSelectedText("[", "](" + url + ")");
+      } else if (action === 'h1') {
+        sel = $('#contentwrite textarea').getSelection();
+        $('#contentwrite textarea').setSelection(sel.start - 2, sel.end);
+        newsel = $('#contentwrite textarea').getSelection();
+        if (S(newsel.text).startsWith("# ")) {
+          $('#contentwrite textarea').deleteText(newsel.start, newsel.start + 2);
+          return $('#contentwrite textarea').setSelection(sel.start - 2, sel.end - 2);
+        } else {
+          $('#contentwrite textarea').setSelection(sel.start, sel.end);
+          return $('#contentwrite textarea').surroundSelectedText("# ", "");
+        }
+      } else if (action === 'h2') {
+        sel = $('#contentwrite textarea').getSelection();
+        $('#contentwrite textarea').setSelection(sel.start - 3, sel.end);
+        newsel = $('#contentwrite textarea').getSelection();
+        if (S(newsel.text).startsWith("## ")) {
+          $('#contentwrite textarea').deleteText(newsel.start, newsel.start + 3);
+          return $('#contentwrite textarea').setSelection(sel.start - 3, sel.end - 3);
+        } else {
+          $('#contentwrite textarea').setSelection(sel.start, sel.end);
+          return $('#contentwrite textarea').surroundSelectedText("## ", "");
+        }
+      } else if (action === 'h3') {
+        sel = $('#contentwrite textarea').getSelection();
+        $('#contentwrite textarea').setSelection(sel.start - 4, sel.end);
+        newsel = $('#contentwrite textarea').getSelection();
+        if (S(newsel.text).startsWith("### ")) {
+          $('#contentwrite textarea').deleteText(newsel.start, newsel.start + 4);
+          return $('#contentwrite textarea').setSelection(sel.start - 4, sel.end - 4);
+        } else {
+          $('#contentwrite textarea').setSelection(sel.start, sel.end);
+          return $('#contentwrite textarea').surroundSelectedText("### ", "");
+        }
+      } else if (action === 'h4') {
+        sel = $('#contentwrite textarea').getSelection();
+        $('#contentwrite textarea').setSelection(sel.start - 5, sel.end);
+        newsel = $('#contentwrite textarea').getSelection();
+        if (S(newsel.text).startsWith("#### ")) {
+          $('#contentwrite textarea').deleteText(newsel.start, newsel.start + 5);
+          return $('#contentwrite textarea').setSelection(sel.start - 5, sel.end - 5);
+        } else {
+          $('#contentwrite textarea').setSelection(sel.start, sel.end);
+          return $('#contentwrite textarea').surroundSelectedText("#### ", "");
+        }
       }
     },
     deselect: function() {
