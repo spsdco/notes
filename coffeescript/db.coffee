@@ -22,6 +22,22 @@ class db
 	constructor: (@notebookdir) ->
 
 	###
+	# Finds the filename of a particular note id
+	# @param {String} id The note you're searching for
+	# @return {String} filename The found filename
+	###
+	filenameNote: (id) ->
+		files = fs.readdirSync @notebookdir
+
+		# Low level loop because perf?
+		i = 0
+		while i >= 0
+			# Finds the filename
+			if files[i] is undefined or files[i].match("."+id+".noted")
+				return files[i]
+			i++
+
+	###
 	# Creates a new notebook
 	# @param {String} name The notebook name
 	# @return {String} id The new notebook id
@@ -30,11 +46,10 @@ class db
 		id = generateUid()
 
 		# there's a 16^16 chance of conflicting, but hey
-		while fs.existsSync(path.join(@notebookdir, id))
+		while fs.existsSync(path.join(@notebookdir, id  + ".json"))
 			id = generateUid()
 
-		fs.mkdirSync(path.join(@notebookdir, id))
-		fs.writeFile path.join(@notebookdir, id, "meta.json"),
+		fs.writeFile path.join(@notebookdir, id + ".json"),
 			JSON.stringify {
 				id: id
 				name: name
@@ -51,10 +66,10 @@ class db
 	createNote: (name, notebook, content) ->
 		id = generateUid()
 
-		while fs.existsSync(path.join(@notebookdir, notebook, id  + ".noted"))
+		while fs.existsSync(path.join(@notebookdir, notebook + "." + id  + ".noted"))
 			id = generateUid()
 
-		fs.writeFile path.join(@notebookdir, notebook, id  + ".noted"),
+		fs.writeFile path.join(@notebookdir, notebook + "." + id  + ".noted"),
 			JSON.stringify {
 				id: id
 				name: name
@@ -63,7 +78,45 @@ class db
 			}
 		return id
 
+	###
+	# List notebooks
+	# @return {Array} notebooks List of Notebooks
+	###
+	readNotebooks: ->
+		files = fs.readdirSync @notebookdir
+		notebooks = []
+
+		files.forEach (file) ->
+			notebooks.push file if file.substr(16,5) is ".json"
+
+		return notebooks
+
+	###
+	# Read a notebook
+	# @param {String} id The notebook id
+	# @return {Object} notebook Notebook metadata with list of notes
+	###
+
+	###
+	# Read a note
+	# @param {String} id The note id
+	# @return {Object} note Note metadata with content
+	###
+
+	###
+	# Deletes a notebook
+	# @param {String} id The notebook id
+	###
+
+	###
+	# Deletes a note
+	# @param {String} id The note id
+	###
+	deleteNote: (id) ->
+		fs.unlink path.join(@notebookdir, @filenameNote(id))
+
 
 noteddb = new db(notebookdir())
-notebook = noteddb.createNotebook("Getting Started")
-noteddb.createNote("Awesome", notebook, "YOLO SWAGGGG")
+# notebook = noteddb.createNotebook("Getting Started")
+# noteddb.createNote("Awesome", notebook, "YOLO SWAGGGG")
+console.log noteddb.readNotebooks()
