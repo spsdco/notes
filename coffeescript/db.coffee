@@ -120,6 +120,13 @@ class db
 	# Deletes a notebook
 	# @param {String} id The notebook id
 	###
+	deleteNotebook: (id) ->
+		# Deletes each note
+		@readNotebook(id).contents.forEach (file) =>
+			fs.unlink path.join(@notebookdir, id+"."+file+".noted")
+
+		# Deletes metadata
+		fs.unlink path.join(@notebookdir, id+".json")
 
 	###
 	# Deletes a note
@@ -132,5 +139,4 @@ class db
 noteddb = new db(notebookdir())
 # notebook = noteddb.createNotebook("Getting Started")
 # noteddb.createNote("Awesome", "b67fe9194949bd46", "YOLO SWAGGGG")
-console.log noteddb.readNotebook(noteddb.readNotebooks()[0])
-console.log noteddb.readNote("875feea4d0f966aa")
+# noteddb.deleteNotebook(noteddb.readNotebooks()[0])
