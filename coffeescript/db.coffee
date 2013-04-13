@@ -1,15 +1,14 @@
 fs = require 'fs'
 path = require 'path'
 
-generateUid = ->
-	s4 = ->
-		(((1+Math.random())*0x10000)|0).toString(16).substring(1)
- 
-	(s4() + s4() + s4() + s4()).toLowerCase()
-
-
-class db
+class noteddb
 	constructor: (@notebookdir) ->
+
+	generateUid: ->
+		s4 = ->
+			(((1+Math.random())*0x10000)|0).toString(16).substring(1)
+ 
+		(s4() + s4() + s4() + s4()).toLowerCase()
 
 	###
 	# Finds the filename of a particular note id
@@ -33,11 +32,11 @@ class db
 	# @return {String} id The new notebook id
 	###
 	createNotebook: (name) ->
-		id = generateUid()
+		id = @generateUid()
 
 		# there's a 16^16 chance of conflicting, but hey
 		while fs.existsSync(path.join(@notebookdir, id  + ".json"))
-			id = generateUid()
+			id = @generateUid()
 
 		fs.writeFile path.join(@notebookdir, id + ".json"),
 			JSON.stringify {
@@ -54,10 +53,10 @@ class db
 	# @return {String} id The new note id
 	###
 	createNote: (name, notebook, content) ->
-		id = generateUid()
+		id = @generateUid()
 
 		while fs.existsSync(path.join(@notebookdir, notebook + "." + id  + ".noted"))
-			id = generateUid()
+			id = @generateUid()
 
 		fs.writeFile path.join(@notebookdir, notebook + "." + id  + ".noted"),
 			JSON.stringify {
@@ -170,3 +169,5 @@ class db
 	###
 	deleteNote: (id) ->
 		fs.unlink path.join(@notebookdir, @filenameNote(id))
+
+module.exports = noteddb
