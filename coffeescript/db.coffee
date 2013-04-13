@@ -71,14 +71,22 @@ class db
 
 	###
 	# List notebooks
+	# @param {Boolean} [names=false] Whether to return names of notebook
 	# @return {Array} notebooks List of Notebooks
 	###
-	readNotebooks: ->
+	readNotebooks: (names) ->
 		files = fs.readdirSync @notebookdir
 		notebooks = []
 
-		files.forEach (file) ->
-			notebooks.push file.substr(0,16) if file.substr(16,5) is ".json"
+		files.forEach (file) =>
+			if file.substr(16,5) is ".json"
+				if names
+					notebooks.push {
+						id: file.substr(0,16)
+						name: JSON.parse(fs.readFileSync(path.join(@notebookdir, file))).name
+					}
+				else
+					notebooks.push file.substr(0,16)
 
 		return notebooks
 
