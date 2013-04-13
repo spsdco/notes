@@ -102,11 +102,9 @@ class db
 
 		files = fs.readdirSync @notebookdir
 		files.forEach (file) ->
-			notebook.contents.push file if file.match(id) and file.substr(16,5) isnt ".json"
+			notebook.contents.push file.substr(17, 16) if file.match(id) and file.substr(16,5) isnt ".json"
 
 		return notebook
-
-
 
 	###
 	# Read a note
