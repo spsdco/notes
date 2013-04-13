@@ -75,6 +75,7 @@ class db
 				name: name
 				notebook: notebook
 				content: content
+				date: Math.round(new Date() / 1000)
 			}
 		return id
 
@@ -111,6 +112,9 @@ class db
 	# @param {String} id The note id
 	# @return {Object} note Note metadata with content
 	###
+	readNote: (id) ->
+		note = fs.readFileSync(path.join(@notebookdir, @filenameNote(id)))
+		JSON.parse note.toString()
 
 	###
 	# Deletes a notebook
@@ -129,3 +133,4 @@ noteddb = new db(notebookdir())
 # notebook = noteddb.createNotebook("Getting Started")
 # noteddb.createNote("Awesome", "b67fe9194949bd46", "YOLO SWAGGGG")
 console.log noteddb.readNotebook(noteddb.readNotebooks()[0])
+console.log noteddb.readNote("875feea4d0f966aa")
