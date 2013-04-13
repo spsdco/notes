@@ -87,7 +87,7 @@ class db
 		notebooks = []
 
 		files.forEach (file) ->
-			notebooks.push file if file.substr(16,5) is ".json"
+			notebooks.push file.substr(0,16) if file.substr(16,5) is ".json"
 
 		return notebooks
 
@@ -96,6 +96,17 @@ class db
 	# @param {String} id The notebook id
 	# @return {Object} notebook Notebook metadata with list of notes
 	###
+	readNotebook: (id) ->
+		notebook = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+".json")))
+		notebook.contents = []
+
+		files = fs.readdirSync @notebookdir
+		files.forEach (file) ->
+			notebook.contents.push file if file.match(id) and file.substr(16,5) isnt ".json"
+
+		return notebook
+
+
 
 	###
 	# Read a note
@@ -118,5 +129,5 @@ class db
 
 noteddb = new db(notebookdir())
 # notebook = noteddb.createNotebook("Getting Started")
-# noteddb.createNote("Awesome", notebook, "YOLO SWAGGGG")
-console.log noteddb.readNotebooks()
+# noteddb.createNote("Awesome", "b67fe9194949bd46", "YOLO SWAGGGG")
+console.log noteddb.readNotebook(noteddb.readNotebooks()[0])
