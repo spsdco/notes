@@ -1,16 +1,6 @@
 fs = require 'fs'
 path = require 'path'
 
-# Anonymous Functions
-notebookdir = ->
-	# Set up where we're going to store stuff.
-	if process.platform is 'darwin'
-		path.join(process.env.HOME, "/Library/Application Support/Noted/Notebooks")
-	else if process.platform is 'win32'
-		path.join(process.env.LOCALAPPDATA, "/Noted/Notebooks")
-	else if process.platform is 'linux'
-		path.join(process.env.HOME, '/.config/Noted/Notebooks')
-
 generateUid = ->
 	s4 = ->
 		(((1+Math.random())*0x10000)|0).toString(16).substring(1)
@@ -117,6 +107,44 @@ class db
 		JSON.parse note.toString()
 
 	###
+	# Update Notebook Metadata
+	# @param {String} id The notebook id
+	# @param {Object} data The new notebook data
+	# @return {Object} data The updated notebook data
+	###
+	updateNotebook: (id, data) ->
+		# Ensure that the id does not change
+		data.id = id
+
+		fs.writeFile path.join(@notebookdir, id + ".json"),
+			JSON.stringify data
+
+		return data
+
+	###
+	# Update Note Data
+	# @param {String} id The note id
+	# @param {Object} data The new note data
+	# @return {Object} data The updated note data
+	###
+	updateNote: (id, data) ->
+		# This stuff cannot be set by the user
+		data.id = id
+		data.date = Math.round(new Date() / 1000)
+
+		# If the notebook has changed, we need to rename the note
+		if data.notebook != @readNote(id).notebook
+			fs.renameSync(
+				path.join(@notebookdir, @filenameNote(id)),
+				path.join(@notebookdir, data.notebook+"."+id+".noted")
+			)
+
+		fs.writeFile path.join(@notebookdir, data.notebook+"."+id+".noted"),
+			JSON.stringify data
+
+		return data
+
+	###
 	# Deletes a notebook
 	# @param {String} id The notebook id
 	###
@@ -134,9 +162,3 @@ class db
 	###
 	deleteNote: (id) ->
 		fs.unlink path.join(@notebookdir, @filenameNote(id))
-
-
-noteddb = new db(notebookdir())
-# notebook = noteddb.createNotebook("Getting Started")
-# noteddb.createNote("Awesome", "b67fe9194949bd46", "YOLO SWAGGGG")
-# noteddb.deleteNotebook(noteddb.readNotebooks()[0])
