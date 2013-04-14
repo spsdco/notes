@@ -240,46 +240,35 @@ window.noted =
 		else if action is 'hyperlink'
 			url = prompt("Enter the URLof the hyperlink","")
 			$('#contentwrite textarea').surroundSelectedText("[","]("+url+")")
-		else if action is 'h1'
+		else if action is 'heading'
 			sel = $('#contentwrite textarea').getSelection()
 			$('#contentwrite textarea').setSelection(sel.start - 2, sel.end) # Surround the "**".
-			newsel = $('#contentwrite textarea').getSelection()
-			if S(newsel.text).startsWith("# ")
-				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+2)
+			newsel1 = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 3, sel.end) # Surround the "**".
+			newsel2 = $('#contentwrite textarea').getSelection()
+			$('#contentwrite textarea').setSelection(sel.start - 4, sel.end) # Surround the "**".
+			newsel3 = $('#contentwrite textarea').getSelection()
+			console.log S(newsel1.text).startsWith("# ")
+			console.log S(newsel2.text).startsWith("## ")
+			console.log S(newsel3.text).startsWith("### ")
+			if S(newsel3.text).startsWith("### ")
+				console.log("h0")
+				$('#contentwrite textarea').deleteText(newsel3.start, newsel3.start+4)
+				$('#contentwrite textarea').setSelection(sel.start-4, sel.end-4)
+			else if S(newsel2.text).startsWith("## ")
+				console.log("h3")
+				$('#contentwrite textarea').deleteText(newsel2.start, newsel2.start+3)
+				$('#contentwrite textarea').setSelection(sel.start-3, sel.end-3)
+				$('#contentwrite textarea').surroundSelectedText("### ","")
+			else if S(newsel1.text).startsWith("# ")
+				console.log("h2")
+				$('#contentwrite textarea').deleteText(newsel1.start, newsel1.start+2)
 				$('#contentwrite textarea').setSelection(sel.start-2, sel.end-2)
+				$('#contentwrite textarea').surroundSelectedText("## ","")
 			else
+				console.log("h1")
 				$('#contentwrite textarea').setSelection(sel.start, sel.end)
 				$('#contentwrite textarea').surroundSelectedText("# ","")
-		else if action is 'h2'
-			sel = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 3, sel.end) # Surround the "**".
-			newsel = $('#contentwrite textarea').getSelection()
-			if S(newsel.text).startsWith("## ")
-				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+3)
-				$('#contentwrite textarea').setSelection(sel.start-3, sel.end-3)
-			else
-				$('#contentwrite textarea').setSelection(sel.start, sel.end)
-				$('#contentwrite textarea').surroundSelectedText("## ","")
-		else if action is 'h3'
-			sel = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 4, sel.end) # Surround the "**".
-			newsel = $('#contentwrite textarea').getSelection()
-			if S(newsel.text).startsWith("### ")
-				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+4)
-				$('#contentwrite textarea').setSelection(sel.start-4, sel.end-4)
-			else
-				$('#contentwrite textarea').setSelection(sel.start, sel.end)
-				$('#contentwrite textarea').surroundSelectedText("### ","")
-		else if action is 'h4'
-			sel = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 5, sel.end) # Surround the "**".
-			newsel = $('#contentwrite textarea').getSelection()
-			if S(newsel.text).startsWith("#### ")
-				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+5)
-				$('#contentwrite textarea').setSelection(sel.start-5, sel.end-5)
-			else
-				$('#contentwrite textarea').setSelection(sel.start, sel.end)
-				$('#contentwrite textarea').surroundSelectedText("#### ","")
 		else if action is 'hr'
 			$('#contentwrite textarea').surroundSelectedText("----\n","")
 		else if action is 'img'
