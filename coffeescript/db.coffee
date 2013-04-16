@@ -38,7 +38,7 @@ class noteddb
 		while fs.existsSync(path.join(@notebookdir, id  + ".json"))
 			id = @generateUid()
 
-		fs.writeFile path.join(@notebookdir, id + ".json"),
+		fs.writeFileSync path.join(@notebookdir, id + ".json"),
 			JSON.stringify {
 				id: id
 				name: name
@@ -58,7 +58,7 @@ class noteddb
 		while fs.existsSync(path.join(@notebookdir, notebook + "." + id  + ".noted"))
 			id = @generateUid()
 
-		fs.writeFile path.join(@notebookdir, notebook + "." + id  + ".noted"),
+		fs.writeFileSync path.join(@notebookdir, notebook + "." + id  + ".noted"),
 			JSON.stringify {
 				id: id
 				name: name
@@ -92,15 +92,27 @@ class noteddb
 	###
 	# Read a notebook
 	# @param {String} id The notebook id
+	# @param {Boolean} [names=false] Whether to return names and excerpts of notes
 	# @return {Object} notebook Notebook metadata with list of notes
 	###
-	readNotebook: (id) ->
+	readNotebook: (id, names) ->
 		notebook = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+".json")))
 		notebook.contents = []
 
 		files = fs.readdirSync @notebookdir
-		files.forEach (file) ->
-			notebook.contents.push file.substr(17, 16) if file.match(id) and file.substr(16,5) isnt ".json"
+		files.forEach (file) =>
+			if file.match(id) and file.substr(16,5) isnt ".json"
+				filename = file.substr(17, 16)
+				if names
+					contents = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+"."+filename+".noted")))
+					notebook.contents.push {
+						id: filename
+						name: contents.name
+						info: contents.content.substring(0,100)
+						date: parseInt(contents.date)
+					}
+				else
+					notebook.contents.push filename
 
 		return notebook
 
@@ -123,7 +135,7 @@ class noteddb
 		# Ensure that the id does not change
 		data.id = id
 
-		fs.writeFile path.join(@notebookdir, id + ".json"),
+		fs.writeFileSync path.join(@notebookdir, id + ".json"),
 			JSON.stringify data
 
 		return data
@@ -146,7 +158,7 @@ class noteddb
 				path.join(@notebookdir, data.notebook+"."+id+".noted")
 			)
 
-		fs.writeFile path.join(@notebookdir, data.notebook+"."+id+".noted"),
+		fs.writeFileSync path.join(@notebookdir, data.notebook+"."+id+".noted"),
 			JSON.stringify data
 
 		return data
@@ -161,7 +173,7 @@ class noteddb
 			fs.unlink path.join(@notebookdir, id+"."+file+".noted")
 
 		# Deletes metadata
-		fs.unlink path.join(@notebookdir, id+".json")
+		fs.unlinkSync path.join(@notebookdir, id+".json")
 
 	###
 	# Deletes a note

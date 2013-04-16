@@ -91,10 +91,10 @@
 </section>
 <!-- Various Templates -->
 <script id="notebook-template" type="text/x-handlebars-template">
- <li class="{{class}}" data-id="{{name}}">{{name}}</li>
+ <li data-id="{{id}}">{{name}}</li>
 </script>
 <script id="note-template" type="text/x-handlebars-template">
-  <li data-id="{{name}}" data-list="{{list}}">
+  <li data-id="{{id}}" data-list="{{list}}">
   	<h2>{{name}}</h2>
   	 <time>{{date}}  - </time><span>{{{excerpt}}}</span>
   </li>

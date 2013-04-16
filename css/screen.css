@@ -576,7 +576,7 @@ body.resizing {
     background: url(../img/book.svg) no-repeat;
     background-size: 33px;
     cursor: default; }
-    #notebooks li.all {
+    #notebooks li[data-id=all] {
       background: url(../img/list.svg) no-repeat 3px 40%;
       background-size: 28px; }
     #notebooks li.tag {

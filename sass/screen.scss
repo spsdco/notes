@@ -196,7 +196,7 @@ body.resizing { cursor: ew-resize; }
 		background-size: 33px;
 		cursor: default;
 
-		&.all {
+		&[data-id=all] {
 			background: url(../img/list.svg) no-repeat 3px 40%;
 			background-size: 28px;
 		}

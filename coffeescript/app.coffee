@@ -1,6 +1,5 @@
 global.document		= document
 gui = global.gui	= require 'nw.gui'
-fs 					= require 'fs'
 buffer 				= require 'buffer'
 path 				= require 'path'
 ncp 				= require('ncp').ncp
@@ -8,6 +7,7 @@ util 				= require 'util'
 global.jQuery = $	= require 'jQuery'
 handlebars			= require 'handlebars'
 marked				= require 'marked'
+db 					= require './javascript/db'
 Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
@@ -49,8 +49,10 @@ window.noted =
 	init: ->
 		# Make variables. Do checks.
 		window.noted.homedir = process.env.HOME
-		window.noted.resvchar = [186, 191, 220, 222, 106, 56]
 		window.noted.storagedir = window.noted.osdirs()
+
+		# Create the DB
+		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"))
 
 		# Pass control onto the initUI function.
 		window.noted.initUI()
@@ -79,19 +81,8 @@ window.noted =
 		window.noted.window.show()
 		window.noted.window.showDevTools()
 		window.noted.load.notebooks()
-		window.noted.load.notes("All Notes")
 
 		window.noted.editor = new jonoeditor($("#contentwrite"))
-
-		# window.noted.editor.on "change", ->
-		# 	$this = $("#contentwrite")
-		# 	delay = 2000
-
-		# 	clearTimeout $this.data('timer')
-		# 	$this.data 'timer', setTimeout( ->
-		# 		$this.removeData('timer')
-		# 		window.noted.save()
-		# 	, delay)
 
 		$('.modal.settings .false').click ->
 			$('.modal.settings').modal "hide"
@@ -128,17 +119,21 @@ window.noted =
 		$(".modal.renameNotebook .false").click ->
 			$(".modal.renameNotebook").modal "hide"
 
-		$('#close').click ->
-			window.noted.UIEvents.titlebarClose()
+		$('#close').click window.noted.UIEvents.titlebarClose
 
-		$('#minimize').click ->
-			window.noted.UIEvents.titlebarMinimize()
+		$('#minimize').click window.noted.UIEvents.titlebarMinimize
 
-		$('#maximize').click ->
-			window.noted.UIEvents.titlebarMaximize()
+		$('#maximize').click window.noted.UIEvents.titlebarMaximize
 
 		$('body').on "keydown", "#notebooks input", (e) ->
-			window.noted.UIEvents.keydownNotebook(e)
+			if e.keyCode is 13
+				e.preventDefault()
+
+				# Create Notebook
+				window.noted.UIEvents.keydownNotebook($(this).val())
+
+				# Clear input box
+				$(this).val("").blur()
 
 		$('body').on "click contextmenu", "#notebooks li", ->
 			window.noted.UIEvents.clickNotebook($(@))
@@ -153,7 +148,7 @@ window.noted =
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			window.noted.UIEvents.keydownTitle(e, $(@))
 
-		$("body").on "keyup", ".headerwrap .left h1", ->
+		$("body").on "keyup change", ".headerwrap .left h1", ->
 			window.noted.UIEvents.keyupTitle($(@))
 
 		$('body').on "click", "#notes li", ->
@@ -169,50 +164,6 @@ window.noted =
 
 		$("body").on "click", ".editorbuttons button", ->
 			window.noted.editorAction $(@).attr('data-action')
-
-	rename: (oldfile, newfile) ->
-		while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", newfile + '.txt'))
-			r = /\(\s*(\d+)\s*\)$/
-			if r.exec(newfile) is null
-				newfile = newfile + " (1)"
-			else
-				newfile = newfile.replace(" ("+r.exec(newfile)[1]+")", " ("+(parseInt(r.exec(newfile)[1])+1)+")")
-
-		fs.rename(
-			path.join(
-				window.noted.storagedir,
-				"Notebooks",
-				oldfile+'.txt'
-			),
-			path.join(
-				window.noted.storagedir,
-				"Notebooks",
-				newfile + '.txt'
-			)
-		)
-		path.join(window.noted.storagedir, "Notebooks", newfile + '.txt')
-
-	renameNotebook: (oldfile, newfile) ->
-		while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", newfile))
-			r = /\(\s*(\d+)\s*\)$/
-			if r.exec(newfile) is null
-				newfile = newfile + " (1)"
-			else
-				newfile = newfile.replace(" ("+r.exec(newfile)[1]+")", " ("+(parseInt(r.exec(newfile)[1])+1)+")")
-
-		fs.rename(
-			path.join(
-				window.noted.storagedir,
-				"Notebooks",
-				oldfile
-			),
-			path.join(
-				window.noted.storagedir,
-				"Notebooks",
-				newfile
-			)
-		)
-		path.join(window.noted.storagedir, "Notebooks", newfile)
 
 	editorAction: (action) ->
 		# I'm sure that mh0 doesn't know how to code.
@@ -285,6 +236,8 @@ window.noted =
 
 	editMode: (mode) ->
 		el = $("#content .edit")
+		$("#content").removeClass("deselected")
+
 		if mode is "preview" or window.noted.editor.getReadOnly() is false and mode isnt "editor"
 
 			el.removeClass("save").text "edit"
@@ -310,76 +263,58 @@ window.noted =
 			$(window).trigger("resize")
 
 	save: ->
-		list = $("#notes li[data-id='" + window.noted.currentNote + "']").attr "data-list"
 		# Make sure a note is selected
 		if window.noted.currentNote isnt ""
+			text = $('.headerwrap .left h1').text()
+			text = "Untitled Note" if text is ""
 
-			notePath = path.join(
-				window.noted.storagedir,
-				"Notebooks",
-				list,
-				window.noted.currentNote + '.txt'
-			)
-
-			# Write file
-			fs.writeFile(notePath, window.noted.editor.getValue())
-
-			# Reload to reveal new timestamp
-			# TODO: window.noted.loadNotes(window.noted.currentList)
+			window.noted.db.updateNote window.noted.currentNote, {
+					name: text
+					content: window.noted.editor.getValue()
+					notebook: window.noted.currentList
+				}
 
 	load:
 		notebooks: ->
 			template = handlebars.compile($("#notebook-template").html())
-			htmlstr = template({name: "All Notes", class: "all"})
+			htmlstr = template({name: "All Notes", id: "all"})
 
-			fs.readdir path.join(window.noted.storagedir, "Notebooks"), (err, data) ->
-				i = 0
-				while i < data.length
-					if fs.statSync(path.join(window.noted.storagedir, "Notebooks", data[i])).isDirectory()
-						htmlstr += template({name: data[i]})
-					i++
+			arr = window.noted.db.readNotebooks(true)
+			arr.forEach (notebook) ->
+				htmlstr += template {name: notebook.name, id: notebook.id}
 
-				# Append the string to the dom (perf matters.)
-				$("#notebooks ul").html(htmlstr)
-				$("#notebooks [data-id='" + window.noted.currentList + "'], #notebooks ." + window.noted.currentList).trigger("click")
+			# Append the string to the dom (perf matters.)
+			$("#notebooks ul").html(htmlstr)
 
-		notes: (list, type, callback) ->
+		notes: (list, type) ->
 			window.noted.currentList = list
 
 			# Templates :)
 			template = handlebars.compile($("#note-template").html())
 			htmlstr = ""
 
-			if list is "All Notes"
+			if list is "all"
 				# TODO: There will be some proper code in here soon
 				htmlstr = "I broke all notes because of the shitty implementation"
 			else
-				# It's easier doing @ without Async.
-				data = fs.readdirSync path.join(window.noted.storagedir, "Notebooks", list)
+				data = window.noted.db.readNotebook(list, true)
 				order = []
-				i = 0
 
-				while i < data.length
-					# Makes sure that it is a text file
-					if data[i].substr(data[i].length - 4, data[i].length) is ".txt"
-						# Removes txt extension
-						name = data[i].substr(0, data[i].length - 4)
-						time = new Date fs.statSync(path.join(window.noted.storagedir, "Notebooks", list, name + '.txt'))['mtime']
+				data.contents.forEach (file) ->
+					# Makes a pretty Excerpt
+					if file.info.length > 90
+						lastIndex = file.info.lastIndexOf(" ")
+						file.info = file.info.substring(0, lastIndex) + "&hellip;"
 
-						# Gets an excerpt
-						fd = fs.openSync(path.join(window.noted.storagedir, "Notebooks", list, name + '.txt'), 'r')
-						buffer = new Buffer(100)
-						num = fs.readSync fd, buffer, 0, 100, 0
-						info = $(marked(buffer.toString("utf-8", 0, num))).text()
-						fs.close(fd)
+					# Rips out ugly markdown
+					file.info = $(marked(file.info)).text()
 
-						# Makes a pretty Excerpt
-						if info.length > 90
-							lastIndex = info.lastIndexOf(" ")
-							info = info.substring(0, lastIndex) + "&hellip;"
-
-						order.push {id: i, time: time, name: name, info: info}
-					i++
+					order.push {
+						id: file.id,
+						date: file.date * 1000
+						name: file.name
+						info: file.info
+					}
 
 				# Sorts all the notes by time
 				order.sort (a, b) ->
@@ -388,38 +323,32 @@ window.noted =
 				# Appends to DOM
 				for note in order
 					htmlstr = template({
+						id: note.id
 						name: note.name
 						list: list
-						date: window.noted.util.date(note.time)
+						date: window.noted.util.date(note.date)
 						excerpt: note.info
 						}) + htmlstr
 
 			$("#notes ul").html(htmlstr)
-			callback() if callback
 
-		note: (selector) ->
-			# Caches Selected Note and List
-			window.noted.currentNote = $(selector).find("h2").text()
+		note: (id) ->
+			window.noted.currentNote = id
+			data = window.noted.db.readNote(id)
 
-			# Opens ze note
-			fs.readFile path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'), 'utf-8', (err, data) ->
-				throw err if (err)
-				$("#content").removeClass("deselected")
-				$('.headerwrap .left h1').text(window.noted.currentNote)
-				noteTime = fs.statSync(path.join(window.noted.storagedir, "Notebooks", $(selector).attr("data-list"), window.noted.currentNote + '.txt'))['mtime']
-				time = new Date(Date.parse(noteTime))
-				$('.headerwrap .right time').text(window.noted.util.date(time)+" "+window.noted.util.pad(time.getHours())+":"+window.noted.util.pad(time.getMinutes()))
-				# BAD CODE: TODO: ^ This code is fucking shit. What were you thinking mh0?
-				$("#contentread").html(marked(data)).show()
-				window.noted.editor.setValue(data)
-				window.noted.editor.setReadOnly(true)
-				# Chucks it into the right mode - this was the best I could do.
-				if selector.hasClass("edit")
-					window.noted.editMode("editor")
-					$("#content .left h1").focus()
-					selector.removeClass("edit")
-				else
-					window.noted.editMode("preview")
+			$('.headerwrap .left h1').text(data.name)
+			$("#contentread").html(marked(data.content)).show()
+			window.noted.editor.setValue(data.content)
+			window.noted.editor.setReadOnly(true)
+
+			time = new Date(data.date * 1000)
+			$('.headerwrap .right time').text(
+				window.noted.util.date(time)+" "+
+				window.noted.util.pad(time.getHours())+":"+
+				window.noted.util.pad(time.getMinutes())
+			)
+
+			window.noted.editMode("preview")
 
 	osdirs: ->
 		# Set up where we're going to store stuff.
@@ -433,27 +362,13 @@ window.noted =
 	UIEvents:
 		# To make life simpler, have <action><element> as a fucntion name: example: clickEdit for when you click $('.edit')
 		clickNoteControls: (id) ->
-			if id is "new" and window.noted.currentList isnt "All Notes" and window.noted.editor.getReadOnly() is true
-				name = "Untitled Note"
-				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+".txt"))
-					r = /\(\s*(\d+)\s*\)$/
-					if r.exec(name) is null
-						name = name+" (1)"
-					else
-						name = name.replace(" ("+r.exec(name)[1]+")", " ("+(parseInt(r.exec(name)[1])+1)+")")
-				# Write to disk.
-				fs.writeFile(
-					path.join(
-						window.noted.storagedir,
-						"Notebooks",
-						window.noted.currentList, name + '.txt'
-					),
-					"This is your new blank note\n====\nAdd some content!",
-					->
-						# FIXME: Function in a Function. Functionception (this is a bad idea).
-						window.noted.load.notes window.noted.currentList, "", ->
-							$("#notes ul li:first").addClass("edit").trigger "click"
-				)
+			if id is "new" and window.noted.currentList isnt "all"
+
+				window.noted.db.createNote("Untitled Note", window.noted.currentList, "# This is your new blank note\n\nAdd some content!")
+				window.noted.load.notes(window.noted.currentList)
+
+				$("#notes ul li:first").addClass("edit").trigger "click"
+
 			else if !$("#noteControls").hasClass("disabled")
 				if id is "share"
 					# Moves thing into correct position
@@ -468,18 +383,9 @@ window.noted =
 		modalclickDel: ->
 			$('.modal.delete').modal "hide"
 			if window.noted.currentNote isnt ""
-				fs.unlink(
-					path.join(
-						window.noted.storagedir,
-						"Notebooks",
-						$("#notes li[data-id='" + window.noted.currentNote + "']").attr("data-list"),
-						window.noted.currentNote + '.txt'
-					), (err) ->
-						throw err if (err)
-						window.noted.deselect()
-						window.noted.load.notes(window.noted.currentList)
-				)
-
+				$("#notes li[data-id=" + window.noted.currentNote + "]").remove()
+				window.noted.db.deleteNote(window.noted.currentNote)
+				window.noted.deselect()
 		titlebarClose: ->
 			window.noted.window.close()
 
@@ -491,77 +397,32 @@ window.noted =
 			window.noted.window.maximize()
 
 		# Deny the enter key
-		keydownNotebook: (e) ->
-			name = $('#notebooks input').val()
-			if e.keyCode is 13
-				e.preventDefault()
-				while fs.existsSync(path.join(window.noted.storagedir, "Notebooks", window.noted.currentList, name+'.txt')) is true
-					regexp = /\(\s*(\d+)\s*\)$/
-					if regexp.exec(name) is null
-						name = name+" (1)"
-					else
-						name = name.replace(" ("+regexp.exec(name)[1]+")", " ("+(parseInt(regexp.exec(name)[1])+1)+")")
-				fs.mkdir(path.join(window.noted.storagedir, "Notebooks", name))
-
-				window.noted.load.notebooks()
-				$('#notebooks input').val("").blur()
+		keydownNotebook: (name) ->
+			# Write File
+			window.noted.db.createNotebook(name)
+			window.noted.load.notebooks()
 
 		clickNotebook: (element) ->
 			$("#noteControls").addClass("disabled")
 			element.parent().find(".selected").removeClass "selected"
 			element.addClass "selected"
-			window.noted.load.notes(element.text())
+			window.noted.load.notes(element.attr("data-id"))
 			window.noted.deselect()
 
 		contextNotebook: (event, element) ->
 			# Moves thing into correct position
 			$(".popover-mask").show()
-			# Probably very ugly, but add a data attribute of the Notebook that triggered this.
-			$(".popover-mask").attr("data-parent", element.text())
-			console.log element.text()
 			$(".delete-popover").css({left: $(event.target).outerWidth(), top: $(event.target).offset().top}).show()
-
 
 		keydownTitle: (e, element) ->
 			if e.keyCode is 13 and element.text() isnt ""
-				e.preventDefault()
-				name = element.text()
-				window.noted.rename(window.noted.currentList+'/'+window.noted.currentNote, window.noted.currentList+'/'+name)
-				window.noted.currentNote = name;
-				window.noted.load.notes(window.noted.currentList)
-				element.blur()
-			else if e.keyCode in window.noted.resvchar
 				e.preventDefault()
 
 		keyupTitle: (element) ->
 			# We can't have "".txt
 			name = element.text()
-
 			if name isnt ""
-
-				$("#notes [data-id='" + window.noted.currentNote + "']")
-					.attr("data-id", name).find("h2").text(element.text())
-
-				path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,window.noted.currentNote + '.txt')
-				path.join(window.noted.storagedir,"Notebooks",window.noted.currentList,name + '.txt')
-
-				# Renames the Note
-				fs.rename(
-					path.join(
-						window.noted.storagedir,
-						"Notebooks",
-						window.noted.currentList,
-						window.noted.currentNote + '.txt'
-					),
-					path.join(
-						window.noted.storagedir,
-						"Notebooks",
-						window.noted.currentList,
-						name + '.txt'
-					)
-				)
-
-				window.noted.currentNote = name
+				$("#notes [data-id='" + window.noted.currentNote + "']").find("h2").text(name)
 
 		clickNote: (element) ->
 			$("#noteControls").removeClass("disabled")
@@ -569,7 +430,7 @@ window.noted =
 			element.addClass("selected")
 
 			# Loads Actual Note
-			window.noted.load.note(element)
+			window.noted.load.note(element.attr("data-id"))
 
 		deleteNotebook: (element) ->
 			$('.modal.deleteNotebook').modal()
@@ -581,23 +442,16 @@ window.noted =
 
 		modalclickDelNotebook: ->
 			$('.modal.deleteNotebook').modal "hide"
-			name = $(".popover-mask").attr("data-parent")
-			console.log name
-			fs.readdir path.join(window.noted.storagedir, "Notebooks", name), (err, files) ->
-				files.forEach (file) ->
-					console.log file
-					fs.unlink(path.join(window.noted.storagedir, "Notebooks", name, file))
-					fs.rmdir path.join(window.noted.storagedir, "Notebooks", name), (err) ->
-						window.noted.deselect()
-						window.noted.load.notebooks()
+			window.noted.db.deleteNotebook(window.noted.currentList)
+			$("#notebooks li[data-id=" + window.noted.currentList + "]").remove()
+			$("#notebooks li").first().trigger("click")
 
 		modalclickRenameNotebook: ->
 			$('.modal.renameNotebook').modal "hide"
-			origname = $(".popover-mask").attr("data-parent")
 			name = $('.modal.renameNotebook input').val()
 			if name isnt ""
-				window.noted.renameNotebook(origname,name)
-				window.noted.load.notebooks()
+				window.noted.db.updateNotebook(window.noted.currentList, {name: name})
+				$("#notebooks li[data-id=" + window.noted.currentList + "]").text(name)
 
 	util:
 		date: (date) ->
