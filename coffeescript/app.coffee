@@ -215,66 +215,69 @@ window.noted =
 		path.join(window.noted.storagedir, "Notebooks", newfile)
 
 	editorAction: (action) ->
+		# I'm sure that mh0 doesn't know how to code.
+		# Cache Selector
+		$area = $('#contentwrite textarea')
+		sel = $area.getSelection()
+
 		if action is 'bold'
-			sel = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 2, sel.end + 2) # Surround the "**".
-			newsel = $('#contentwrite textarea').getSelection()
+			$area.setSelection(sel.start - 2, sel.end + 2) # Surround the "**".
+			newsel = $area.getSelection()
 			if S(newsel.text).endsWith("**") and S(newsel.text).startsWith("**")
-				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+2)
-				$('#contentwrite textarea').deleteText(newsel.end-4, newsel.end-2)
-				$('#contentwrite textarea').setSelection(sel.start-2, sel.end-2)
+				$area.deleteText(newsel.start, newsel.start+2)
+				$area.deleteText(newsel.end-4, newsel.end-2)
+				$area.setSelection(sel.start-2, sel.end-2)
 			else
-				$('#contentwrite textarea').setSelection(sel.start, sel.end)
-				$('#contentwrite textarea').surroundSelectedText("**","**")
+				$area.setSelection(sel.start, sel.end)
+				$area.surroundSelectedText("**","**")
+
 		else if action is 'italics'
-			sel = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 1, sel.end + 1) # Surround the "**".
-			newsel = $('#contentwrite textarea').getSelection()
+			$area.setSelection(sel.start - 1, sel.end + 1) # Surround the "**".
+			newsel = $area.getSelection()
 			if S(newsel.text).endsWith("*") and S(newsel.text).startsWith("*")
-				$('#contentwrite textarea').deleteText(newsel.start, newsel.start+1)
-				$('#contentwrite textarea').deleteText(newsel.end-2, newsel.end-1)
-				$('#contentwrite textarea').setSelection(sel.start-1, sel.end-1)
+				$area.deleteText(newsel.start, newsel.start+1)
+				$area.deleteText(newsel.end-2, newsel.end-1)
+				$area.setSelection(sel.start-1, sel.end-1)
 			else
-				$('#contentwrite textarea').setSelection(sel.start, sel.end)
-				$('#contentwrite textarea').surroundSelectedText("*","*")
+				$area.setSelection(sel.start, sel.end)
+				$area.surroundSelectedText("*","*")
+
 		else if action is 'hyperlink'
-			url = prompt("Enter the URLof the hyperlink","")
-			$('#contentwrite textarea').surroundSelectedText("[","]("+url+")")
+			url = prompt("Enter the URL of the hyperlink","")
+			$area.surroundSelectedText("[","]("+url+")")
+
 		else if action is 'heading'
-			sel = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 2, sel.end) # Surround the "**".
-			newsel1 = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 3, sel.end) # Surround the "**".
-			newsel2 = $('#contentwrite textarea').getSelection()
-			$('#contentwrite textarea').setSelection(sel.start - 4, sel.end) # Surround the "**".
-			newsel3 = $('#contentwrite textarea').getSelection()
-			console.log S(newsel1.text).startsWith("# ")
-			console.log S(newsel2.text).startsWith("## ")
-			console.log S(newsel3.text).startsWith("### ")
+			$area.setSelection(sel.start - 2, sel.end) # Surround the "**".
+			newsel1 = $area.getSelection()
+			$area.setSelection(sel.start - 3, sel.end) # Surround the "**".
+			newsel2 = $area.getSelection()
+			$area.setSelection(sel.start - 4, sel.end) # Surround the "**".
+			newsel3 = $area.getSelection()
+
 			if S(newsel3.text).startsWith("### ")
-				console.log("h0")
-				$('#contentwrite textarea').deleteText(newsel3.start, newsel3.start+4)
-				$('#contentwrite textarea').setSelection(sel.start-4, sel.end-4)
+				$area.deleteText(newsel3.start, newsel3.start+4)
+				$area.setSelection(sel.start-4, sel.end-4)
+
 			else if S(newsel2.text).startsWith("## ")
-				console.log("h3")
-				$('#contentwrite textarea').deleteText(newsel2.start, newsel2.start+3)
-				$('#contentwrite textarea').setSelection(sel.start-3, sel.end-3)
-				$('#contentwrite textarea').surroundSelectedText("### ","")
+				$area.deleteText(newsel2.start, newsel2.start+3)
+				$area.setSelection(sel.start-3, sel.end-3)
+				$area.surroundSelectedText("### ","")
+
 			else if S(newsel1.text).startsWith("# ")
-				console.log("h2")
-				$('#contentwrite textarea').deleteText(newsel1.start, newsel1.start+2)
-				$('#contentwrite textarea').setSelection(sel.start-2, sel.end-2)
-				$('#contentwrite textarea').surroundSelectedText("## ","")
+				$area.deleteText(newsel1.start, newsel1.start+2)
+				$area.setSelection(sel.start-2, sel.end-2)
+				$area.surroundSelectedText("## ","")
+
 			else
-				console.log("h1")
-				$('#contentwrite textarea').setSelection(sel.start, sel.end)
-				$('#contentwrite textarea').surroundSelectedText("# ","")
+				$area.setSelection(sel.start, sel.end)
+				$area.surroundSelectedText("# ","")
+
 		else if action is 'hr'
-			$('#contentwrite textarea').surroundSelectedText("----\n","")
+			$area.surroundSelectedText("----\n","")
+
 		else if action is 'img'
 			url = prompt("Enter the URL of the image","")
-			$('#contentwrite textarea').surroundSelectedText("![","]("+url+")")
-
+			$area.surroundSelectedText("![","]("+url+")")
 
 	deselect: ->
 		$("#content").addClass("deselected")
