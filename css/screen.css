@@ -555,11 +555,16 @@ body.resizing {
   box-shadow: -1px 0 #b4b3b1; }
 
 #notebooks {
-  background: #f00;
   position: absolute;
   left: 0;
   background: #e7e5e4;
-  overflow: auto; }
+  padding-bottom: 30px; }
+  #notebooks .container {
+    top: 0;
+    position: absolute;
+    width: 100%;
+    bottom: 30px;
+    overflow: auto; }
   #notebooks ul {
     list-style-type: none;
     padding: 0;
@@ -599,6 +604,21 @@ body.resizing {
     border: 0; }
     #notebooks input:focus {
       background-image: url(../img/book.svg); }
+
+#settingsbar {
+  position: fixed;
+  bottom: 0;
+  height: 29px;
+  width: 100%;
+  background: -webkit-linear-gradient(top, #eeeeee, #dddddd);
+  border-top: 1px solid #bbbbbb; }
+  #settingsbar img {
+    height: 17px;
+    vertical-align: top;
+    margin: 6px 0 6px 8px;
+    opacity: 0.6; }
+    #settingsbar img:active {
+      opacity: 0.9; }
 
 #notes {
   border-right: 1px solid #b4b3b1;

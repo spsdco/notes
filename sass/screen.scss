@@ -172,11 +172,18 @@ body.resizing { cursor: ew-resize; }
 }
 
 #notebooks {
-	background: #f00;
 	position: absolute;
 	left: 0;
 	background: $sidebar-color;
-	overflow: auto;
+	padding-bottom: 30px;
+
+	.container {
+		top: 0;
+		position: absolute;
+		width: 100%;
+		bottom: 30px;
+		overflow: auto;
+	}
 
 	ul {
 		list-style-type: none;
@@ -226,6 +233,26 @@ body.resizing { cursor: ew-resize; }
 
 		&:focus {
 			background-image: url(../img/book.svg);
+		}
+	}
+}
+
+#settingsbar {
+	position: fixed;
+	bottom: 0;
+	height: 29px;
+	width: 100%;
+	background: -webkit-linear-gradient(top, #eee, #ddd);
+	border-top: 1px solid #bbb;
+
+	img {
+		height: 17px;
+		vertical-align: top;
+		margin: 6px 0 6px 8px;
+		opacity: 0.6;
+
+		&:active {
+			opacity: 0.9;
 		}
 	}
 }
