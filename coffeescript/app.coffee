@@ -5,14 +5,19 @@ path 				= require 'path'
 ncp 				= require('ncp').ncp
 util 				= require 'util'
 global.jQuery = $	= require 'jQuery'
+Dropbox 			= require 'dropbox'
 handlebars			= require 'handlebars'
 marked				= require 'marked'
+S					= require 'string'
 db 					= require './javascript/db'
 Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
-S				= require 'string'
+
+# client.getUserInfo (err, info) ->
+# 	console.log err if err
+# 	console.log info
 
 # Accepts a jQuery Selector
 class jonoeditor
@@ -46,6 +51,24 @@ window.noted =
 	currentList: "all"
 	currentNote: ""
 
+	auth: ->
+		# if there are creds, try get the users info
+		if window.localStorage.oauth
+			window.client.oauth = new Dropbox.Oauth JSON.parse(localStorage.oauth)
+			window.client.getUserInfo (err, info) ->
+				if err
+					localStorage.removeItem "oauth"
+					return console.warn(error)
+				# If we get to here, the user is successfully authed!
+				console.log info
+		else
+			window.client.authenticate (error, client) ->
+				return console.warn(error) if error
+				localStorage.oauth = JSON.stringify(client.oauth)
+				window.noted.auth()
+
+	sync: ->
+
 	init: ->
 		# Make variables. Do checks.
 		window.noted.homedir = process.env.HOME
@@ -53,6 +76,13 @@ window.noted =
 
 		# Create the DB
 		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"))
+
+		# Setup Dropbox
+		window.client = new Dropbox.Client {
+			key: "GCLhKiJJwJA=|5dgkjE/gvYMv09OgvUpzN1UoNir+CfgY36WwMeNnmQ==",
+			sandbox: true
+		}
+		window.client.authDriver(new Dropbox.Drivers.NodeServer(8191))
 
 		# Pass control onto the initUI function.
 		window.noted.initUI()
@@ -144,6 +174,9 @@ window.noted =
 
 		$('body').on "click contextmenu", ".popover-mask", ->
 			$(@).hide().children().hide()
+
+		$("#sync").click ->
+			window.noted.auth()
 
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			window.noted.UIEvents.keydownTitle(e, $(@))
