@@ -15,10 +15,6 @@ modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
 
-# client.getUserInfo (err, info) ->
-# 	console.log err if err
-# 	console.log info
-
 # Accepts a jQuery Selector
 class jonoeditor
 	constructor: (@el) ->
@@ -60,6 +56,7 @@ window.noted =
 					localStorage.removeItem "oauth"
 					return console.warn(error)
 				# If we get to here, the user is successfully authed!
+				window.noted.db.client = window.client
 				console.log info
 		else
 			window.client.authenticate (error, client) ->

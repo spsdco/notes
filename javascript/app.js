@@ -82,6 +82,7 @@
             localStorage.removeItem("oauth");
             return console.warn(error);
           }
+          window.noted.db.client = window.client;
           return console.log(info);
         });
       } else {

@@ -2,7 +2,8 @@ fs = require 'fs'
 path = require 'path'
 
 class noteddb
-	constructor: (@notebookdir) ->
+	constructor: (@notebookdir, @client) ->
+		@client ?= no
 
 	generateUid: ->
 		s4 = ->
@@ -55,17 +56,20 @@ class noteddb
 	createNote: (name, notebook, content) ->
 		id = @generateUid()
 
+		# Generates a new id if already exists
 		while fs.existsSync(path.join(@notebookdir, notebook + "." + id  + ".noted"))
 			id = @generateUid()
 
-		fs.writeFileSync path.join(@notebookdir, notebook + "." + id  + ".noted"),
-			JSON.stringify {
+		filename = notebook + "." + id  + ".noted"
+		data = JSON.stringify {
 				id: id
 				name: name
 				notebook: notebook
 				content: content
 				date: Math.round(new Date() / 1000)
 			}
+		fs.writeFileSync path.join(@notebookdir, filename), data
+		@syncWrite filename, data
 		return id
 
 	###
@@ -181,5 +185,12 @@ class noteddb
 	###
 	deleteNote: (id) ->
 		fs.unlink path.join(@notebookdir, @filenameNote(id))
+
+	# Syncing
+	syncWrite: (file, content) ->
+		if @client
+			@client.writeFile file, content, (err, stat) ->
+				console.log err if err
+				console.log stat
 
 module.exports = noteddb

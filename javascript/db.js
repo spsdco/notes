@@ -8,8 +8,13 @@
 
   noteddb = (function() {
 
-    function noteddb(notebookdir) {
+    function noteddb(notebookdir, client) {
+      var _ref;
       this.notebookdir = notebookdir;
+      this.client = client;
+      if ((_ref = this.client) == null) {
+        this.client = false;
+      }
     }
 
     noteddb.prototype.generateUid = function() {
@@ -69,18 +74,21 @@
 
 
     noteddb.prototype.createNote = function(name, notebook, content) {
-      var id;
+      var data, filename, id;
       id = this.generateUid();
       while (fs.existsSync(path.join(this.notebookdir, notebook + "." + id + ".noted"))) {
         id = this.generateUid();
       }
-      fs.writeFileSync(path.join(this.notebookdir, notebook + "." + id + ".noted"), JSON.stringify({
+      filename = notebook + "." + id + ".noted";
+      data = JSON.stringify({
         id: id,
         name: name,
         notebook: notebook,
         content: content,
         date: Math.round(new Date() / 1000)
-      }));
+      });
+      fs.writeFileSync(path.join(this.notebookdir, filename), data);
+      this.syncWrite(filename, data);
       return id;
     };
 
@@ -212,6 +220,17 @@
 
     noteddb.prototype.deleteNote = function(id) {
       return fs.unlink(path.join(this.notebookdir, this.filenameNote(id)));
+    };
+
+    noteddb.prototype.syncWrite = function(file, content) {
+      if (this.client) {
+        return this.client.writeFile(file, content, function(err, stat) {
+          if (err) {
+            console.log(err);
+          }
+          return console.log(stat);
+        });
+      }
     };
 
     return noteddb;
