@@ -128,19 +128,46 @@ window.noted =
 			$('#panel').addClass('drag')
 
 		$('#noteControls img').click ->
-			window.noted.UIEvents.clickNoteControls($(@).attr("id"))
+			if $(@).attr("id") is "new" and window.noted.currentList isnt "all"
+
+				window.noted.db.createNote("Untitled Note", window.noted.currentList, "# This is your new blank note\n\nAdd some content!")
+				window.noted.load.notes(window.noted.currentList)
+
+				$("#notes ul li:first").addClass("edit").trigger "click"
+
+			else if !$("#noteControls").hasClass("disabled")
+				if $(@).attr("id") is "share"
+					# Moves thing into correct position
+					$(".popover-mask").show()
+					$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
+					mailto = "mailto:?subject=" + encodeURI(window.noted.currentNote) + "&body=" + encodeURI(window.noted.editor.getValue())
+					$("#emailNote").parent().attr("href", mailto)
+
+				else if $(@).attr("id") is "del"
+					$('.modal.delete').modal()
 
 		$(".modal.delete .true").click ->
-			window.noted.UIEvents.modalclickDel()
+			$('.modal.delete').modal "hide"
+			if window.noted.currentNote isnt ""
+				$("#notes li[data-id=" + window.noted.currentNote + "]").remove()
+				window.noted.db.deleteNote(window.noted.currentNote)
+				window.noted.deselect()
 
 		$(".modal.delete .false").click ->
 			$(".modal.delete").modal "hide"
 
 		$(".modal.deleteNotebook .true").click ->
-			window.noted.UIEvents.modalclickDelNotebook()
+			$('.modal.deleteNotebook').modal "hide"
+			window.noted.db.deleteNotebook(window.noted.currentList)
+			$("#notebooks li[data-id=" + window.noted.currentList + "]").remove()
+			$("#notebooks li").first().trigger("click")
 
 		$(".modal.renameNotebook .true").click ->
-			window.noted.UIEvents.modalclickRenameNotebook()
+			$('.modal.renameNotebook').modal "hide"
+			name = $('.modal.renameNotebook input').val()
+			if name isnt ""
+				window.noted.db.updateNotebook(window.noted.currentList, {name: name})
+				$("#notebooks li[data-id=" + window.noted.currentList + "]").text(name)
 
 		$(".modal.deleteNotebook .false").click ->
 			$(".modal.deleteNotebook").modal "hide"
@@ -148,28 +175,37 @@ window.noted =
 		$(".modal.renameNotebook .false").click ->
 			$(".modal.renameNotebook").modal "hide"
 
-		$('#close').click window.noted.UIEvents.titlebarClose
+		$('body').on "click", "#close", ->
+			window.noted.window.close()
 
-		$('#minimize').click window.noted.UIEvents.titlebarMinimize
+		$('body').on "click", "#minimize", ->
+			window.noted.window.minimize()
 
-		$('#maximize').click window.noted.UIEvents.titlebarMaximize
+		$('body').on "click", "#maximize", ->
+			window.noted.window.maximize()
 
 		$('body').on "keydown", "#notebooks input", (e) ->
 			if e.keyCode is 13
 				e.preventDefault()
 
 				# Create Notebook
-				window.noted.UIEvents.keydownNotebook($(this).val())
+				window.noted.db.createNotebook(name)
+				window.noted.load.notebooks()
 
 				# Clear input box
 				$(this).val("").blur()
 
 		$('body').on "click contextmenu", "#notebooks li", ->
-			window.noted.UIEvents.clickNotebook($(@))
+			$("#noteControls").addClass("disabled")
+			$(@).parent().find(".selected").removeClass "selected"
+			$(@).addClass "selected"
+			window.noted.load.notes($(@).attr("data-id"))
+			window.noted.deselect()
 
 		$('body').on "contextmenu", "#notebooks li", (e) ->
-			window.noted.UIEvents.contextNotebook(e, $(@))
-			false
+			# Moves thing into correct position
+			$(".popover-mask").show()
+			$(".delete-popover").css({left: $(event.target).outerWidth(), top: $(event.target).offset().top}).show()
 
 		$('body').on "click contextmenu", ".popover-mask", ->
 			$(@).hide().children().hide()
@@ -178,19 +214,30 @@ window.noted =
 			window.noted.auth()
 
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
-			window.noted.UIEvents.keydownTitle(e, $(@))
+			if e.keyCode is 13 and $(@).text() isnt ""
+				e.preventDefault()
 
 		$("body").on "keyup change", ".headerwrap .left h1", ->
-			window.noted.UIEvents.keyupTitle($(@))
+			# We can't have "".txt
+			name = $(@).text()
+			if name isnt ""
+				$("#notes [data-id='" + window.noted.currentNote + "']").find("h2").text(name)
 
 		$('body').on "click", "#notes li", ->
-			window.noted.UIEvents.clickNote($(@))
+			$("#noteControls").removeClass("disabled")
+			$("#notes .selected").removeClass("selected")
+			$(@).addClass("selected")
+
+			# Loads Actual Note
+			window.noted.load.note($(@).attr("data-id"))
 
 		$('body').on "click", "#deleteNotebook", ->
-			window.noted.UIEvents.deleteNotebook($(@))
+			$('.modal.deleteNotebook').modal()
 
 		$('body').on "click", "#renameNotebook", ->
-			window.noted.UIEvents.renameNotebook()
+			name = $(".popover-mask").attr("data-parent")
+			$('.modal.renameNotebook').modal()
+			$('.modal.renameNotebook input').val(name).focus()
 
 		$("#content .edit").click window.noted.editMode
 
@@ -390,100 +437,6 @@ window.noted =
 			path.join(process.env.LOCALAPPDATA, "/Noted/")
 		else if process.platform is 'linux'
 			path.join(window.noted.homedir, '/.config/Noted/')
-
-	UIEvents:
-		# To make life simpler, have <action><element> as a fucntion name: example: clickEdit for when you click $('.edit')
-		clickNoteControls: (id) ->
-			if id is "new" and window.noted.currentList isnt "all"
-
-				window.noted.db.createNote("Untitled Note", window.noted.currentList, "# This is your new blank note\n\nAdd some content!")
-				window.noted.load.notes(window.noted.currentList)
-
-				$("#notes ul li:first").addClass("edit").trigger "click"
-
-			else if !$("#noteControls").hasClass("disabled")
-				if id is "share"
-					# Moves thing into correct position
-					$(".popover-mask").show()
-					$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
-					mailto = "mailto:?subject=" + encodeURI(window.noted.currentNote) + "&body=" + encodeURI(window.noted.editor.getValue())
-					$("#emailNote").parent().attr("href", mailto)
-
-				else if id is "del"
-					$('.modal.delete').modal()
-
-		modalclickDel: ->
-			$('.modal.delete').modal "hide"
-			if window.noted.currentNote isnt ""
-				$("#notes li[data-id=" + window.noted.currentNote + "]").remove()
-				window.noted.db.deleteNote(window.noted.currentNote)
-				window.noted.deselect()
-		titlebarClose: ->
-			window.noted.window.close()
-
-		titlebarMinimize: ->
-			window.noted.window.minimize()
-
-		titlebarMaximize: ->
-			# TODO: Add unmaximizing
-			window.noted.window.maximize()
-
-		# Deny the enter key
-		keydownNotebook: (name) ->
-			# Write File
-			window.noted.db.createNotebook(name)
-			window.noted.load.notebooks()
-
-		clickNotebook: (element) ->
-			$("#noteControls").addClass("disabled")
-			element.parent().find(".selected").removeClass "selected"
-			element.addClass "selected"
-			window.noted.load.notes(element.attr("data-id"))
-			window.noted.deselect()
-
-		contextNotebook: (event, element) ->
-			# Moves thing into correct position
-			$(".popover-mask").show()
-			$(".delete-popover").css({left: $(event.target).outerWidth(), top: $(event.target).offset().top}).show()
-
-		keydownTitle: (e, element) ->
-			if e.keyCode is 13 and element.text() isnt ""
-				e.preventDefault()
-
-		keyupTitle: (element) ->
-			# We can't have "".txt
-			name = element.text()
-			if name isnt ""
-				$("#notes [data-id='" + window.noted.currentNote + "']").find("h2").text(name)
-
-		clickNote: (element) ->
-			$("#noteControls").removeClass("disabled")
-			$("#notes .selected").removeClass("selected")
-			element.addClass("selected")
-
-			# Loads Actual Note
-			window.noted.load.note(element.attr("data-id"))
-
-		deleteNotebook: (element) ->
-			$('.modal.deleteNotebook').modal()
-
-		renameNotebook: ->
-			name = $(".popover-mask").attr("data-parent")
-			$('.modal.renameNotebook').modal()
-			$('.modal.renameNotebook input').val(name).focus()
-
-		modalclickDelNotebook: ->
-			$('.modal.deleteNotebook').modal "hide"
-			window.noted.db.deleteNotebook(window.noted.currentList)
-			$("#notebooks li[data-id=" + window.noted.currentList + "]").remove()
-			$("#notebooks li").first().trigger("click")
-
-		modalclickRenameNotebook: ->
-			$('.modal.renameNotebook').modal "hide"
-			name = $('.modal.renameNotebook input').val()
-			if name isnt ""
-				window.noted.db.updateNotebook(window.noted.currentList, {name: name})
-				$("#notebooks li[data-id=" + window.noted.currentList + "]").text(name)
 
 	util:
 		date: (date) ->
