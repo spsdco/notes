@@ -97,9 +97,13 @@
     },
     sync: function() {},
     init: function() {
+      var _base, _ref;
       window.noted.homedir = process.env.HOME;
       window.noted.storagedir = window.noted.osdirs();
-      window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"));
+      if ((_ref = (_base = window.localStorage).queue) == null) {
+        _base.queue = "{}";
+      }
+      window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue");
       window.client = new Dropbox.Client({
         key: "GCLhKiJJwJA=|5dgkjE/gvYMv09OgvUpzN1UoNir+CfgY36WwMeNnmQ==",
         sandbox: true

@@ -8,13 +8,18 @@
 
   noteddb = (function() {
 
-    function noteddb(notebookdir, client) {
-      var _ref;
+    function noteddb(notebookdir, client, queue) {
+      var _ref, _ref1;
       this.notebookdir = notebookdir;
       this.client = client;
-      if ((_ref = this.client) == null) {
+      this.queue = queue;
+      if ((_ref = this.queue) == null) {
+        this.queue = false;
+      }
+      if ((_ref1 = this.client) == null) {
         this.client = false;
       }
+      this.queueArr = JSON.parse(window.localStorage.getItem(this.queue));
     }
 
     noteddb.prototype.generateUid = function() {
@@ -52,15 +57,22 @@
 
 
     noteddb.prototype.createNotebook = function(name) {
-      var id;
+      var data, filename, id;
       id = this.generateUid();
       while (fs.existsSync(path.join(this.notebookdir, id + ".json"))) {
         id = this.generateUid();
       }
-      fs.writeFileSync(path.join(this.notebookdir, id + ".json"), JSON.stringify({
+      filename = id + ".json";
+      data = {
         id: id,
         name: name
-      }));
+      };
+      fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
+      this.addToQueue({
+        "operation": "create",
+        "file": filename,
+        "data": data
+      });
       return id;
     };
 
@@ -80,15 +92,19 @@
         id = this.generateUid();
       }
       filename = notebook + "." + id + ".noted";
-      data = JSON.stringify({
+      data = {
         id: id,
         name: name,
         notebook: notebook,
         content: content,
         date: Math.round(new Date() / 1000)
+      };
+      fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
+      this.addToQueue({
+        "operation": "create",
+        "file": filename,
+        "data": data
       });
-      fs.writeFileSync(path.join(this.notebookdir, filename), data);
-      this.syncWrite(filename, data);
       return id;
     };
 
@@ -175,8 +191,15 @@
 
 
     noteddb.prototype.updateNotebook = function(id, data) {
+      var filename;
       data.id = id;
-      fs.writeFileSync(path.join(this.notebookdir, id + ".json"), JSON.stringify(data));
+      filename = id + ".json";
+      fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
+      this.addToQueue({
+        "operation": "update",
+        "file": filename,
+        "data": data
+      });
       return data;
     };
 
@@ -189,12 +212,29 @@
 
 
     noteddb.prototype.updateNote = function(id, data) {
+      var filename;
       data.id = id;
       data.date = Math.round(new Date() / 1000);
+      filename = data.notebook + "." + id + ".noted";
       if (data.notebook !== this.readNote(id).notebook) {
+        this.addToQueue({
+          "operation": "remove",
+          "file": this.filenameNote(id)
+        });
         fs.renameSync(path.join(this.notebookdir, this.filenameNote(id)), path.join(this.notebookdir, data.notebook + "." + id + ".noted"));
+        this.addToQueue({
+          "operation": "create",
+          "file": filename,
+          "data": data
+        });
+      } else {
+        this.addToQueue({
+          "operation": "update",
+          "file": filename,
+          "data": data
+        });
       }
-      fs.writeFileSync(path.join(this.notebookdir, data.notebook + "." + id + ".noted"), JSON.stringify(data));
+      fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
       return data;
     };
 
@@ -205,11 +245,23 @@
 
 
     noteddb.prototype.deleteNotebook = function(id) {
-      var _this = this;
+      var filename,
+        _this = this;
       this.readNotebook(id).contents.forEach(function(file) {
-        return fs.unlink(path.join(_this.notebookdir, id + "." + file + ".noted"));
+        var filename;
+        filename = id + "." + file + ".noted";
+        fs.unlink(path.join(_this.notebookdir, filename));
+        return _this.addToQueue({
+          "operation": "remove",
+          "file": filename
+        });
       });
-      return fs.unlinkSync(path.join(this.notebookdir, id + ".json"));
+      filename = id + ".json";
+      fs.unlinkSync(path.join(this.notebookdir, filename));
+      return this.addToQueue({
+        "operation": "remove",
+        "file": filename
+      });
     };
 
     /*
@@ -219,7 +271,19 @@
 
 
     noteddb.prototype.deleteNote = function(id) {
-      return fs.unlink(path.join(this.notebookdir, this.filenameNote(id)));
+      var filename;
+      filename = this.filenameNote(id);
+      fs.unlink(path.join(this.notebookdir, filename));
+      return this.addToQueue({
+        "operation": "remove",
+        "file": filename
+      });
+    };
+
+    noteddb.prototype.addToQueue = function(obj) {
+      console.log(obj.file);
+      this.queueArr[obj.file] = obj;
+      return window.localStorage.setItem(this.queue, JSON.stringify(this.queueArr));
     };
 
     noteddb.prototype.syncWrite = function(file, content) {

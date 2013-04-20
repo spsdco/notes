@@ -2,8 +2,11 @@ fs = require 'fs'
 path = require 'path'
 
 class noteddb
-	constructor: (@notebookdir, @client) ->
+	constructor: (@notebookdir, @client, @queue) ->
+		@queue ?= no
 		@client ?= no
+
+		@queueArr = JSON.parse(window.localStorage.getItem(@queue))
 
 	generateUid: ->
 		s4 = ->
@@ -39,11 +42,19 @@ class noteddb
 		while fs.existsSync(path.join(@notebookdir, id  + ".json"))
 			id = @generateUid()
 
-		fs.writeFileSync path.join(@notebookdir, id + ".json"),
-			JSON.stringify {
-				id: id
-				name: name
-			}
+		filename = id + ".json"
+		data = {
+			id: id
+			name: name
+		}
+
+		# Write to FS & Dropbox
+		fs.writeFileSync path.join(@notebookdir, filename), JSON.stringify(data)
+		@addToQueue {
+			"operation": "create"
+			"file": filename
+			"data": data
+		}
 		return id
 
 	###
@@ -61,15 +72,19 @@ class noteddb
 			id = @generateUid()
 
 		filename = notebook + "." + id  + ".noted"
-		data = JSON.stringify {
-				id: id
-				name: name
-				notebook: notebook
-				content: content
-				date: Math.round(new Date() / 1000)
-			}
-		fs.writeFileSync path.join(@notebookdir, filename), data
-		@syncWrite filename, data
+		data = {
+			id: id
+			name: name
+			notebook: notebook
+			content: content
+			date: Math.round(new Date() / 1000)
+		}
+		fs.writeFileSync path.join(@notebookdir, filename), JSON.stringify(data)
+		@addToQueue {
+			"operation": "create"
+			"file": filename
+			"data": data
+		}
 		return id
 
 	###
@@ -138,9 +153,16 @@ class noteddb
 	updateNotebook: (id, data) ->
 		# Ensure that the id does not change
 		data.id = id
+		filename = id + ".json"
 
-		fs.writeFileSync path.join(@notebookdir, id + ".json"),
+		fs.writeFileSync path.join(@notebookdir, filename),
 			JSON.stringify data
+
+		@addToQueue {
+			"operation": "update"
+			"file": filename
+			"data": data
+		}
 
 		return data
 
@@ -154,16 +176,33 @@ class noteddb
 		# This stuff cannot be set by the user
 		data.id = id
 		data.date = Math.round(new Date() / 1000)
+		filename = data.notebook+"."+id+".noted"
 
 		# If the notebook has changed, we need to rename the note
 		if data.notebook != @readNote(id).notebook
+			@addToQueue {
+				"operation": "remove"
+				"file": @filenameNote(id)
+			}
 			fs.renameSync(
 				path.join(@notebookdir, @filenameNote(id)),
 				path.join(@notebookdir, data.notebook+"."+id+".noted")
 			)
+			@addToQueue {
+				"operation": "create"
+				"file": filename
+				"data": data
+			}
+		else
+			@addToQueue {
+				"operation": "update"
+				"file": filename
+				"data": data
+			}
 
-		fs.writeFileSync path.join(@notebookdir, data.notebook+"."+id+".noted"),
+		fs.writeFileSync path.join(@notebookdir, filename),
 			JSON.stringify data
+
 
 		return data
 
@@ -174,19 +213,42 @@ class noteddb
 	deleteNotebook: (id) ->
 		# Deletes each note
 		@readNotebook(id).contents.forEach (file) =>
-			fs.unlink path.join(@notebookdir, id+"."+file+".noted")
+			filename = id+"."+file+".noted"
+			fs.unlink path.join(@notebookdir, filename)
+			@addToQueue {
+				"operation": "remove"
+				"file": filename
+			}
 
 		# Deletes metadata
-		fs.unlinkSync path.join(@notebookdir, id+".json")
+		filename = id+".json"
+		fs.unlinkSync path.join(@notebookdir, filename)
+		@addToQueue {
+			"operation": "remove"
+			"file": filename
+		}
 
 	###
 	# Deletes a note
 	# @param {String} id The note id
 	###
 	deleteNote: (id) ->
-		fs.unlink path.join(@notebookdir, @filenameNote(id))
+		filename = @filenameNote(id)
+		fs.unlink path.join(@notebookdir, filename)
+		@addToQueue {
+			"operation": "remove"
+			"file": filename
+		}
 
-	# Syncing
+	# Syncing / Queues
+	addToQueue: (obj) ->
+		# This is clever. If it's updated or removed etc, the old operation is deleted.
+		console.log obj.file
+		@queueArr[obj.file] = obj
+
+		# Saves to LocalStorage
+		window.localStorage.setItem(@queue, JSON.stringify(@queueArr))
+
 	syncWrite: (file, content) ->
 		if @client
 			@client.writeFile file, content, (err, stat) ->

@@ -71,8 +71,10 @@ window.noted =
 		window.noted.homedir = process.env.HOME
 		window.noted.storagedir = window.noted.osdirs()
 
+		window.localStorage.queue ?= "{}"
+
 		# Create the DB
-		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"))
+		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue")
 
 		# Setup Dropbox
 		window.client = new Dropbox.Client {
