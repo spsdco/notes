@@ -64,8 +64,6 @@ window.noted =
 				localStorage.oauth = JSON.stringify(client.oauth)
 				window.noted.auth()
 
-	sync: ->
-
 	init: ->
 		# Make variables. Do checks.
 		window.noted.homedir = process.env.HOME

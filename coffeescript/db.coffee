@@ -252,19 +252,36 @@ class noteddb
 		window.localStorage.setItem(@queue, JSON.stringify(@queueArr))
 
 	syncQueue: ->
-		for file of @queueArr
-			# Bring up to date
-			@syncDelta()
+		@syncDelta ->
+			opcount = 0 - Object.keys(@queueArr).length
 
-			# Sync Item
+			# Just define the callback here cause #yolo
+			callback = (err, stat) =>
+				# When ops hit zero, we do a delta
+				opcount++
+				if opcount is 0
+					# Do a delta to get the new cursor
+					@client.delta @cursor, (err, data) =>
+						@cursor = data.cursorTag
+						window.localStorage.setItem("cursor", data.cursorTag)
 
-			# Remove Element
+				return console.warn err if err
+				delete @queueArr[file]
 
-			# Find New Delta
+			# For each item in the queue
+			for file of @queueArr
+				# Sync Item
+				op = @queueArr[file].operation
+				if op is "create" or op is "update"
+					# Create / Update the file
+					@client.writeFile file, JSON.stringify(@queueArr[file].data), callback
 
-			# Call the function again
+				else
+					# Delete the File
+					@client.delete file, callback
 
-	syncDelta: ->
+	syncDelta: (callback) ->
+		@callback = callback
 		@client.delta @cursor, (err, data) =>
 			data.changes.forEach (file) =>
 				if file.wasRemoved
@@ -273,18 +290,14 @@ class noteddb
 				else
 					# Downloads file from Dropbox
 					@client.readFile file.path, null, (err, data) =>
-						return console.log err if err
+						return console.warn err if err
 						fs.writeFile(path.join(@notebookdir, file.path), data)
 
 			# New cursor
 			@cursor = data.cursorTag
 			window.localStorage.setItem("cursor", data.cursorTag)
 
-
-	syncWrite: (file, content) ->
-		if @client
-			@client.writeFile file, content, (err, stat) ->
-				console.log err if err
-				console.log stat
+			# Run callback... not sure about conflicts, scoping and the async nature.
+			@callback() if @callback
 
 module.exports = noteddb

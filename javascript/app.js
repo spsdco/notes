@@ -95,7 +95,6 @@
         });
       }
     },
-    sync: function() {},
     init: function() {
       var _base, _base1, _ref, _ref1;
       window.noted.homedir = process.env.HOME;

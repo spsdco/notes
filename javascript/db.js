@@ -293,16 +293,39 @@
     };
 
     noteddb.prototype.syncQueue = function() {
-      var file, _results;
-      _results = [];
-      for (file in this.queueArr) {
-        _results.push(this.syncDelta());
-      }
-      return _results;
+      return this.syncDelta(function() {
+        var callback, file, op, opcount, _results,
+          _this = this;
+        opcount = 0 - Object.keys(this.queueArr).length;
+        callback = function(err, stat) {
+          opcount++;
+          if (opcount === 0) {
+            _this.client.delta(_this.cursor, function(err, data) {
+              _this.cursor = data.cursorTag;
+              return window.localStorage.setItem("cursor", data.cursorTag);
+            });
+          }
+          if (err) {
+            return console.warn(err);
+          }
+          return delete _this.queueArr[file];
+        };
+        _results = [];
+        for (file in this.queueArr) {
+          op = this.queueArr[file].operation;
+          if (op === "create" || op === "update") {
+            _results.push(this.client.writeFile(file, JSON.stringify(this.queueArr[file].data), callback));
+          } else {
+            _results.push(this.client["delete"](file, callback));
+          }
+        }
+        return _results;
+      });
     };
 
-    noteddb.prototype.syncDelta = function() {
+    noteddb.prototype.syncDelta = function(callback) {
       var _this = this;
+      this.callback = callback;
       return this.client.delta(this.cursor, function(err, data) {
         data.changes.forEach(function(file) {
           if (file.wasRemoved) {
@@ -310,26 +333,18 @@
           } else {
             return _this.client.readFile(file.path, null, function(err, data) {
               if (err) {
-                return console.log(err);
+                return console.warn(err);
               }
               return fs.writeFile(path.join(_this.notebookdir, file.path), data);
             });
           }
         });
         _this.cursor = data.cursorTag;
-        return window.localStorage.setItem("cursor", data.cursorTag);
+        window.localStorage.setItem("cursor", data.cursorTag);
+        if (_this.callback) {
+          return _this.callback();
+        }
       });
-    };
-
-    noteddb.prototype.syncWrite = function(file, content) {
-      if (this.client) {
-        return this.client.writeFile(file, content, function(err, stat) {
-          if (err) {
-            console.log(err);
-          }
-          return console.log(stat);
-        });
-      }
     };
 
     return noteddb;
