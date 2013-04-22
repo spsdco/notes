@@ -1,10 +1,12 @@
 fs = require 'fs'
 path = require 'path'
+Q = require 'q'
 
 class noteddb
-	constructor: (@notebookdir, @client, @queue) ->
+	constructor: (@notebookdir, @client, @queue, @cursor) ->
 		@queue ?= no
 		@client ?= no
+		@cursor ?= no
 
 		@queueArr = JSON.parse(window.localStorage.getItem(@queue))
 
@@ -248,6 +250,36 @@ class noteddb
 
 		# Saves to LocalStorage
 		window.localStorage.setItem(@queue, JSON.stringify(@queueArr))
+
+	syncQueue: ->
+		for file of @queueArr
+			# Bring up to date
+			@syncDelta()
+
+			# Sync Item
+
+			# Remove Element
+
+			# Find New Delta
+
+			# Call the function again
+
+	syncDelta: ->
+		@client.delta @cursor, (err, data) =>
+			data.changes.forEach (file) =>
+				if file.wasRemoved
+					# Removes file to stay in sync
+					fs.unlink path.join(@notebookdir, file.path)
+				else
+					# Downloads file from Dropbox
+					@client.readFile file.path, null, (err, data) =>
+						return console.log err if err
+						fs.writeFile(path.join(@notebookdir, file.path), data)
+
+			# New cursor
+			@cursor = data.cursorTag
+			window.localStorage.setItem("cursor", data.cursorTag)
+
 
 	syncWrite: (file, content) ->
 		if @client

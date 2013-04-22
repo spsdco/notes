@@ -69,12 +69,20 @@ window.noted =
 	init: ->
 		# Make variables. Do checks.
 		window.noted.homedir = process.env.HOME
-		window.noted.storagedir = window.noted.osdirs()
+
+		# Set up where we're going to store stuff.
+		if process.platform is 'darwin'
+			window.noted.storagedir = path.join(window.noted.homedir, "/Library/Application Support/Noted/")
+		else if process.platform is 'win32'
+			window.noted.storagedir = path.join(process.env.LOCALAPPDATA, "/Noted/")
+		else if process.platform is 'linux'
+			window.noted.storagedir = path.join(window.noted.homedir, '/.config/Noted/')
 
 		window.localStorage.queue ?= "{}"
+		window.localStorage.cursor ?= ""
 
 		# Create the DB
-		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue")
+		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue", window.localStorage.cursor)
 
 		# Setup Dropbox
 		window.client = new Dropbox.Client {
@@ -428,15 +436,6 @@ window.noted =
 			)
 
 			window.noted.editMode("preview")
-
-	osdirs: ->
-		# Set up where we're going to store stuff.
-		if process.platform is 'darwin'
-			path.join(window.noted.homedir, "/Library/Application Support/Noted/")
-		else if process.platform is 'win32'
-			path.join(process.env.LOCALAPPDATA, "/Noted/")
-		else if process.platform is 'linux'
-			path.join(window.noted.homedir, '/.config/Noted/')
 
 	util:
 		date: (date) ->
