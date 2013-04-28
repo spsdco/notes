@@ -209,6 +209,24 @@ class noteddb
 		return data
 
 	###
+	# Search Notes
+	# @param {String} query The search query
+	# @return {Object} results The results of the query
+	###
+	search: (query) ->
+		files = fs.readdirSync @notebookdir
+		files.forEach (file) =>
+			if file.match("^."+query+".$") and file.substr(16,5) isnt ".json"
+				id = file.substr(17, 16)
+				md = fs.readFileSync(path.join(@notebookdir, id+"."+filename+".noted"))
+				results.push {
+					'id': id,
+					'name': md.name
+				}
+
+		return results
+
+	###
 	# Deletes a notebook
 	# @param {String} id The notebook id
 	###
