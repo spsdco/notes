@@ -269,6 +269,14 @@ class noteddb
 		# Saves to LocalStorage
 		window.localStorage.setItem(@queue, JSON.stringify(@queueArr))
 
+	firstSync: ->
+		@syncDelta ->
+			files = fs.readdirSync @notebookdir
+			files.forEach (file) =>
+				data = fs.readFileSync(path.join(@notebookdir, file))
+				@client.writeFile file, data.toString(), (err, stat) ->
+					console.log stat
+
 	syncQueue: ->
 		@syncDelta ->
 			opcount = 0 - Object.keys(@queueArr).length
