@@ -308,9 +308,6 @@ window.noted =
 				$area.setSelection(sel.start, sel.end)
 				$area.surroundSelectedText("# ","")
 
-		else if action is 'hr'
-			$area.surroundSelectedText("----\n","")
-
 		else if action is 'img'
 			url = prompt("Enter the URL of the image","")
 			$area.surroundSelectedText("![","]("+url+")")

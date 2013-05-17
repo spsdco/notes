@@ -479,7 +479,7 @@ body.resizing { cursor: ew-resize; }
 		font-size: 15px;
 		line-height: 1.1;
 		min-height: 100%;
-		padding: 0 0 25px;
+		padding: 0 0 30px;
 		color: #444;
 		background: lighten($white-color, 1%);
 	}
@@ -489,15 +489,45 @@ body.resizing { cursor: ew-resize; }
 	z-index: 9;
 	position: absolute;
 	margin-top: 60px;
-	height: 29px;
+	height: 35px;
 	width: 100%;
 	background: #eee;
 	border-bottom: 1px solid #ccc;
-	top: -30px;
+	top: -36px;
 	-webkit-transition: 200ms ease all;
 
 	&.show {
 		top: 0;
+	}
+
+	.inner {
+		max-width: 610px;
+		margin: 3px auto;
+	}
+
+	button {
+		background: transparent;
+		border: 2px solid #444;
+		border-radius: 50%;
+		width: 26px;
+		height: 26px;
+		margin: 2px 3px;
+		text-align: center;
+		padding: 0;
+
+		&:first-child {
+			margin-left: 0;
+		}
+
+		&:hover {
+			-webkit-filter: invert(100%);
+			background: #bbb;
+		}
+
+		img {
+			padding-top: 3px;
+			vertical-align: top;
+		}
 	}
 }
 
