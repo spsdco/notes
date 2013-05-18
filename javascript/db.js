@@ -76,8 +76,7 @@
       fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
       this.addToQueue({
         "operation": "create",
-        "file": filename,
-        "data": data
+        "file": filename
       });
       return id;
     };
@@ -108,8 +107,7 @@
       fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
       this.addToQueue({
         "operation": "create",
-        "file": filename,
-        "data": data
+        "file": filename
       });
       return id;
     };
@@ -203,8 +201,7 @@
       fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
       this.addToQueue({
         "operation": "update",
-        "file": filename,
-        "data": data
+        "file": filename
       });
       return data;
     };
@@ -230,14 +227,12 @@
         fs.renameSync(path.join(this.notebookdir, this.filenameNote(id)), path.join(this.notebookdir, data.notebook + "." + id + ".noted"));
         this.addToQueue({
           "operation": "create",
-          "file": filename,
-          "data": data
+          "file": filename
         });
       } else {
         this.addToQueue({
           "operation": "update",
-          "file": filename,
-          "data": data
+          "file": filename
         });
       }
       fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
@@ -312,25 +307,35 @@
     };
 
     noteddb.prototype.addToQueue = function(obj) {
-      console.log(obj.file);
       this.queueArr[obj.file] = obj;
       return window.localStorage.setItem(this.queue, JSON.stringify(this.queueArr));
     };
+
+    /*
+    	# Run when user first connects to Dropbox
+    */
+
 
     noteddb.prototype.firstSync = function() {
       return this.syncDelta(function() {
         var files,
           _this = this;
         files = fs.readdirSync(this.notebookdir);
-        return files.forEach(function(file) {
+        files.forEach(function(file) {
           var data;
           data = fs.readFileSync(path.join(_this.notebookdir, file));
           return _this.client.writeFile(file, data.toString(), function(err, stat) {
             return console.log(stat);
           });
         });
+        return window.localStorage.setItem("queue", "{}");
       });
     };
+
+    /*
+    	# Sync the current queue with Dropbox
+    */
+
 
     noteddb.prototype.syncQueue = function() {
       return this.syncDelta(function() {
@@ -354,7 +359,7 @@
         for (file in this.queueArr) {
           op = this.queueArr[file].operation;
           if (op === "create" || op === "update") {
-            _results.push(this.client.writeFile(file, JSON.stringify(this.queueArr[file].data), callback));
+            _results.push(this.client.writeFile(file, fs.readFileSync(path.join(this.notebookdir, file)).toString(), callback));
           } else {
             _results.push(this.client["delete"](file, callback));
           }
@@ -367,7 +372,9 @@
       var _this = this;
       this.callback = callback;
       return this.client.delta(this.cursor, function(err, data) {
+        console.log(data);
         data.changes.forEach(function(file) {
+          console.log(file);
           if (file.wasRemoved) {
             return fs.unlink(path.join(_this.notebookdir, file.path));
           } else {

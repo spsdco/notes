@@ -55,7 +55,6 @@ class noteddb
 		@addToQueue {
 			"operation": "create"
 			"file": filename
-			"data": data
 		}
 		return id
 
@@ -85,7 +84,6 @@ class noteddb
 		@addToQueue {
 			"operation": "create"
 			"file": filename
-			"data": data
 		}
 		return id
 
@@ -163,7 +161,6 @@ class noteddb
 		@addToQueue {
 			"operation": "update"
 			"file": filename
-			"data": data
 		}
 
 		return data
@@ -193,13 +190,11 @@ class noteddb
 			@addToQueue {
 				"operation": "create"
 				"file": filename
-				"data": data
 			}
 		else
 			@addToQueue {
 				"operation": "update"
 				"file": filename
-				"data": data
 			}
 
 		fs.writeFileSync path.join(@notebookdir, filename),
@@ -263,12 +258,14 @@ class noteddb
 	# Syncing / Queues
 	addToQueue: (obj) ->
 		# This is clever. If it's updated or removed etc, the old operation is deleted.
-		console.log obj.file
 		@queueArr[obj.file] = obj
 
 		# Saves to LocalStorage
 		window.localStorage.setItem(@queue, JSON.stringify(@queueArr))
 
+	###
+	# Run when user first connects to Dropbox
+	###
 	firstSync: ->
 		@syncDelta ->
 			files = fs.readdirSync @notebookdir
@@ -277,6 +274,12 @@ class noteddb
 				@client.writeFile file, data.toString(), (err, stat) ->
 					console.log stat
 
+			# Resets queue to a blank state
+			window.localStorage.setItem("queue", "{}")
+
+	###
+	# Sync the current queue with Dropbox
+	###
 	syncQueue: ->
 		@syncDelta ->
 			opcount = 0 - Object.keys(@queueArr).length
@@ -300,7 +303,7 @@ class noteddb
 				op = @queueArr[file].operation
 				if op is "create" or op is "update"
 					# Create / Update the file
-					@client.writeFile file, JSON.stringify(@queueArr[file].data), callback
+					@client.writeFile file, fs.readFileSync(path.join(@notebookdir, file)).toString(), callback
 
 				else
 					# Delete the File
@@ -309,7 +312,9 @@ class noteddb
 	syncDelta: (callback) ->
 		@callback = callback
 		@client.delta @cursor, (err, data) =>
+			console.log(data)
 			data.changes.forEach (file) =>
+				console.log(file)
 				if file.wasRemoved
 					# Removes file to stay in sync
 					fs.unlink path.join(@notebookdir, file.path)

@@ -48,20 +48,33 @@ window.noted =
 	currentNote: ""
 
 	auth: ->
+		# if we have the client info i.e we can actually sync
+		if window.noted.db.client
+			if window.noted.db.cursor is ""
+				console.log "going for first sync"
+				window.noted.db.firstSync()
+			else
+				console.log "going for queue sync"
+				window.noted.db.syncQueue()
 		# if there are creds, try get the users info
-		if window.localStorage.oauth
+		else if window.localStorage.oauth
 			window.client.oauth = new Dropbox.Oauth JSON.parse(localStorage.oauth)
 			window.client.getUserInfo (err, info) ->
 				if err
 					localStorage.removeItem "oauth"
 					return console.warn(error)
+
 				# If we get to here, the user is successfully authed!
 				window.noted.db.client = window.client
-				console.log info
+
+				# Run the same function again, this time it should sync
+				window.noted.auth()
 		else
 			window.client.authenticate (error, client) ->
 				return console.warn(error) if error
 				localStorage.oauth = JSON.stringify(client.oauth)
+
+				# Get users info
 				window.noted.auth()
 
 	init: ->
