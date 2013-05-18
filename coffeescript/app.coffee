@@ -217,7 +217,7 @@ window.noted =
 				e.preventDefault()
 
 				# Create Notebook
-				window.noted.db.createNotebook(name)
+				window.noted.db.createNotebook($(this).val())
 				window.noted.load.notebooks()
 
 				# Clear input box

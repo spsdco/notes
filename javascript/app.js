@@ -244,7 +244,7 @@
       $('body').on("keydown", "#notebooks input", function(e) {
         if (e.keyCode === 13) {
           e.preventDefault();
-          window.noted.db.createNotebook(name);
+          window.noted.db.createNotebook($(this).val());
           window.noted.load.notebooks();
           return $(this).val("").blur();
         }
