@@ -605,6 +605,13 @@ body.resizing {
     #notebooks input:focus {
       background-image: url(../img/book.svg); }
 
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0); }
+
+  100% {
+    -webkit-transform: rotate(360deg); } }
+
 #settingsbar {
   position: fixed;
   bottom: 0;
@@ -616,7 +623,10 @@ body.resizing {
     height: 17px;
     vertical-align: top;
     margin: 6px 0 6px 8px;
-    opacity: 0.6; }
+    opacity: 0.6;
+    -webkit-animation: spin 1000ms linear 1; }
+    #settingsbar img.spin {
+      -webkit-animation: spin 1000ms linear infinite; }
     #settingsbar img:active {
       opacity: 0.9; }
 

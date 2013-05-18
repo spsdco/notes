@@ -75,13 +75,20 @@
     currentList: "all",
     currentNote: "",
     auth: function() {
+      var elem;
+      elem = $("#sync");
+      elem.addClass("spin");
       if (window.noted.db.client) {
         if (window.noted.db.cursor === "") {
           console.log("going for first sync");
-          return window.noted.db.firstSync();
+          return window.noted.db.firstSync(function() {
+            return elem.removeClass("spin");
+          });
         } else {
           console.log("going for queue sync");
-          return window.noted.db.syncQueue();
+          return window.noted.db.syncQueue(function() {
+            return elem.removeClass("spin");
+          });
         }
       } else if (window.localStorage.oauth) {
         window.client.oauth = new Dropbox.Oauth(JSON.parse(localStorage.oauth));
@@ -94,6 +101,7 @@
           return window.noted.auth();
         });
       } else {
+        elem.removeClass("spin");
         return window.client.authenticate(function(error, client) {
           if (error) {
             return console.warn(error);
@@ -128,6 +136,7 @@
       return window.noted.initUI();
     },
     initUI: function() {
+      $("#sync").removeClass("spin");
       Splitter.init({
         parent: $('#parent')[0],
         panels: {

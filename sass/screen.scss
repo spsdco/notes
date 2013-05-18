@@ -237,6 +237,15 @@ body.resizing { cursor: ew-resize; }
 	}
 }
 
+@-webkit-keyframes spin {
+	0% {
+		-webkit-transform: rotate(0);
+	}
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+
 #settingsbar {
 	position: fixed;
 	bottom: 0;
@@ -250,6 +259,11 @@ body.resizing { cursor: ew-resize; }
 		vertical-align: top;
 		margin: 6px 0 6px 8px;
 		opacity: 0.6;
+		-webkit-animation: spin 1000ms linear 1;
+
+		&.spin {
+			-webkit-animation: spin 1000ms linear infinite;
+		}
 
 		&:active {
 			opacity: 0.9;

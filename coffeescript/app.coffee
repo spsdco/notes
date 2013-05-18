@@ -48,14 +48,19 @@ window.noted =
 	currentNote: ""
 
 	auth: ->
+		elem = $("#sync")
+		elem.addClass("spin")
 		# if we have the client info i.e we can actually sync
 		if window.noted.db.client
 			if window.noted.db.cursor is ""
 				console.log "going for first sync"
-				window.noted.db.firstSync()
+				window.noted.db.firstSync ->
+					elem.removeClass("spin")
 			else
 				console.log "going for queue sync"
-				window.noted.db.syncQueue()
+				window.noted.db.syncQueue ->
+					elem.removeClass("spin")
+
 		# if there are creds, try get the users info
 		else if window.localStorage.oauth
 			window.client.oauth = new Dropbox.Oauth JSON.parse(localStorage.oauth)
@@ -70,6 +75,7 @@ window.noted =
 				# Run the same function again, this time it should sync
 				window.noted.auth()
 		else
+			elem.removeClass("spin")
 			window.client.authenticate (error, client) ->
 				return console.warn(error) if error
 				localStorage.oauth = JSON.stringify(client.oauth)
@@ -106,6 +112,9 @@ window.noted =
 		window.noted.initUI()
 
 	initUI: ->
+		# Because threading issues in node-webkit
+		$("#sync").removeClass("spin")
+
 		Splitter.init
 			parent: $('#parent')[0],
 			panels:

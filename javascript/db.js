@@ -316,16 +316,28 @@
     */
 
 
-    noteddb.prototype.firstSync = function() {
+    noteddb.prototype.firstSync = function(callback) {
       return this.syncDelta(function() {
-        var files,
+        var files, opcount,
           _this = this;
         files = fs.readdirSync(this.notebookdir);
+        opcount = 0 - files.length;
+        if (files.length === 0) {
+          if (callback) {
+            callback();
+          }
+        }
         files.forEach(function(file) {
           var data;
           data = fs.readFileSync(path.join(_this.notebookdir, file));
           return _this.client.writeFile(file, data.toString(), function(err, stat) {
-            return console.log(stat);
+            console.log(stat);
+            opcount++;
+            if (opcount === 0) {
+              if (callback) {
+                return callback();
+              }
+            }
           });
         });
         return window.localStorage.setItem("queue", "{}");
@@ -337,17 +349,20 @@
     */
 
 
-    noteddb.prototype.syncQueue = function() {
+    noteddb.prototype.syncQueue = function(callback) {
       return this.syncDelta(function() {
-        var callback, file, op, opcount, _results,
+        var file, filecallback, op, opcount,
           _this = this;
         opcount = 0 - Object.keys(this.queueArr).length;
-        callback = function(err, stat) {
+        filecallback = function(err, stat) {
           opcount++;
           if (opcount === 0) {
             _this.client.delta(_this.cursor, function(err, data) {
               _this.cursor = data.cursorTag;
-              return window.localStorage.setItem("cursor", data.cursorTag);
+              window.localStorage.setItem("cursor", data.cursorTag);
+              if (callback) {
+                return callback();
+              }
             });
           }
           if (err) {
@@ -355,16 +370,19 @@
           }
           return delete _this.queueArr[file];
         };
-        _results = [];
         for (file in this.queueArr) {
           op = this.queueArr[file].operation;
           if (op === "create" || op === "update") {
-            _results.push(this.client.writeFile(file, fs.readFileSync(path.join(this.notebookdir, file)).toString(), callback));
+            this.client.writeFile(file, fs.readFileSync(path.join(this.notebookdir, file)).toString(), filecallback);
           } else {
-            _results.push(this.client["delete"](file, callback));
+            this.client["delete"](file, filecallback);
           }
         }
-        return _results;
+        if (this.queueArr.length === 0) {
+          if (callback) {
+            return callback();
+          }
+        }
       });
     };
 

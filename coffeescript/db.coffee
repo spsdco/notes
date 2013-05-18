@@ -266,13 +266,22 @@ class noteddb
 	###
 	# Run when user first connects to Dropbox
 	###
-	firstSync: ->
+	firstSync: (callback) ->
 		@syncDelta ->
 			files = fs.readdirSync @notebookdir
+			opcount = 0 - files.length
+
+			# Run callback if nothing is there
+			if files.length is 0
+				callback() if callback
+
 			files.forEach (file) =>
 				data = fs.readFileSync(path.join(@notebookdir, file))
 				@client.writeFile file, data.toString(), (err, stat) ->
 					console.log stat
+					opcount++
+					if opcount is 0
+						callback() if callback
 
 			# Resets queue to a blank state
 			window.localStorage.setItem("queue", "{}")
@@ -280,12 +289,12 @@ class noteddb
 	###
 	# Sync the current queue with Dropbox
 	###
-	syncQueue: ->
+	syncQueue: (callback) ->
 		@syncDelta ->
 			opcount = 0 - Object.keys(@queueArr).length
 
 			# Just define the callback here cause #yolo
-			callback = (err, stat) =>
+			filecallback = (err, stat) =>
 				# When ops hit zero, we do a delta
 				opcount++
 				if opcount is 0
@@ -293,6 +302,7 @@ class noteddb
 					@client.delta @cursor, (err, data) =>
 						@cursor = data.cursorTag
 						window.localStorage.setItem("cursor", data.cursorTag)
+						callback() if callback
 
 				return console.warn err if err
 				delete @queueArr[file]
@@ -303,11 +313,15 @@ class noteddb
 				op = @queueArr[file].operation
 				if op is "create" or op is "update"
 					# Create / Update the file
-					@client.writeFile file, fs.readFileSync(path.join(@notebookdir, file)).toString(), callback
+					@client.writeFile file, fs.readFileSync(path.join(@notebookdir, file)).toString(), filecallback
 
 				else
 					# Delete the File
-					@client.delete file, callback
+					@client.delete file, filecallback
+
+			# Runs callback if there is nothing to sync
+			if @queueArr.length is 0
+				callback() if callback
 
 	syncDelta: (callback) ->
 		@callback = callback
