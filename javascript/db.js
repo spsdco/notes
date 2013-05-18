@@ -150,15 +150,22 @@
     noteddb.prototype.readNotebook = function(id, names) {
       var files, notebook,
         _this = this;
-      notebook = JSON.parse(fs.readFileSync(path.join(this.notebookdir, id + ".json")));
+      if (id === "all") {
+        notebook = {
+          name: "All Notes",
+          id: "all"
+        };
+      } else {
+        notebook = JSON.parse(fs.readFileSync(path.join(this.notebookdir, id + ".json")));
+      }
       notebook.contents = [];
       files = fs.readdirSync(this.notebookdir);
       files.forEach(function(file) {
         var contents, filename;
-        if (file.match(id) && file.substr(16, 5) !== ".json") {
+        if (file.match(id) && file.substr(33, 6) === ".noted" || id === "all" && file.substr(33, 6) === ".noted") {
           filename = file.substr(17, 16);
           if (names) {
-            contents = JSON.parse(fs.readFileSync(path.join(_this.notebookdir, id + "." + filename + ".noted")));
+            contents = JSON.parse(fs.readFileSync(path.join(_this.notebookdir, file)));
             return notebook.contents.push({
               id: filename,
               name: contents.name,

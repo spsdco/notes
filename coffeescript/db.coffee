@@ -115,15 +115,18 @@ class noteddb
 	# @return {Object} notebook Notebook metadata with list of notes
 	###
 	readNotebook: (id, names) ->
-		notebook = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+".json")))
+		if id is "all"
+			notebook = {name: "All Notes", id: "all"}
+		else
+			notebook = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+".json")))
 		notebook.contents = []
 
 		files = fs.readdirSync @notebookdir
 		files.forEach (file) =>
-			if file.match(id) and file.substr(16,5) isnt ".json"
+			if file.match(id) and file.substr(33,6) is ".noted" or id is "all" and file.substr(33,6) is ".noted"
 				filename = file.substr(17, 16)
 				if names
-					contents = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+"."+filename+".noted")))
+					contents = JSON.parse(fs.readFileSync(path.join(@notebookdir, file)))
 					notebook.contents.push {
 						id: filename
 						name: contents.name

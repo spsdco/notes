@@ -395,7 +395,7 @@
         return window.noted.db.updateNote(window.noted.currentNote, {
           name: text,
           content: window.noted.editor.getValue(),
-          notebook: window.noted.currentList
+          notebook: window.noted.db.readNote(window.noted.currentNote).notebook
         });
       }
     },
@@ -421,38 +421,34 @@
         window.noted.currentList = list;
         template = handlebars.compile($("#note-template").html());
         htmlstr = "";
-        if (list === "all") {
-          htmlstr = "I broke all notes because of the shitty implementation";
-        } else {
-          data = window.noted.db.readNotebook(list, true);
-          order = [];
-          data.contents.forEach(function(file) {
-            var lastIndex;
-            if (file.info.length > 90) {
-              lastIndex = file.info.lastIndexOf(" ");
-              file.info = file.info.substring(0, lastIndex) + "&hellip;";
-            }
-            file.info = $(marked(file.info)).text();
-            return order.push({
-              id: file.id,
-              date: file.date * 1000,
-              name: file.name,
-              info: file.info
-            });
-          });
-          order.sort(function(a, b) {
-            return new Date(a.time) - new Date(b.time);
-          });
-          for (_i = 0, _len = order.length; _i < _len; _i++) {
-            note = order[_i];
-            htmlstr = template({
-              id: note.id,
-              name: note.name,
-              list: list,
-              date: window.noted.util.date(note.date),
-              excerpt: note.info
-            }) + htmlstr;
+        data = window.noted.db.readNotebook(list, true);
+        order = [];
+        data.contents.forEach(function(file) {
+          var lastIndex;
+          if (file.info.length > 90) {
+            lastIndex = file.info.lastIndexOf(" ");
+            file.info = file.info.substring(0, lastIndex) + "&hellip;";
           }
+          file.info = $(marked(file.info)).text();
+          return order.push({
+            id: file.id,
+            date: file.date * 1000,
+            name: file.name,
+            info: file.info
+          });
+        });
+        order.sort(function(a, b) {
+          return new Date(a.time) - new Date(b.time);
+        });
+        for (_i = 0, _len = order.length; _i < _len; _i++) {
+          note = order[_i];
+          htmlstr = template({
+            id: note.id,
+            name: note.name,
+            list: list,
+            date: window.noted.util.date(note.date),
+            excerpt: note.info
+          }) + htmlstr;
         }
         return $("#notes ul").html(htmlstr);
       },
@@ -479,7 +475,6 @@
         oneDay = 86400000;
         words = '';
         difference = Math.ceil((date.getTime() - now.getTime()) / oneDay);
-        console.log(difference);
         if (difference === 0) {
           words = "Today";
         } else if (difference === -1) {

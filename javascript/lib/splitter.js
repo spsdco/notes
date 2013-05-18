@@ -76,7 +76,6 @@
     this.left.el.insertAdjacentElement('afterend', this.el);
     this.pos = this.el.offsetLeft;
     this.el.obj = this;
-    console.log(this.el)
     this.el.onmousedown = events.mousedown;
 
   };
@@ -223,8 +222,6 @@
         width = parent.offsetWidth;
         var diff = width - last.width;
         if (diff === 0 || width < minWidth) { return false; }
-
-        console.log(diff, width, minWidth)
 
         // If window is shrinking
         if (diff < 0) {

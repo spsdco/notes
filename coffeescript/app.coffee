@@ -375,7 +375,7 @@ window.noted =
 			window.noted.db.updateNote window.noted.currentNote, {
 					name: text
 					content: window.noted.editor.getValue()
-					notebook: window.noted.currentList
+					notebook: window.noted.db.readNote(window.noted.currentNote).notebook
 				}
 
 	load:
@@ -397,42 +397,38 @@ window.noted =
 			template = handlebars.compile($("#note-template").html())
 			htmlstr = ""
 
-			if list is "all"
-				# TODO: There will be some proper code in here soon
-				htmlstr = "I broke all notes because of the shitty implementation"
-			else
-				data = window.noted.db.readNotebook(list, true)
-				order = []
+			data = window.noted.db.readNotebook(list, true)
+			order = []
 
-				data.contents.forEach (file) ->
-					# Makes a pretty Excerpt
-					if file.info.length > 90
-						lastIndex = file.info.lastIndexOf(" ")
-						file.info = file.info.substring(0, lastIndex) + "&hellip;"
+			data.contents.forEach (file) ->
+				# Makes a pretty Excerpt
+				if file.info.length > 90
+					lastIndex = file.info.lastIndexOf(" ")
+					file.info = file.info.substring(0, lastIndex) + "&hellip;"
 
-					# Rips out ugly markdown
-					file.info = $(marked(file.info)).text()
+				# Rips out ugly markdown
+				file.info = $(marked(file.info)).text()
 
-					order.push {
-						id: file.id,
-						date: file.date * 1000
-						name: file.name
-						info: file.info
-					}
+				order.push {
+					id: file.id,
+					date: file.date * 1000
+					name: file.name
+					info: file.info
+				}
 
-				# Sorts all the notes by time
-				order.sort (a, b) ->
-					return new Date(a.time) - new Date(b.time)
+			# Sorts all the notes by time
+			order.sort (a, b) ->
+				return new Date(a.time) - new Date(b.time)
 
-				# Appends to DOM
-				for note in order
-					htmlstr = template({
-						id: note.id
-						name: note.name
-						list: list
-						date: window.noted.util.date(note.date)
-						excerpt: note.info
-						}) + htmlstr
+			# Appends to DOM
+			for note in order
+				htmlstr = template({
+					id: note.id
+					name: note.name
+					list: list
+					date: window.noted.util.date(note.date)
+					excerpt: note.info
+					}) + htmlstr
 
 			$("#notes ul").html(htmlstr)
 
@@ -480,7 +476,6 @@ window.noted =
 
 			# Find difference between days
 			difference = Math.ceil((date.getTime() - now.getTime()) / oneDay)
-			console.log difference
 
 			# Show difference nicely
 			if difference is 0
