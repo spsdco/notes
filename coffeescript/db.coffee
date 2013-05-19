@@ -305,9 +305,10 @@ class noteddb
 					@client.delta @cursor, (err, data) =>
 						@cursor = data.cursorTag
 						window.localStorage.setItem("cursor", data.cursorTag)
+						window.localStorage.setItem("queue", "{}")
 						callback() if callback
 
-				return console.warn err if err
+				console.warn err if err
 				delete @queueArr[file]
 
 			# For each item in the queue
@@ -324,6 +325,7 @@ class noteddb
 
 			# Runs callback if there is nothing to sync
 			if @queueArr.length is 0
+				window.localStorage.setItem("queue", "{}")
 				callback() if callback
 
 	syncDelta: (callback) ->

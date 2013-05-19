@@ -367,13 +367,14 @@
             _this.client.delta(_this.cursor, function(err, data) {
               _this.cursor = data.cursorTag;
               window.localStorage.setItem("cursor", data.cursorTag);
+              window.localStorage.setItem("queue", "{}");
               if (callback) {
                 return callback();
               }
             });
           }
           if (err) {
-            return console.warn(err);
+            console.warn(err);
           }
           return delete _this.queueArr[file];
         };
@@ -386,6 +387,7 @@
           }
         }
         if (this.queueArr.length === 0) {
+          window.localStorage.setItem("queue", "{}");
           if (callback) {
             return callback();
           }
