@@ -172,6 +172,9 @@
       window.noted.window.showDevTools();
       window.noted.load.notebooks();
       window.noted.editor = new jonoeditor($("#contentwrite"));
+      $("#contentread").on("click", "a", function() {
+        return gui.Shell.openExternal($(this).attr("href"));
+      });
       $('.modal.settings .false').click(function() {
         return $('.modal.settings').modal("hide");
       });

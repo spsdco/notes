@@ -148,6 +148,9 @@ window.noted =
 
 		window.noted.editor = new jonoeditor($("#contentwrite"))
 
+		$("#contentread").on "click", "a", ->
+			gui.Shell.openExternal $(@).attr("href")
+
 		$('.modal.settings .false').click ->
 			$('.modal.settings').modal "hide"
 
