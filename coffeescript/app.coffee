@@ -17,12 +17,19 @@ rangyinputs			= require './javascript/lib/rangyinputs'
 
 # Accepts a jQuery Selector
 class jonoeditor
-	constructor: (@el) ->
+	constructor: (@el, @timer) ->
+
 		@el.prop("disabled", false)
 
 		# Add the editor to the dom
 		@el.html("<textarea></textarea>")
-		@el.find("textarea").autogrow()
+
+		# Whenever a key is pushed, it waits 10 secs and then saves the file.
+		@el.find("textarea").autogrow().on "change keyup", =>
+			clearTimeout @timer
+			@timer = setTimeout ->
+				window.noted.save()
+			, 10000
 
 	getReadOnly: ->
 		@el.prop("disabled")
@@ -267,7 +274,9 @@ window.noted =
 			$('.modal.renameNotebook').modal()
 			$('.modal.renameNotebook input').val(name).focus()
 
-		$("#content .edit").click window.noted.editMode
+		$("#content .edit").click ->
+			window.noted.save()
+			window.noted.editMode()
 
 		$("body").on "click", ".editorbuttons button", ->
 			window.noted.editorAction $(@).attr('data-action')
@@ -352,7 +361,6 @@ window.noted =
 			$("#content .editorbuttons").removeClass("show")
 			window.noted.editor.hide()
 			window.noted.editor.setReadOnly(true)
-			window.noted.save()
 		else
 			el.addClass("save").text "save"
 			$('.headerwrap .left h1').attr('contenteditable', 'true')
@@ -451,6 +459,8 @@ window.noted =
 			window.noted.editMode("preview")
 
 	util:
+		# I can't help but feel that this function is bugged,
+		# but fuckit, lets ship.
 		date: (date) ->
 			date = new Date(date)
 
@@ -480,13 +490,14 @@ window.noted =
 			# Show difference nicely
 			if difference is 0
 				words = "Today"
+				words = "Yesterday" if now.getDate() isnt date.getDate()
 
 			else if difference is -1
 				words = "Yesterday"
 
 			else if difference > 0
 				# If the user has a TARDIS
-				words = "In " + difference + " days"
+				words = "Today"
 
 			else if difference > -15
 				words = Math.abs(difference) + " days ago"

@@ -36,11 +36,18 @@
 
   jonoeditor = (function() {
 
-    function jonoeditor(el) {
+    function jonoeditor(el, timer) {
+      var _this = this;
       this.el = el;
+      this.timer = timer;
       this.el.prop("disabled", false);
       this.el.html("<textarea></textarea>");
-      this.el.find("textarea").autogrow();
+      this.el.find("textarea").autogrow().on("change keyup", function() {
+        clearTimeout(_this.timer);
+        return _this.timer = setTimeout(function() {
+          return window.noted.save();
+        }, 10000);
+      });
     }
 
     jonoeditor.prototype.getReadOnly = function() {
@@ -296,7 +303,10 @@
         $('.modal.renameNotebook').modal();
         return $('.modal.renameNotebook input').val(name).focus();
       });
-      $("#content .edit").click(window.noted.editMode);
+      $("#content .edit").click(function() {
+        window.noted.save();
+        return window.noted.editMode();
+      });
       return $("body").on("click", ".editorbuttons button", function() {
         return window.noted.editorAction($(this).attr('data-action'));
       });
@@ -372,8 +382,7 @@
         $("#contentread").html(marked(window.noted.editor.getValue())).show();
         $("#content .editorbuttons").removeClass("show");
         window.noted.editor.hide();
-        window.noted.editor.setReadOnly(true);
-        return window.noted.save();
+        return window.noted.editor.setReadOnly(true);
       } else {
         el.addClass("save").text("save");
         $('.headerwrap .left h1').attr('contenteditable', 'true');
@@ -477,10 +486,13 @@
         difference = Math.ceil((date.getTime() - now.getTime()) / oneDay);
         if (difference === 0) {
           words = "Today";
+          if (now.getDate() !== date.getDate()) {
+            words = "Yesterday";
+          }
         } else if (difference === -1) {
           words = "Yesterday";
         } else if (difference > 0) {
-          words = "In " + difference + " days";
+          words = "Today";
         } else if (difference > -15) {
           words = Math.abs(difference) + " days ago";
         } else if (difference > -365) {
