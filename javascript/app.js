@@ -172,7 +172,8 @@
       window.noted.window.showDevTools();
       window.noted.load.notebooks();
       window.noted.editor = new jonoeditor($("#contentwrite"));
-      $("#contentread").on("click", "a", function() {
+      $("#contentread").on("click", "a", function(e) {
+        e.preventDefault();
         return gui.Shell.openExternal($(this).attr("href"));
       });
       $('.modal.settings .false').click(function() {
@@ -398,12 +399,20 @@
       }
     },
     save: function() {
-      var text;
+      var info, lastIndex, text;
       if (window.noted.currentNote !== "") {
         text = $('.headerwrap .left h1').text();
         if (text === "") {
           text = "Untitled Note";
         }
+        info = window.noted.editor.getValue();
+        if (info > 90) {
+          lastIndex = info.lastIndexOf(" ");
+          info = info.substring(0, lastIndex) + "&hellip;";
+        }
+        info = $(marked(info)).text();
+        console.log(info);
+        $("#notes [data-id=" + window.noted.currentNote + "]").find("span").text(info).parent().find("time").text("Today");
         return window.noted.db.updateNote(window.noted.currentNote, {
           name: text,
           content: window.noted.editor.getValue(),

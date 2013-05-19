@@ -148,7 +148,8 @@ window.noted =
 
 		window.noted.editor = new jonoeditor($("#contentwrite"))
 
-		$("#contentread").on "click", "a", ->
+		$("#contentread").on "click", "a", (e) ->
+			e.preventDefault()
 			gui.Shell.openExternal $(@).attr("href")
 
 		$('.modal.settings .false').click ->
@@ -382,6 +383,24 @@ window.noted =
 		if window.noted.currentNote isnt ""
 			text = $('.headerwrap .left h1').text()
 			text = "Untitled Note" if text is ""
+
+			# Makes a pretty Excerpt
+			info = window.noted.editor.getValue()
+			if info > 90
+				lastIndex = info.lastIndexOf(" ")
+				info = info.substring(0, lastIndex) + "&hellip;"
+
+			# Rips out ugly markdown
+			info = $(marked(info)).text()
+			console.log info
+
+			# Changes Element
+			$("#notes [data-id=" + window.noted.currentNote + "]")
+				.find("span")
+				.text(info)
+				.parent()
+				.find("time")
+				.text("Today")
 
 			window.noted.db.updateNote window.noted.currentNote, {
 					name: text
