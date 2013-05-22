@@ -87,8 +87,13 @@
       elem.addClass("spin");
       if (window.noted.db.client) {
         callback = function() {
+          console.log("calling back");
           elem.removeClass("spin");
-          return console.log("calling back");
+          window.noted.load.notebooks();
+          window.noted.load.notes(window.noted.currentList);
+          if (window.noted.currentNote !== "" && window.noted.editor.getReadOnly() === true) {
+            return window.noted.load.note(window.noted.currentNote);
+          }
         };
         if (window.noted.db.cursor === "") {
           console.log("going for first sync");
@@ -171,6 +176,7 @@
       window.noted.window.show();
       window.noted.window.showDevTools();
       window.noted.load.notebooks();
+      window.noted.load.notes("all");
       window.noted.editor = new jonoeditor($("#contentwrite"));
       $("#contentread").on("click", "a", function(e) {
         e.preventDefault();
@@ -261,9 +267,6 @@
         }
       });
       $('body').on("click contextmenu", "#notebooks li", function() {
-        $("#noteControls").addClass("disabled");
-        $(this).parent().find(".selected").removeClass("selected");
-        $(this).addClass("selected");
         window.noted.load.notes($(this).attr("data-id"));
         return window.noted.deselect();
       });
@@ -293,9 +296,6 @@
         }
       });
       $('body').on("click", "#notes li", function() {
-        $("#noteControls").removeClass("disabled");
-        $("#notes .selected").removeClass("selected");
-        $(this).addClass("selected");
         return window.noted.load.note($(this).attr("data-id"));
       });
       $('body').on("click", "#deleteNotebook", function() {
@@ -438,9 +438,12 @@
         });
         return $("#notebooks ul").html(htmlstr);
       },
-      notes: function(list, type) {
+      notes: function(list) {
         var data, htmlstr, note, order, template, _i, _len;
         window.noted.currentList = list;
+        $("#noteControls").addClass("disabled");
+        $("#notebooks li.selected").removeClass("selected");
+        $("#notebooks li[data-id=" + list + "]").addClass("selected");
         template = handlebars.compile($("#note-template").html());
         htmlstr = "";
         data = window.noted.db.readNotebook(list, true);
@@ -477,6 +480,9 @@
       note: function(id) {
         var data, time;
         window.noted.currentNote = id;
+        $("#noteControls").removeClass("disabled");
+        $("#notes .selected").removeClass("selected");
+        $("#notes li[data-id=" + id + "]").addClass("selected");
         data = window.noted.db.readNote(id);
         $('.headerwrap .left h1').text(data.name);
         $("#contentread").html(marked(data.content)).show();

@@ -62,8 +62,14 @@ window.noted =
 		if window.noted.db.client
 			# define callback here
 			callback = ->
-				elem.removeClass("spin")
 				console.log "calling back"
+				elem.removeClass("spin")
+				window.noted.load.notebooks()
+				window.noted.load.notes(window.noted.currentList)
+
+				# Load current note if not in edit mode.
+				if window.noted.currentNote isnt "" and window.noted.editor.getReadOnly() is true
+					window.noted.load.note(window.noted.currentNote)
 
 			if window.noted.db.cursor is ""
 				console.log "going for first sync"
@@ -148,7 +154,9 @@ window.noted =
 		window.noted.window = gui.Window.get()
 		window.noted.window.show()
 		window.noted.window.showDevTools()
+
 		window.noted.load.notebooks()
+		window.noted.load.notes("all")
 
 		window.noted.editor = new jonoeditor($("#contentwrite"))
 
@@ -239,9 +247,6 @@ window.noted =
 				$(this).val("").blur()
 
 		$('body').on "click contextmenu", "#notebooks li", ->
-			$("#noteControls").addClass("disabled")
-			$(@).parent().find(".selected").removeClass "selected"
-			$(@).addClass "selected"
 			window.noted.load.notes($(@).attr("data-id"))
 			window.noted.deselect()
 
@@ -267,11 +272,6 @@ window.noted =
 				$("#notes [data-id='" + window.noted.currentNote + "']").find("h2").text(name)
 
 		$('body').on "click", "#notes li", ->
-			$("#noteControls").removeClass("disabled")
-			$("#notes .selected").removeClass("selected")
-			$(@).addClass("selected")
-
-			# Loads Actual Note
 			window.noted.load.note($(@).attr("data-id"))
 
 		$('body').on "click", "#deleteNotebook", ->
@@ -425,8 +425,13 @@ window.noted =
 			# Append the string to the dom (perf matters.)
 			$("#notebooks ul").html(htmlstr)
 
-		notes: (list, type) ->
+		notes: (list) ->
 			window.noted.currentList = list
+
+			# Dom update
+			$("#noteControls").addClass("disabled")
+			$("#notebooks li.selected").removeClass "selected"
+			$("#notebooks li[data-id=" + list + "]").addClass "selected"
 
 			# Templates :)
 			template = handlebars.compile($("#note-template").html())
@@ -469,6 +474,11 @@ window.noted =
 
 		note: (id) ->
 			window.noted.currentNote = id
+
+			$("#noteControls").removeClass("disabled")
+			$("#notes .selected").removeClass("selected")
+			$("#notes li[data-id=" + id + "]").addClass("selected")
+
 			data = window.noted.db.readNote(id)
 
 			$('.headerwrap .left h1').text(data.name)

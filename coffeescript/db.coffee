@@ -126,13 +126,16 @@ class noteddb
 			if file.match(id) and file.substr(33,6) is ".noted" or id is "all" and file.substr(33,6) is ".noted"
 				filename = file.substr(17, 16)
 				if names
-					contents = JSON.parse(fs.readFileSync(path.join(@notebookdir, file)))
-					notebook.contents.push {
-						id: filename
-						name: contents.name
-						info: contents.content.substring(0,100)
-						date: parseInt(contents.date)
-					}
+					try
+						contents = JSON.parse(fs.readFileSync(path.join(@notebookdir, file)))
+						notebook.contents.push {
+							id: filename
+							name: contents.name
+							info: contents.content.substring(0,100)
+							date: parseInt(contents.date)
+						}
+					catch e
+						# node-webkit/noted fucks itself if there's a parse error.
 				else
 					notebook.contents.push filename
 
@@ -145,7 +148,12 @@ class noteddb
 	###
 	readNote: (id) ->
 		note = fs.readFileSync(path.join(@notebookdir, @filenameNote(id)))
-		JSON.parse note.toString()
+		try
+			JSON.parse note.toString()
+		catch e
+			# return nothing
+			"error in file."
+
 
 	###
 	# Update Notebook Metadata

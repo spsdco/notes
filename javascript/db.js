@@ -165,13 +165,17 @@
         if (file.match(id) && file.substr(33, 6) === ".noted" || id === "all" && file.substr(33, 6) === ".noted") {
           filename = file.substr(17, 16);
           if (names) {
-            contents = JSON.parse(fs.readFileSync(path.join(_this.notebookdir, file)));
-            return notebook.contents.push({
-              id: filename,
-              name: contents.name,
-              info: contents.content.substring(0, 100),
-              date: parseInt(contents.date)
-            });
+            try {
+              contents = JSON.parse(fs.readFileSync(path.join(_this.notebookdir, file)));
+              return notebook.contents.push({
+                id: filename,
+                name: contents.name,
+                info: contents.content.substring(0, 100),
+                date: parseInt(contents.date)
+              });
+            } catch (e) {
+
+            }
           } else {
             return notebook.contents.push(filename);
           }
@@ -190,7 +194,11 @@
     noteddb.prototype.readNote = function(id) {
       var note;
       note = fs.readFileSync(path.join(this.notebookdir, this.filenameNote(id)));
-      return JSON.parse(note.toString());
+      try {
+        return JSON.parse(note.toString());
+      } catch (e) {
+        return "error in file.";
+      }
     };
 
     /*
