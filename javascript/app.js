@@ -87,13 +87,14 @@
       elem.addClass("spin");
       if (window.noted.db.client) {
         callback = function() {
-          console.log("calling back");
           elem.removeClass("spin");
-          window.noted.load.notebooks();
-          window.noted.load.notes(window.noted.currentList);
-          if (window.noted.currentNote !== "" && window.noted.editor.getReadOnly() === true) {
-            return window.noted.load.note(window.noted.currentNote);
-          }
+          return setTimeout(function() {
+            window.noted.load.notebooks();
+            window.noted.load.notes(window.noted.currentList);
+            if (window.noted.currentNote !== "" && window.noted.editor.getReadOnly() === true) {
+              return window.noted.load.note(window.noted.currentNote);
+            }
+          }, 1000);
         };
         if (window.noted.db.cursor === "") {
           console.log("going for first sync");

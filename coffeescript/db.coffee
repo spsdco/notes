@@ -1,6 +1,5 @@
 fs = require 'fs'
 path = require 'path'
-Q = require 'q'
 
 class noteddb
 	constructor: (@notebookdir, @client, @queue, @cursor) ->

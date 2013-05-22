@@ -60,16 +60,20 @@ window.noted =
 
 		# if we have the client info i.e we can actually sync
 		if window.noted.db.client
-			# define callback here
-			callback = ->
-				console.log "calling back"
-				elem.removeClass("spin")
-				window.noted.load.notebooks()
-				window.noted.load.notes(window.noted.currentList)
 
-				# Load current note if not in edit mode.
-				if window.noted.currentNote isnt "" and window.noted.editor.getReadOnly() is true
-					window.noted.load.note(window.noted.currentNote)
+			# define callback here
+			# TODO: REFACTOR TO USE PROMISES.
+			callback = ->
+				elem.removeClass("spin")
+
+				setTimeout ->
+					window.noted.load.notebooks()
+					window.noted.load.notes(window.noted.currentList)
+
+					# Load current note if not in edit mode.
+					if window.noted.currentNote isnt "" and window.noted.editor.getReadOnly() is true
+						window.noted.load.note(window.noted.currentNote)
+				, 1000
 
 			if window.noted.db.cursor is ""
 				console.log "going for first sync"
