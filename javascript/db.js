@@ -386,7 +386,8 @@
             this.client["delete"](file, filecallback);
           }
         }
-        if (this.queueArr.length === 0) {
+        if (Object.keys(this.queueArr).length === 0) {
+          console.log("nothing to sync");
           window.localStorage.setItem("queue", "{}");
           if (callback) {
             return callback();

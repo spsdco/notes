@@ -57,16 +57,20 @@ window.noted =
 	auth: ->
 		elem = $("#sync")
 		elem.addClass("spin")
+
 		# if we have the client info i.e we can actually sync
 		if window.noted.db.client
+			# define callback here
+			callback = ->
+				elem.removeClass("spin")
+				console.log "calling back"
+
 			if window.noted.db.cursor is ""
 				console.log "going for first sync"
-				window.noted.db.firstSync ->
-					elem.removeClass("spin")
+				window.noted.db.firstSync callback
 			else
 				console.log "going for queue sync"
-				window.noted.db.syncQueue ->
-					elem.removeClass("spin")
+				window.noted.db.syncQueue callback
 
 		# if there are creds, try get the users info
 		else if window.localStorage.oauth
@@ -386,7 +390,8 @@ window.noted =
 
 			# Makes a pretty Excerpt
 			info = window.noted.editor.getValue()
-			if info > 90
+			if info.length > 90
+				info = info.substring(0, 100)
 				lastIndex = info.lastIndexOf(" ")
 				info = info.substring(0, lastIndex) + "&hellip;"
 
@@ -400,7 +405,7 @@ window.noted =
 				.text(info)
 				.parent()
 				.find("time")
-				.text("Today")
+				.text("Today -")
 
 			window.noted.db.updateNote window.noted.currentNote, {
 					name: text

@@ -82,20 +82,20 @@
     currentList: "all",
     currentNote: "",
     auth: function() {
-      var elem;
+      var callback, elem;
       elem = $("#sync");
       elem.addClass("spin");
       if (window.noted.db.client) {
+        callback = function() {
+          elem.removeClass("spin");
+          return console.log("calling back");
+        };
         if (window.noted.db.cursor === "") {
           console.log("going for first sync");
-          return window.noted.db.firstSync(function() {
-            return elem.removeClass("spin");
-          });
+          return window.noted.db.firstSync(callback);
         } else {
           console.log("going for queue sync");
-          return window.noted.db.syncQueue(function() {
-            return elem.removeClass("spin");
-          });
+          return window.noted.db.syncQueue(callback);
         }
       } else if (window.localStorage.oauth) {
         window.client.oauth = new Dropbox.Oauth(JSON.parse(localStorage.oauth));
@@ -406,13 +406,14 @@
           text = "Untitled Note";
         }
         info = window.noted.editor.getValue();
-        if (info > 90) {
+        if (info.length > 90) {
+          info = info.substring(0, 100);
           lastIndex = info.lastIndexOf(" ");
           info = info.substring(0, lastIndex) + "&hellip;";
         }
         info = $(marked(info)).text();
         console.log(info);
-        $("#notes [data-id=" + window.noted.currentNote + "]").find("span").text(info).parent().find("time").text("Today");
+        $("#notes [data-id=" + window.noted.currentNote + "]").find("span").text(info).parent().find("time").text("Today -");
         return window.noted.db.updateNote(window.noted.currentNote, {
           name: text,
           content: window.noted.editor.getValue(),

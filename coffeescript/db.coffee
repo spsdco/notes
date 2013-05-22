@@ -324,7 +324,8 @@ class noteddb
 					@client.delete file, filecallback
 
 			# Runs callback if there is nothing to sync
-			if @queueArr.length is 0
+			if Object.keys(@queueArr).length is 0
+				console.log "nothing to sync"
 				window.localStorage.setItem("queue", "{}")
 				callback() if callback
 
