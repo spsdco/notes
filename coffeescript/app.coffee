@@ -287,7 +287,11 @@ window.noted =
 			$('.modal.renameNotebook input').val(name).focus()
 
 		$("#content .edit").click ->
-			window.noted.save()
+			# Only runs save if it's the save button
+			if window.noted.editor.getReadOnly() is false
+				window.noted.save()
+				clearTimeout(noted.editor.timer)
+
 			window.noted.editMode()
 
 		$("body").on "click", ".editorbuttons button", ->
@@ -416,6 +420,9 @@ window.noted =
 					content: window.noted.editor.getValue()
 					notebook: window.noted.db.readNote(window.noted.currentNote).notebook
 				}
+
+			# Updates Dropbox, if connected
+			window.noted.auth() if window.localStorage.oauth
 
 	load:
 		notebooks: ->

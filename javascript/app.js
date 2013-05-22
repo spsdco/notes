@@ -309,7 +309,10 @@
         return $('.modal.renameNotebook input').val(name).focus();
       });
       $("#content .edit").click(function() {
-        window.noted.save();
+        if (window.noted.editor.getReadOnly() === false) {
+          window.noted.save();
+          clearTimeout(noted.editor.timer);
+        }
         return window.noted.editMode();
       });
       return $("body").on("click", ".editorbuttons button", function() {
@@ -415,11 +418,14 @@
         info = $(marked(info)).text();
         console.log(info);
         $("#notes [data-id=" + window.noted.currentNote + "]").find("span").text(info).parent().find("time").text("Today -");
-        return window.noted.db.updateNote(window.noted.currentNote, {
+        window.noted.db.updateNote(window.noted.currentNote, {
           name: text,
           content: window.noted.editor.getValue(),
           notebook: window.noted.db.readNote(window.noted.currentNote).notebook
         });
+        if (window.localStorage.oauth) {
+          return window.noted.auth();
+        }
       }
     },
     load: {
