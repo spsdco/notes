@@ -752,7 +752,30 @@ body.resizing { cursor: ew-resize; }
 		}
 	}
 
+	.about-container {
+		width: 400px;
+		margin-left: -228px;
+		padding: 25px;
+		text-align: center;
+		font-size: 16px;
+		color: #222;
+		border: 3px solid $purple;
 
+		input {
+			font-size: 18px;
+			border: 2px solid $purple;
+			padding: 5px 10px;
+			outline: 0;
+		}
+
+		button.special, a.special {
+			border: 2px solid $purple;
+
+			&:active {
+				background: $purple;
+			}
+		}
+	}
 
 	span {
 		display: inline-block;

@@ -1002,6 +1002,23 @@ body.resizing {
       border: 2px solid #522453; }
       .modal .rename-container button.special:active, .modal .rename-container a.special:active {
         background: #522453; }
+  .modal .about-container {
+    width: 400px;
+    margin-left: -228px;
+    padding: 25px;
+    text-align: center;
+    font-size: 16px;
+    color: #222;
+    border: 3px solid #522453; }
+    .modal .about-container input {
+      font-size: 18px;
+      border: 2px solid #522453;
+      padding: 5px 10px;
+      outline: 0; }
+    .modal .about-container button.special, .modal .about-container a.special {
+      border: 2px solid #522453; }
+      .modal .about-container button.special:active, .modal .about-container a.special:active {
+        background: #522453; }
   .modal span {
     display: inline-block;
     margin: 5px 0; }

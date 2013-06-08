@@ -149,6 +149,56 @@
       return window.noted.initUI();
     },
     initUI: function() {
+      var about, del_note, email_note, help_menu, help_menuitem, new_note, notes_menu, notes_menuitem;
+      gui.Window.get().menu = new gui.Menu({
+        type: 'menubar'
+      });
+      notes_menuitem = new gui.MenuItem({
+        label: "Noted"
+      });
+      help_menuitem = new gui.MenuItem({
+        label: "Help"
+      });
+      gui.Window.get().menu.append(notes_menuitem);
+      gui.Window.get().menu.append(help_menuitem);
+      notes_menu = new gui.Menu();
+      help_menu = new gui.Menu();
+      notes_menuitem.submenu = notes_menu;
+      help_menuitem.submenu = help_menu;
+      new_note = new gui.MenuItem({
+        label: 'New'
+      });
+      email_note = new gui.MenuItem({
+        label: 'Email Note'
+      });
+      del_note = new gui.MenuItem({
+        label: 'Delete'
+      });
+      about = new gui.MenuItem({
+        label: 'About Noted'
+      });
+      notes_menu.append(new_note);
+      notes_menu.append(email_note);
+      notes_menu.append(del_note);
+      help_menu.append(about);
+      new_note.click = function() {
+        if (window.noted.currentList !== "all") {
+          window.noted.db.createNote("Untitled Note", window.noted.currentList, "# This is your new blank note\n\nAdd some content!");
+          window.noted.load.notes(window.noted.currentList);
+          return $("#notes ul li:first").addClass("edit").trigger("click");
+        }
+      };
+      email_note.click = function() {
+        var mailto;
+        mailto = "mailto:?subject=" + encodeURI(window.noted.currentNote) + "&body=" + encodeURI(window.noted.editor.getValue());
+        return $("#emailNote").parent().attr("href", mailto);
+      };
+      del_note.click = function() {
+        return $('.modal.delete').modal();
+      };
+      about.click = function() {
+        return $('.modal.about').modal();
+      };
       $("#sync").removeClass("spin");
       Splitter.init({
         parent: $('#parent')[0],
@@ -246,6 +296,9 @@
       });
       $(".modal.deleteNotebook .false").click(function() {
         return $(".modal.deleteNotebook").modal("hide");
+      });
+      $(".modal.about .false").click(function() {
+        return $(".modal.about").modal("hide");
       });
       $(".modal.renameNotebook .false").click(function() {
         return $(".modal.renameNotebook").modal("hide");

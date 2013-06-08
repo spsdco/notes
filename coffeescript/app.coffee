@@ -133,6 +133,51 @@ window.noted =
 		window.noted.initUI()
 
 	initUI: ->
+		# Noted menu/app bar
+		# Mac support
+		gui.Window.get().menu = new gui.Menu({type: 'menubar'})
+		
+		notes_menuitem = new gui.MenuItem({label: "Noted"})
+		help_menuitem = new gui.MenuItem({label: "Help"})
+		
+		gui.Window.get().menu.append(notes_menuitem)
+		gui.Window.get().menu.append(help_menuitem)
+
+		notes_menu = new gui.Menu()
+		help_menu = new gui.Menu()
+
+		notes_menuitem.submenu = notes_menu
+		help_menuitem.submenu = help_menu
+
+		new_note = new gui.MenuItem({label: 'New'})
+		email_note = new gui.MenuItem({label: 'Email Note'})
+		del_note = new gui.MenuItem({label: 'Delete'})
+
+		about = new gui.MenuItem({label: 'About Noted'})
+
+		notes_menu.append(new_note)
+		notes_menu.append(email_note)
+		notes_menu.append(del_note)
+
+		help_menu.append(about)
+
+		new_note.click = ->
+			if window.noted.currentList isnt "all"
+				window.noted.db.createNote("Untitled Note", window.noted.currentList, "# This is your new blank note\n\nAdd some content!")
+				window.noted.load.notes(window.noted.currentList)
+
+				$("#notes ul li:first").addClass("edit").trigger "click"
+
+		email_note.click = ->
+			mailto = "mailto:?subject=" + encodeURI(window.noted.currentNote) + "&body=" + encodeURI(window.noted.editor.getValue())
+			$("#emailNote").parent().attr("href", mailto)
+
+		del_note.click = ->
+			$('.modal.delete').modal()
+
+		about.click = ->
+			$('.modal.about').modal()
+
 		# Because threading issues in node-webkit
 		$("#sync").removeClass("spin")
 
@@ -226,6 +271,9 @@ window.noted =
 
 		$(".modal.deleteNotebook .false").click ->
 			$(".modal.deleteNotebook").modal "hide"
+
+		$(".modal.about .false").click ->
+			$(".modal.about").modal "hide"
 
 		$(".modal.renameNotebook .false").click ->
 			$(".modal.renameNotebook").modal "hide"
