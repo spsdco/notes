@@ -224,15 +224,14 @@ class noteddb
 	# @return {Object} results The results of the query
 	###
 	search: (query) ->
+		results = []
 		files = fs.readdirSync @notebookdir
 		files.forEach (file) =>
-			if file.match("^."+query+".$") and file.substr(16,5) isnt ".json"
-				id = file.substr(17, 16)
-				md = fs.readFileSync(path.join(@notebookdir, id+"."+filename+".noted"))
-				results.push {
-					'id': id,
-					'name': md.name
-				}
+			id = file.substr(17, 16)
+			if id isnt "json"
+				notedata = @readNote(file.substr(17, 16))
+				if notedata.name.match(query) or notedata.content.match(query)
+					results.push notedata
 
 		return results
 

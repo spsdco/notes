@@ -349,6 +349,34 @@
           return $("#notes [data-id='" + window.noted.currentNote + "']").find("h2").text(name);
         }
       });
+      $("body").on("keydown", "#search", function(e) {
+        if (e.keyCode === 13 && $(this).text() !== "") {
+          return e.preventDefault();
+        }
+      });
+      $("body").on("keyup change", "#search", function() {
+        var htmlstr, query, results, template,
+          _this = this;
+        query = $('#panel #search input').val();
+        if (query !== "") {
+          template = handlebars.compile($("#note-template").html());
+          htmlstr = "";
+          window.noted.deselect();
+          window.noted.load.notes("all");
+          $('#notes ul').html();
+          results = window.noted.db.search(query);
+          results.forEach(function(note) {
+            htmlstr = template({
+              id: note.id,
+              name: note.name,
+              date: window.noted.util.date(note.date),
+              excerpt: note.content.substring(0, 100)
+            }) + htmlstr;
+            return console.log(note.date);
+          });
+          return $('#notes ul').html(htmlstr);
+        }
+      });
       $('body').on("click", "#notes li", function() {
         return window.noted.load.note($(this).attr("data-id"));
       });

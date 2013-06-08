@@ -270,18 +270,18 @@
 
 
     noteddb.prototype.search = function(query) {
-      var files,
+      var files, results,
         _this = this;
+      results = [];
       files = fs.readdirSync(this.notebookdir);
       files.forEach(function(file) {
-        var id, md;
-        if (file.match("^." + query + ".$") && file.substr(16, 5) !== ".json") {
-          id = file.substr(17, 16);
-          md = fs.readFileSync(path.join(_this.notebookdir, id + "." + filename + ".noted"));
-          return results.push({
-            'id': id,
-            'name': md.name
-          });
+        var id, notedata;
+        id = file.substr(17, 16);
+        if (id !== "json") {
+          notedata = _this.readNote(file.substr(17, 16));
+          if (notedata.name.match(query) || notedata.content.match(query)) {
+            return results.push(notedata);
+          }
         }
       });
       return results;
