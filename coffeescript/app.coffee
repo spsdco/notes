@@ -2,18 +2,110 @@ global.document		= document
 gui = global.gui	= require 'nw.gui'
 buffer 				= require 'buffer'
 path 				= require 'path'
+net 				= require 'net'
 ncp 				= require('ncp').ncp
 util 				= require 'util'
 global.jQuery = $	= require 'jQuery'
 Dropbox 			= require 'dropbox'
 handlebars			= require 'handlebars'
 marked				= require 'marked'
+http				= require 'http'
 S					= require 'string'
 db 					= require './javascript/db'
 Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
+
+isOpen = (port, host, callback) ->
+  isOpen = false
+  executed = false
+  onClose = ->
+    return  if executed
+    exectued = true
+    clearTimeout timeoutId
+    delete conn
+
+    callback isOpen, port, host
+
+  onOpen = ->
+    isOpen = true
+    conn.end()
+
+  timeoutId = setTimeout(->
+    conn.destroy()
+  , 400)
+  conn = net.createConnection(port, host, onOpen)
+  conn.on "close", ->
+    onClose()  unless executed
+
+  conn.on "error", ->
+    conn.end()
+
+  conn.on "connect", onOpen
+
+
+class NodeWebkitDriver
+  # @param {?Object} options one or more of the options below
+  # @option options {Number} port the number of the TCP port that will receive
+  #   HTTP requests
+  constructor: (options) ->
+    @port = options?.port or 8912
+
+    @callbacks = {}
+    @nodeUrl = require 'url'
+    @createApp()
+
+  # URL to the node.js OAuth callback handler.
+  url: (token) ->
+    "http://localhost:#{@port}/oauth_callback?dboauth_token=" +
+        encodeURIComponent(token)
+
+  # Opens the token
+  doAuthorize: (authUrl, token, tokenSecret, callback) ->
+    @callbacks[token] = callback
+    gui.Shell.openExternal authUrl
+
+  # Creates and starts up an HTTP server that will intercept the redirect.
+  createApp: ->
+    @app = http.createServer (request, response) =>
+      @doRequest request, response
+    @app.listen @port
+
+  # Shuts down the HTTP server.
+  # The driver will become unusable after this call.
+  closeServer: ->
+    @app.close()
+
+  # Reads out an /authorize callback.
+  doRequest: (request, response) ->
+    url = @nodeUrl.parse request.url, true
+    if url.pathname is '/oauth_callback'
+      if url.query.not_approved is 'true'
+        rejected = true
+        token = url.query.dboauth_token
+      else
+        rejected = false
+        token = url.query.oauth_token
+      if @callbacks[token]
+        @callbacks[token](rejected)
+        delete @callbacks[token]
+    data = ''
+    request.on 'data', (dataFragment) -> data += dataFragment
+    request.on 'end', =>
+      @closeBrowser response
+
+  # Renders a response that will close the browser window used for OAuth.
+  closeBrowser: (response) ->
+    closeHtml = """
+                <!doctype html>
+                <p>Please close this window and go back to Noted.</p>
+                """
+    response.writeHead(200,
+      {'Content-Length': closeHtml.length, 'Content-Type': 'text/html' })
+    response.write closeHtml
+    response.end()
+
 
 # Accepts a jQuery Selector
 class jonoeditor
@@ -64,6 +156,7 @@ window.noted =
 			# define callback here
 			# TODO: REFACTOR TO USE PROMISES.
 			callback = ->
+				console.log "sync done"
 				elem.removeClass("spin")
 
 				setTimeout ->
@@ -73,7 +166,7 @@ window.noted =
 					# Load current note if not in edit mode.
 					if window.noted.currentNote isnt "" and window.noted.editor.getReadOnly() is true
 						window.noted.load.note(window.noted.currentNote)
-				, 1000
+				, 2500
 
 			if window.noted.db.cursor is ""
 				console.log "going for first sync"
@@ -123,11 +216,14 @@ window.noted =
 		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue", window.localStorage.cursor)
 
 		# Setup Dropbox
-		window.client = new Dropbox.Client {
+		window.client = new Dropbox.Client
 			key: "GCLhKiJJwJA=|5dgkjE/gvYMv09OgvUpzN1UoNir+CfgY36WwMeNnmQ==",
 			sandbox: true
-		}
-		window.client.authDriver(new Dropbox.Drivers.NodeServer(8191))
+
+		isOpen (Math.round(Math.random() * 48120) + 1024).toString(), "127.0.0.1", (isportopen, port, host) =>
+			# Eh, there's a pretty high chance that this will work.
+			port = (Math.round(Math.random() * 48120) + 1024) if isportopen
+			window.client.authDriver(new NodeWebkitDriver(port))
 
 		# Pass control onto the initUI function.
 		window.noted.initUI()
@@ -136,10 +232,10 @@ window.noted =
 		# Noted menu/app bar
 		# Mac support
 		gui.Window.get().menu = new gui.Menu({type: 'menubar'})
-		
+
 		notes_menuitem = new gui.MenuItem({label: "Noted"})
 		help_menuitem = new gui.MenuItem({label: "Help"})
-		
+
 		gui.Window.get().menu.append(notes_menuitem)
 		gui.Window.get().menu.append(help_menuitem)
 
@@ -337,7 +433,7 @@ window.noted =
 				window.noted.deselect()
 				window.noted.load.notes("all")
 				$('#notes ul').html()
-				results = window.noted.db.search(query)				
+				results = window.noted.db.search(query)
 				results.forEach (note) =>
 					htmlstr = template({
 						id: note.id
