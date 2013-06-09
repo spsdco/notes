@@ -7,10 +7,7 @@ class noteddb
 		@client ?= no
 		@cursor ?= no
 
-		fs.exists @notebookdir, (exists) =>
-			if exists is false
-				fs.mkdir @notebookdir, (err) =>
-					console.war(err) if err
+		fs.mkdirSync(@notebookdir) if fs.existsSync(@notebookdir) is false
 
 		@queueArr = JSON.parse(window.localStorage.getItem(@queue))
 
