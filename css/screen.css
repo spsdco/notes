@@ -865,7 +865,7 @@ body.resizing {
     padding: 0 0 0 20px; }
   #contentread hr {
     border: 0;
-    border-top: 1px solid #cccccc;
+    border-top: 1px solid#ccc;
     margin: 2em 0; }
   #contentread p {
     margin-top: 0.4em; }
@@ -1002,23 +1002,16 @@ body.resizing {
       border: 2px solid #522453; }
       .modal .rename-container button.special:active, .modal .rename-container a.special:active {
         background: #522453; }
-  .modal .about-container {
+  .modal .error-container {
     width: 400px;
     margin-left: -228px;
     padding: 25px;
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     color: #222;
-    border: 3px solid #522453; }
-    .modal .about-container input {
-      font-size: 18px;
-      border: 2px solid #522453;
-      padding: 5px 10px;
-      outline: 0; }
-    .modal .about-container button.special, .modal .about-container a.special {
-      border: 2px solid #522453; }
-      .modal .about-container button.special:active, .modal .about-container a.special:active {
-        background: #522453; }
+    border: 3px solid #e15556;
+    font-family: "Ubuntu Light", "Ubuntu";
+    font-weight: 300; }
   .modal span {
     display: inline-block;
     margin: 5px 0; }

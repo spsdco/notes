@@ -155,7 +155,10 @@ window.noted =
 
 			# define callback here
 			# TODO: REFACTOR TO USE PROMISES.
-			callback = ->
+			callback = (err) ->
+				if err
+					return window.noted.util.err()
+
 				console.log "sync done"
 				elem.removeClass("spin")
 
@@ -178,10 +181,10 @@ window.noted =
 		# if there are creds, try get the users info
 		else if window.localStorage.oauth
 			window.client.oauth = new Dropbox.Oauth JSON.parse(localStorage.oauth)
-			window.client.getUserInfo (err, info) ->
+			window.client.getUserInfo (err) ->
 				if err
 					localStorage.removeItem "oauth"
-					return console.warn(error)
+					return window.noted.util.err()
 
 				# If we get to here, the user is successfully authed!
 				window.noted.db.client = window.client
@@ -190,8 +193,10 @@ window.noted =
 				window.noted.auth()
 		else
 			elem.removeClass("spin")
-			window.client.authenticate (error, client) ->
-				return console.warn(error) if error
+			window.client.authenticate (err, client) ->
+				if err
+					client.reset()
+					return window.noted.util.err()
 				localStorage.oauth = JSON.stringify(client.oauth)
 
 				# Get users info
@@ -304,7 +309,7 @@ window.noted =
 				window.noted.db.deleteNote(window.noted.currentNote)
 				window.noted.deselect()
 
-		$(".modal.delete .false").click ->
+		$(".modal.delete").click ->
 			$(".modal.delete").modal "hide"
 
 		$(".modal.deleteNotebook .true").click ->
@@ -323,8 +328,8 @@ window.noted =
 		$(".modal.deleteNotebook .false").click ->
 			$(".modal.deleteNotebook").modal "hide"
 
-		$(".modal.about .false").click ->
-			$(".modal.about").modal "hide"
+		$(".modal.error .false").click ->
+			$(".modal.error").modal "hide"
 
 		$(".modal.renameNotebook .false").click ->
 			$(".modal.renameNotebook").modal "hide"
@@ -680,6 +685,10 @@ window.noted =
 				words = window.noted.util.pad(date.getFullYear())+"-"+(window.noted.util.pad(date.getMonth()+1))+"-"+window.noted.util.pad(date.getDate())
 
 			words #return
+
+		err: ->
+			$(".modal.error").modal("show")
+			$("#sync").removeClass("spin")
 
 		pad: (n) ->
 			# pad a single-digit number to a 2-digit number for things such as times or dates.

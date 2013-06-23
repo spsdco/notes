@@ -278,7 +278,9 @@ class noteddb
 	# Run when user first connects to Dropbox
 	###
 	firstSync: (callback) ->
-		@syncDelta ->
+		@syncDelta (err) ->
+			callback(err) if err && callback
+
 			files = fs.readdirSync @notebookdir
 			opcount = 0 - files.length
 
@@ -301,7 +303,9 @@ class noteddb
 	# Sync the current queue with Dropbox
 	###
 	syncQueue: (callback) ->
-		@syncDelta ->
+		@syncDelta (err) ->
+			callback(err) if err && callback
+
 			opcount = 0 - Object.keys(@queueArr).length
 
 			# Just define the callback here cause #yolo
@@ -340,6 +344,9 @@ class noteddb
 	syncDelta: (callback) ->
 		@callback = callback
 		@client.delta @cursor, (err, data) =>
+			if err
+				return @callback(err)
+
 			console.log(data)
 			data.changes.forEach (file) =>
 				console.log(file)
