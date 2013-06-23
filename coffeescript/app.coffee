@@ -3,7 +3,6 @@ gui = global.gui	= require 'nw.gui'
 buffer 				= require 'buffer'
 path 				= require 'path'
 net 				= require 'net'
-ncp 				= require('ncp').ncp
 util 				= require 'util'
 global.jQuery = $	= require 'jQuery'
 Dropbox 			= require 'dropbox'

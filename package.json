@@ -18,7 +18,6 @@
     "plugin": false
   },
   "dependencies": {
-    "ncp": "0.2.x",
     "jQuery": "1.7.x",
     "marked": "0.2.x",
     "handlebars": "1.0.x",
