@@ -146,6 +146,13 @@ class noteddb
 				else
 					notebook.contents.push filename
 
+		if names
+			notebook.contents.sort (a,b) ->
+				console.log(a, b)
+				return -1 if a.date < b.date
+				return 1 if a.date > b.date
+				return 0
+
 		return notebook
 
 	###
