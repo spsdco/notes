@@ -566,6 +566,11 @@ window.noted =
 		notes: (list) ->
 			window.noted.currentList = list
 
+			if list is "all"
+				$("#noteControls").addClass("all")
+			else
+				$("#noteControls").removeClass("all")
+
 			# Dom update
 			$("#noteControls").addClass("disabled")
 			$("#notebooks li.selected").removeClass "selected"

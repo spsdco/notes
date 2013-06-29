@@ -594,6 +594,11 @@
       notes: function(list) {
         var data, htmlstr, note, order, template, _i, _len;
         window.noted.currentList = list;
+        if (list === "all") {
+          $("#noteControls").addClass("all");
+        } else {
+          $("#noteControls").removeClass("all");
+        }
         $("#noteControls").addClass("disabled");
         $("#notebooks li.selected").removeClass("selected");
         $("#notebooks li[data-id=" + list + "]").addClass("selected");

@@ -483,6 +483,8 @@ body.resizing {
   padding: 5px 0px 5px 4px;
   top: 0;
   border-right: 1px solid #444; }
+  #noteControls.all #new {
+    opacity: 0.35; }
   #noteControls.disabled #share, #noteControls.disabled #del {
     opacity: 0.35; }
   #noteControls img {

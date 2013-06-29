@@ -75,6 +75,12 @@ body.resizing { cursor: ew-resize; }
 	top: 0;
 	border-right: 1px solid #444;
 
+	&.all {
+		#new {
+			opacity: 0.35;
+		}
+	}
+
 	&.disabled {
 		#share, #del {
 			opacity: 0.35;
