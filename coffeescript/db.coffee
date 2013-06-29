@@ -107,6 +107,12 @@ class noteddb
 				else
 					notebooks.push file.substr(0,16)
 
+		if names
+			notebooks.sort (a,b) ->
+				return -1 if a.name < b.name
+				return 1 if a.name > b.name
+				return 0
+
 		return notebooks
 
 	###

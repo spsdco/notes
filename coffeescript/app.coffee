@@ -557,11 +557,6 @@ window.noted =
 			htmlstr = template({name: "All Notes", id: "all"})
 
 			arr = window.noted.db.readNotebooks(true)
-			arr.sort (a,b) ->
-				return -1 if a.name < b.name
-				return 1 if a.name > b.name
-				return 0
-
 			arr.forEach (notebook) ->
 				htmlstr += template {name: notebook.name, id: notebook.id}
 
