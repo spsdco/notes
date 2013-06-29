@@ -583,6 +583,15 @@
           id: "all"
         });
         arr = window.noted.db.readNotebooks(true);
+        arr.sort(function(a, b) {
+          if (a.name < b.name) {
+            return -1;
+          }
+          if (a.name > b.name) {
+            return 1;
+          }
+          return 0;
+        });
         arr.forEach(function(notebook) {
           return htmlstr += template({
             name: notebook.name,
