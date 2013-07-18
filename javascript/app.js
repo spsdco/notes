@@ -462,6 +462,11 @@
         }
         return window.noted.editMode();
       });
+      $(".tabs ul").click(function(e) {
+        $(this).find(".current").removeClass("current");
+        $(".preferences-container .container").find(".current").removeClass("current");
+        return $(".preferences-container .container").find("div." + $(e.target).addClass("current").attr("data-id")).addClass("current");
+      });
       return $("body").on("click", ".editorbuttons button", function() {
         return window.noted.editorAction($(this).attr('data-action'));
       });

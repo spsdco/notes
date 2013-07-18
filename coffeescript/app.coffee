@@ -422,6 +422,11 @@ window.noted =
 
 			window.noted.editMode()
 
+		$(".tabs ul").click (e) ->
+			$(@).find(".current").removeClass "current"
+			$(".preferences-container .container").find(".current").removeClass "current"
+			$(".preferences-container .container").find("div."+$(e.target).addClass("current").attr("data-id")).addClass("current") # Yes, this is shitty. Fuck me, right?
+
 		$("body").on "click", ".editorbuttons button", ->
 			window.noted.editorAction $(@).attr('data-action')
 
