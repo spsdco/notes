@@ -276,6 +276,7 @@
       }
     },
     initUI: function() {
+      var resize;
       $("#sync").removeClass("spin");
       Splitter.init({
         parent: $('#parent')[0],
@@ -306,7 +307,7 @@
       window.noted.load.notebooks();
       window.noted.load.notes("all");
       window.noted.editor = new jonoeditor($("#contentwrite"));
-      $("#contentread").on("click", "a", function(e) {
+      $("#contentread, .preferences-container").on("click", "a", function(e) {
         e.preventDefault();
         return gui.Shell.openExternal($(this).attr("href"));
       });
@@ -498,13 +499,22 @@
         }
         return window.noted.editMode();
       });
-      $(".tabs ul").click(function(e) {
-        $(this).find(".current").removeClass("current");
+      $(".tabs li").click(function(e) {
+        $(this).parent().find(".current").removeClass("current");
         $(".preferences-container .container").find(".current").removeClass("current");
         return $(".preferences-container .container").find("div." + $(e.target).addClass("current").attr("data-id")).addClass("current");
       });
-      return $("body").on("click", ".editorbuttons button", function() {
+      $("body").on("click", ".editorbuttons button", function() {
         return window.noted.editorAction($(this).attr('data-action'));
+      });
+      resize = function() {
+        return $("#noteControls").width($("#notes").width() - 4).css("left", $("#notebooks").width());
+      };
+      $(".splitter.split-right").on("mouseup", function() {
+        return resize();
+      });
+      return $(window).resize(function() {
+        return resize();
       });
     },
     editorAction: function(action) {

@@ -33,6 +33,11 @@ body.resizing { cursor: ew-resize; }
 
 .drag {
 	-webkit-app-region: drag;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default !important;
 }
 
 #notebooks, #panel, #notes {
@@ -44,6 +49,7 @@ body.resizing { cursor: ew-resize; }
 	-moz-user-drag: none;
 	-ms-user-drag: none;
 	user-drag: none;
+	cursor: default !important;
 }
 
 #panel {
@@ -80,6 +86,10 @@ body.resizing { cursor: ew-resize; }
 		#new {
 			opacity: 0.35;
 		}
+	}
+
+	#share {
+		display: none;
 	}
 
 	&.disabled {
@@ -715,6 +725,8 @@ body.resizing { cursor: ew-resize; }
 		//-webkit-transform: scale(0.75) translate3d(0, 0, 0);
 		background: #fff;
 		font-size: 16px;
+		background: -webkit-linear-gradient(bottom, #fff, #fcfcfc);
+		box-shadow: 0 1px 15px rgba(0,0,0,0.2);
 	}
 
 	.delete-container {
@@ -779,8 +791,8 @@ body.resizing { cursor: ew-resize; }
 		display: inline-block;
 		text-decoration: none;
 		border: 2px solid $red-color;
-		background: #fff;
-		font-size: 16px;
+		background: transparent;
+		font-size: 14px;
 		color: #222;
 		margin-top: 15px;
 		padding: 8px 15px;
@@ -799,7 +811,7 @@ body.resizing { cursor: ew-resize; }
 	margin-left: -228px;
 	text-align: center;
 	font-size: 16px;
-	color: #222;
+	color: #333;
 	border: 2px solid $nephritis;
 	font-weight: 300;
 	font-family: $light-font;
@@ -822,7 +834,6 @@ body.resizing { cursor: ew-resize; }
 			font-weight: bold;
 			color: #444;
 			cursor: default;
-			background: white;
 
 			&:active {
 				color: darken($nephritis,15%);
@@ -835,8 +846,27 @@ body.resizing { cursor: ew-resize; }
 		}
 	}
 
+	a {
+		color: $purple;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
 	.container {
 		padding: 10px 25px;
+	}
+
+	.signedin, .signedout {
+		padding-bottom: 15px;
+		p {
+			margin: 0;
+		}
+		button {
+			font-size: 13px;
+		}
 	}
 
 	input {

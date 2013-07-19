@@ -279,7 +279,7 @@ window.noted =
 
 		window.noted.editor = new jonoeditor($("#contentwrite"))
 
-		$("#contentread").on "click", "a", (e) ->
+		$("#contentread, .preferences-container").on "click", "a", (e) ->
 			e.preventDefault()
 			gui.Shell.openExternal $(@).attr("href")
 
@@ -465,13 +465,21 @@ window.noted =
 
 			window.noted.editMode()
 
-		$(".tabs ul").click (e) ->
-			$(@).find(".current").removeClass "current"
+		$(".tabs li").click (e) ->
+			$(@).parent().find(".current").removeClass "current"
 			$(".preferences-container .container").find(".current").removeClass "current"
 			$(".preferences-container .container").find("div."+$(e.target).addClass("current").attr("data-id")).addClass("current") # Yes, this is shitty. Fuck me, right?
 
 		$("body").on "click", ".editorbuttons button", ->
 			window.noted.editorAction $(@).attr('data-action')
+
+		resize = ->
+			$("#noteControls").width($("#notes").width()-4).css("left", $("#notebooks").width())
+
+		$(".splitter.split-right").on "mouseup", ->
+			resize()
+		$(window).resize ->
+			resize()
 
 	editorAction: (action) ->
 		# I'm sure that mh0 doesn't know how to code.

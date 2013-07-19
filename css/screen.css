@@ -446,7 +446,12 @@ body.resizing {
   cursor: ew-resize; }
 
 .drag {
-  -webkit-app-region: drag; }
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default !important; }
 
 #notebooks, #panel, #notes {
   -webkit-user-select: none;
@@ -456,7 +461,8 @@ body.resizing {
   -webkit-user-drag: none;
   -moz-user-drag: none;
   -ms-user-drag: none;
-  user-drag: none; }
+  user-drag: none;
+  cursor: default !important; }
 
 #panel {
   width: 100%;
@@ -485,6 +491,8 @@ body.resizing {
   border-right: 1px solid #444; }
   #noteControls.all #new {
     opacity: 0.35; }
+  #noteControls #share {
+    display: none; }
   #noteControls.disabled #share, #noteControls.disabled #del {
     opacity: 0.35; }
   #noteControls img {
@@ -972,7 +980,9 @@ body.resizing {
     top: 15%;
     left: 50%;
     background: #fff;
-    font-size: 16px; }
+    font-size: 16px;
+    background: -webkit-linear-gradient(bottom, white, #fcfcfc);
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.2); }
   .modal .delete-container {
     width: 400px;
     margin-left: -228px;
@@ -1020,8 +1030,8 @@ body.resizing {
     display: inline-block;
     text-decoration: none;
     border: 2px solid #e15556;
-    background: #fff;
-    font-size: 16px;
+    background: transparent;
+    font-size: 14px;
     color: #222;
     margin-top: 15px;
     padding: 8px 15px;
@@ -1036,7 +1046,7 @@ body.resizing {
   margin-left: -228px;
   text-align: center;
   font-size: 16px;
-  color: #222;
+  color: #333;
   border: 2px solid #66be7f;
   font-weight: 300;
   font-family: "Ubuntu Light", "Ubuntu"; }
@@ -1054,15 +1064,25 @@ body.resizing {
       padding: 0 15px;
       font-weight: bold;
       color: #444;
-      cursor: default;
-      background: white; }
+      cursor: default; }
       .preferences-container .tabs li:active {
         color: #409759; }
       .preferences-container .tabs li.current {
         background: #66be7f;
         color: white; }
+  .preferences-container a {
+    color: #522453;
+    text-decoration: none; }
+    .preferences-container a:hover {
+      text-decoration: underline; }
   .preferences-container .container {
     padding: 10px 25px; }
+  .preferences-container .signedin, .preferences-container .signedout {
+    padding-bottom: 15px; }
+    .preferences-container .signedin p, .preferences-container .signedout p {
+      margin: 0; }
+    .preferences-container .signedin button, .preferences-container .signedout button {
+      font-size: 13px; }
   .preferences-container input {
     font-size: 14px;
     border: 2px solid #66be7f;
