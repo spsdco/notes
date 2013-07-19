@@ -1,10 +1,10 @@
-Noted
+Springseed
 ====
 
-Organise your life with easy to use note taking application Noted. Add, edit and remove notes with easy, also sync and share your notes easily with a few clicks.
+Springseed provides easy note taking with Dropbox sync for Ubuntu.
 
 ## How to Use
-Noted uses CoffeeScript. Install CoffeeScript with `npm install -g coffee-script`. Then use `coffee -o javascript/ -cw coffeescript/` to compile it. Noted also uses SASS & Compass. Install Compass with `gem install compass`. Then use `compass watch` to compile it. You also want to get node-webkit and use `npm install .`
+Springseed uses CoffeeScript. Install CoffeeScript with `npm install -g coffee-script`. Then use `coffee -o javascript/ -cw coffeescript/` to compile it. Springseed also uses SASS & Compass. Install Compass with `gem install compass`. Then use `compass watch` to compile it. You also want to get node-webkit and use `npm install .`
 
 You can avoid all this if you just use CodeKit.
 

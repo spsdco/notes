@@ -1,9 +1,9 @@
 {
   "main": "index.html",
-  "name": "Noted",
+  "name": "Springseed",
   "description": "Organise your life with notes.",
   "version": "1.0.0",
-  "keywords": [ "noted", "notes", "planner" ],
+  "keywords": [ "Springseed", "notes", "planner" ],
   "window": {
     "toolbar": false,
     "width": 1200,

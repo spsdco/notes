@@ -126,7 +126,7 @@
 
     NodeWebkitDriver.prototype.closeBrowser = function(response) {
       var closeHtml;
-      closeHtml = "<!doctype html>\n<p>Please close this window and go back to Noted.</p>";
+      closeHtml = "<!doctype html>\n<div style=\"padding: 20px; text-align: center; font-family: 'Ubuntu Light', 'Ubuntu', sans-serif;\">\n<h1 style=\"font-weight:300\">Success!</h1>\n<h2 style=\"font-weight:300\">Please close this window and go back to Springseed.</h2>\n</div>";
       response.writeHead(200, {
         'Content-Length': closeHtml.length,
         'Content-Type': 'text/html'

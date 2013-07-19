@@ -98,7 +98,10 @@ class NodeWebkitDriver
   closeBrowser: (response) ->
     closeHtml = """
                 <!doctype html>
-                <p>Please close this window and go back to Noted.</p>
+                <div style="padding: 20px; text-align: center; font-family: 'Ubuntu Light', 'Ubuntu', sans-serif;">
+                <h1 style="font-weight:300">Success!</h1>
+                <h2 style="font-weight:300">Please close this window and go back to Springseed.</h2>
+                </div>
                 """
     response.writeHead(200,
       {'Content-Length': closeHtml.length, 'Content-Type': 'text/html' })
