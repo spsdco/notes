@@ -265,7 +265,6 @@ body.resizing { cursor: ew-resize; }
 		vertical-align: top;
 		margin: 6px 0 6px 8px;
 		opacity: 0.6;
-		-webkit-animation: spin 1000ms linear 1;
 
 		&.spin {
 			-webkit-animation: spin 1000ms linear infinite;
