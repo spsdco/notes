@@ -16,7 +16,7 @@ modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
 
-isOpen = (port, host, callback) ->
+window.isOpen = (port, host, callback) ->
   isOpen = false
   executed = false
   onClose = ->
@@ -44,7 +44,7 @@ isOpen = (port, host, callback) ->
   conn.on "connect", onOpen
 
 
-class NodeWebkitDriver
+class window.NodeWebkitDriver
   # @param {?Object} options one or more of the options below
   # @option options {Number} port the number of the TCP port that will receive
   #   HTTP requests
@@ -183,10 +183,15 @@ window.noted =
 		# if there are creds, try get the users info
 		else if window.localStorage.oauth
 			window.client.oauth = new Dropbox.Oauth JSON.parse(localStorage.oauth)
-			window.client.getUserInfo (err) ->
+			window.client.getUserInfo (err, info) ->
 				if err
 					localStorage.removeItem "oauth"
 					return window.noted.util.err()
+
+				# Throw their email into the settings
+				$(".signedin .username").text(info.email)
+				$(".signedout").hide()
+				$(".signedin").show()
 
 				# If we get to here, the user is successfully authed!
 				window.noted.db.client = window.client
@@ -223,20 +228,24 @@ window.noted =
 		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue", window.localStorage.cursor)
 
 		# Setup Dropbox
+		window.noted.initDropbox()
+
+		# Pass control onto the initUI function.
+		window.noted.initUI()
+
+	initDropbox: ->
 		window.client = new Dropbox.Client
 			key: "GCLhKiJJwJA=|5dgkjE/gvYMv09OgvUpzN1UoNir+CfgY36WwMeNnmQ==",
 			sandbox: true
 
-		isOpen (Math.round(Math.random() * 48120) + 1024).toString(), "127.0.0.1", (isportopen, port, host) =>
+		window.isOpen (Math.round(Math.random() * 48120) + 1024).toString(), "127.0.0.1", (isportopen, port, host) =>
 			# Eh, there's a pretty high chance that this will work.
 			port = (Math.round(Math.random() * 48120) + 1024) if isportopen
-			window.client.authDriver(new NodeWebkitDriver(port))
+			console.log("using port: " + port)
+			window.client.authDriver(new window.NodeWebkitDriver({port: port}))
 
 		# Sync on Startup
 		window.noted.auth() if window.localStorage.oauth
-
-		# Pass control onto the initUI function.
-		window.noted.initUI()
 
 	initUI: ->
 		# Because threading issues in node-webkit
@@ -282,6 +291,14 @@ window.noted =
 		).mouseleave ->
 			$('#panel').removeClass('drag')
 
+		# Sets up settings
+		if window.localStorage.oauth
+			$(".signedout").hide()
+			$(".signedin").show()
+		else
+			$(".signedout").show()
+			$(".signedin").hide()
+
 		# # Disallows Dragging on Buttons
 		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
 			$('#panel').removeClass('drag')
@@ -302,7 +319,6 @@ window.noted =
 					$(".popover-mask").show()
 					$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
 					mailto = "mailto:?subject=" + encodeURI(window.noted.currentNote) + "&body=" + encodeURI(window.noted.editor.getValue())
-					$("#emailNote").parent().attr("href", mailto)
 
 				else if $(@).attr("id") is "del"
 					$('.modal.delete').modal()
@@ -375,7 +391,25 @@ window.noted =
 			$(".preferences.modal").modal("show")
 
 		$("#sync").click ->
+			if window.localStorage.oauth
+				window.noted.auth()
+			else
+				$(".preferences.modal").modal("show")
+
+		$("#signin").click ->
 			window.noted.auth()
+
+		$("#signout").click ->
+			# This is terrible, but works
+			delete window.client
+			delete window.noted.db.client
+			window.localStorage.removeItem("queue")
+			window.localStorage.removeItem("oauth")
+			window.localStorage.removeItem("client")
+			window.noted.initDropbox()
+
+			$(".signedout").show()
+			$(".signedin").hide()
 
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			if e.keyCode is 13 and $(@).text() isnt ""

@@ -1037,7 +1037,9 @@ body.resizing {
   text-align: center;
   font-size: 16px;
   color: #222;
-  border: 2px solid #66be7f; }
+  border: 2px solid #66be7f;
+  font-weight: 300;
+  font-family: "Ubuntu Light", "Ubuntu"; }
   .preferences-container .tabs {
     border-bottom: 2px solid #66be7f; }
     .preferences-container .tabs ul {
@@ -1076,11 +1078,8 @@ body.resizing {
   .about.current, .general.current {
     display: block; }
 
-.about {
+.about .name {
   font-weight: 300;
-  font-family: "Ubuntu Light", "Ubuntu"; }
-  .about .name {
-    font-weight: 300;
-    font-size: 32px; }
-  .about p {
-    font-size: 13px; }
+  font-size: 32px; }
+.about p {
+  font-size: 13px; }

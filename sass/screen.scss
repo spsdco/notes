@@ -801,6 +801,8 @@ body.resizing { cursor: ew-resize; }
 	font-size: 16px;
 	color: #222;
 	border: 2px solid $nephritis;
+	font-weight: 300;
+	font-family: $light-font;
 
 	.tabs {
 		border-bottom: 2px solid $nephritis;
@@ -863,9 +865,6 @@ body.resizing { cursor: ew-resize; }
 }
 
 .about {
-	font-weight: 300;
-	font-family: $light-font;
-
 	.name {
 		font-weight: 300;
 		font-size: 32px;
