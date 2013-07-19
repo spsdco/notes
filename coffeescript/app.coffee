@@ -229,6 +229,9 @@ window.noted =
 			port = (Math.round(Math.random() * 48120) + 1024) if isportopen
 			window.client.authDriver(new NodeWebkitDriver(port))
 
+		# Sync on Startup
+		window.noted.auth() if window.localStorage.oauth
+
 		# Pass control onto the initUI function.
 		window.noted.initUI()
 
