@@ -7,6 +7,7 @@ $border-color: #b4b3b1;
 $sidebar-color: #e7e5e4;
 $light-font: "Ubuntu Light", "Ubuntu";
 $purple: #522453;
+$nephritis: #66be7f;
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -799,10 +800,10 @@ body.resizing { cursor: ew-resize; }
 	text-align: center;
 	font-size: 16px;
 	color: #222;
-	border: 2px solid $border-color;
+	border: 2px solid $nephritis;
 
 	.tabs {
-		border-bottom: 2px solid $border-color;
+		border-bottom: 2px solid $nephritis;
 
 		ul {
 			list-style: none;
@@ -817,37 +818,37 @@ body.resizing { cursor: ew-resize; }
 			font-size: 15px;
 			padding: 0 15px;
 			font-weight: bold;
-			color: $border-color;
+			color: #444;
 			cursor: default;
 			background: white;
 
 			&:active {
-				color: darken($border-color,15%);
+				color: darken($nephritis,15%);
 			}
 
 			&.current {
-				background: $border-color;
+				background: $nephritis;
 				color: white;
 			}
 		}
 	}
 
-	.conatiner {
-		padding: 25px;
+	.container {
+		padding: 10px 25px;
 	}
 
 	input {
 		font-size: 14px;
-		border: 2px solid $border-color;
+		border: 2px solid $nephritis;
 		padding: 5px 10px;
 		outline: 0;
 	}
 
 	button.special, a.special {
-		border: 2px solid $border-color;
+		border: 2px solid $nephritis;
 
 		&:active {
-			background-color: $border-color;
+			background-color: $nephritis;
 		}
 
 	}
@@ -862,13 +863,15 @@ body.resizing { cursor: ew-resize; }
 }
 
 .about {
+	font-weight: 300;
 	font-family: $light-font;
 
 	.name {
-		font-size: 24px;
+		font-weight: 300;
+		font-size: 32px;
 	}
 
 	p {
-		font-size: 12px;
+		font-size: 13px;
 	}
 }

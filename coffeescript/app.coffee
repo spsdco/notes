@@ -371,6 +371,9 @@ window.noted =
 		$('body').on "click contextmenu", ".popover-mask", ->
 			$(@).hide().children().hide()
 
+		$("#settings").click ->
+			$(".preferences.modal").modal("show")
+
 		$("#sync").click ->
 			window.noted.auth()
 

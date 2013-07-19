@@ -1037,9 +1037,9 @@ body.resizing {
   text-align: center;
   font-size: 16px;
   color: #222;
-  border: 2px solid #b4b3b1; }
+  border: 2px solid #66be7f; }
   .preferences-container .tabs {
-    border-bottom: 2px solid #b4b3b1; }
+    border-bottom: 2px solid #66be7f; }
     .preferences-container .tabs ul {
       list-style: none;
       margin: 0;
@@ -1051,25 +1051,25 @@ body.resizing {
       font-size: 15px;
       padding: 0 15px;
       font-weight: bold;
-      color: #b4b3b1;
+      color: #444;
       cursor: default;
       background: white; }
       .preferences-container .tabs li:active {
-        color: #8f8d8a; }
+        color: #409759; }
       .preferences-container .tabs li.current {
-        background: #b4b3b1;
+        background: #66be7f;
         color: white; }
-  .preferences-container .conatiner {
-    padding: 25px; }
+  .preferences-container .container {
+    padding: 10px 25px; }
   .preferences-container input {
     font-size: 14px;
-    border: 2px solid #b4b3b1;
+    border: 2px solid #66be7f;
     padding: 5px 10px;
     outline: 0; }
   .preferences-container button.special, .preferences-container a.special {
-    border: 2px solid #b4b3b1; }
+    border: 2px solid #66be7f; }
     .preferences-container button.special:active, .preferences-container a.special:active {
-      background-color: #b4b3b1; }
+      background-color: #66be7f; }
 
 .about, .general {
   display: none; }
@@ -1077,8 +1077,10 @@ body.resizing {
     display: block; }
 
 .about {
+  font-weight: 300;
   font-family: "Ubuntu Light", "Ubuntu"; }
   .about .name {
-    font-size: 24px; }
+    font-weight: 300;
+    font-size: 32px; }
   .about p {
-    font-size: 12px; }
+    font-size: 13px; }

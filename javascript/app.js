@@ -402,6 +402,9 @@
       $('body').on("click contextmenu", ".popover-mask", function() {
         return $(this).hide().children().hide();
       });
+      $("#settings").click(function() {
+        return $(".preferences.modal").modal("show");
+      });
       $("#sync").click(function() {
         return window.noted.auth();
       });
