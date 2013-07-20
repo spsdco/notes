@@ -215,11 +215,11 @@ window.noted =
 
 		# Set up where we're going to store stuff.
 		if process.platform is 'darwin'
-			window.noted.storagedir = path.join(window.noted.homedir, "/Library/Application Support/Noted/")
+			window.noted.storagedir = path.join(window.noted.homedir, "/Library/Application Support/Springseed/")
 		else if process.platform is 'win32'
-			window.noted.storagedir = path.join(process.env.LOCALAPPDATA, "/Noted/")
+			window.noted.storagedir = path.join(process.env.LOCALAPPDATA, "/Springseed/")
 		else if process.platform is 'linux'
-			window.noted.storagedir = path.join(window.noted.homedir, '/.config/Noted/')
+			window.noted.storagedir = path.join(window.noted.homedir, '/.config/Springseed/')
 
 		window.localStorage.queue ?= "{}"
 		window.localStorage.cursor ?= ""
@@ -403,6 +403,8 @@ window.noted =
 			# This is terrible, but works
 			delete window.client
 			delete window.noted.db.client
+			delete window.noted.db.cursor
+			delete window.noted.db.queue
 			window.localStorage.removeItem("queue")
 			window.localStorage.removeItem("oauth")
 			window.localStorage.removeItem("client")
