@@ -407,7 +407,7 @@ window.noted =
 			delete window.noted.db.queue
 			window.localStorage.removeItem("queue")
 			window.localStorage.removeItem("oauth")
-			window.localStorage.removeItem("client")
+			window.localStorage.removeItem("cursor")
 			window.noted.initDropbox()
 
 			$(".signedout").show()

@@ -47,7 +47,7 @@
       files = fs.readdirSync(this.notebookdir);
       i = 0;
       while (i >= 0) {
-        if (files[i] === void 0 || files[i].match("." + id + ".noted")) {
+        if (files[i] === void 0 || files[i].match("." + id + ".note")) {
           return files[i];
         }
         i++;
@@ -64,10 +64,10 @@
     noteddb.prototype.createNotebook = function(name) {
       var data, filename, id;
       id = this.generateUid();
-      while (fs.existsSync(path.join(this.notebookdir, id + ".json"))) {
+      while (fs.existsSync(path.join(this.notebookdir, id + ".list"))) {
         id = this.generateUid();
       }
-      filename = id + ".json";
+      filename = id + ".list";
       data = {
         id: id,
         name: name
@@ -92,10 +92,10 @@
     noteddb.prototype.createNote = function(name, notebook, content) {
       var data, filename, id;
       id = this.generateUid();
-      while (fs.existsSync(path.join(this.notebookdir, notebook + "." + id + ".noted"))) {
+      while (fs.existsSync(path.join(this.notebookdir, notebook + "." + id + ".note"))) {
         id = this.generateUid();
       }
-      filename = notebook + "." + id + ".noted";
+      filename = notebook + "." + id + ".note";
       data = {
         id: id,
         name: name,
@@ -124,7 +124,7 @@
       files = fs.readdirSync(this.notebookdir);
       notebooks = [];
       files.forEach(function(file) {
-        if (file.substr(16, 5) === ".json") {
+        if (file.substr(16, 5) === ".list") {
           if (names) {
             return notebooks.push({
               id: file.substr(0, 16),
@@ -166,13 +166,13 @@
           id: "all"
         };
       } else {
-        notebook = JSON.parse(fs.readFileSync(path.join(this.notebookdir, id + ".json")));
+        notebook = JSON.parse(fs.readFileSync(path.join(this.notebookdir, id + ".list")));
       }
       notebook.contents = [];
       files = fs.readdirSync(this.notebookdir);
       files.forEach(function(file) {
         var contents, e, filename;
-        if (file.match(id) && file.substr(33, 6) === ".noted" || id === "all" && file.substr(33, 6) === ".noted") {
+        if (file.match(id) && file.substr(33, 5) === ".note" || id === "all" && file.substr(33, 5) === ".note") {
           filename = file.substr(17, 16);
           if (names) {
             try {
@@ -234,7 +234,7 @@
     noteddb.prototype.updateNotebook = function(id, data) {
       var filename;
       data.id = id;
-      filename = id + ".json";
+      filename = id + ".list";
       fs.writeFileSync(path.join(this.notebookdir, filename), JSON.stringify(data));
       this.addToQueue({
         "operation": "update",
@@ -255,13 +255,13 @@
       var filename;
       data.id = id;
       data.date = Math.round(new Date() / 1000);
-      filename = data.notebook + "." + id + ".noted";
+      filename = data.notebook + "." + id + ".note";
       if (data.notebook !== this.readNote(id).notebook) {
         this.addToQueue({
           "operation": "remove",
           "file": this.filenameNote(id)
         });
-        fs.renameSync(path.join(this.notebookdir, this.filenameNote(id)), path.join(this.notebookdir, data.notebook + "." + id + ".noted"));
+        fs.renameSync(path.join(this.notebookdir, this.filenameNote(id)), path.join(this.notebookdir, data.notebook + "." + id + ".note"));
         this.addToQueue({
           "operation": "create",
           "file": filename
@@ -291,7 +291,7 @@
       files.forEach(function(file) {
         var id, notedata;
         id = file.substr(17, 16);
-        if (id !== "json") {
+        if (id !== "list") {
           notedata = _this.readNote(file.substr(17, 16));
           if (notedata.name.match(query) || notedata.content.match(query)) {
             return results.push(notedata);
@@ -312,14 +312,14 @@
         _this = this;
       this.readNotebook(id).contents.forEach(function(file) {
         var filename;
-        filename = id + "." + file + ".noted";
+        filename = id + "." + file + ".note";
         fs.unlink(path.join(_this.notebookdir, filename));
         return _this.addToQueue({
           "operation": "remove",
           "file": filename
         });
       });
-      filename = id + ".json";
+      filename = id + ".list";
       fs.unlinkSync(path.join(this.notebookdir, filename));
       return this.addToQueue({
         "operation": "remove",
