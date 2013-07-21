@@ -240,7 +240,7 @@ class noteddb
 			id = file.substr(17, 16)
 			if id isnt "json"
 				notedata = @readNote(file.substr(17, 16))
-				if notedata.name.match(query) or notedata.content.match(query)
+				if notedata.name.match(new RegExp(query, 'i')) or notedata.content.match(new RegExp(query, 'i'))
 					results.push notedata
 
 		return results

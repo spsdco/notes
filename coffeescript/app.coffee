@@ -394,10 +394,12 @@ window.noted =
 				$('#notes ul').html()
 				results = window.noted.db.search(query)
 				results.forEach (note) =>
+					console.log note.date
+					console.log window.noted.util.date note.date
 					htmlstr = template({
 						id: note.id
 						name: note.name
-						date: window.noted.util.date(note.date)
+						date: window.noted.util.date(note.date*1000)
 						excerpt: note.content.substring(0,100)
 					}) + htmlstr
 				$('#notes ul').html(htmlstr)
@@ -647,6 +649,7 @@ window.noted =
 		# I can't help but feel that this function is bugged,
 		# but fuckit, lets ship.
 		date: (date) ->
+			date = parseInt(date)
 			date = new Date(date)
 
 			month = [

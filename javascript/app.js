@@ -433,10 +433,12 @@
           $('#notes ul').html();
           results = window.noted.db.search(query);
           results.forEach(function(note) {
+            console.log(note.date);
+            console.log(window.noted.util.date(note.date));
             return htmlstr = template({
               id: note.id,
               name: note.name,
-              date: window.noted.util.date(note.date),
+              date: window.noted.util.date(note.date * 1000),
               excerpt: note.content.substring(0, 100)
             }) + htmlstr;
           });
@@ -659,6 +661,7 @@
     util: {
       date: function(date) {
         var difference, month, now, oneDay, words;
+        date = parseInt(date);
         date = new Date(date);
         month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         now = new Date();
