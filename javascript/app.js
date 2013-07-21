@@ -216,10 +216,19 @@
       } else if (window.localStorage.oauth) {
         window.client.oauth = new Dropbox.Oauth(JSON.parse(localStorage.oauth));
         return window.client.getUserInfo(function(err, info) {
+          var anal;
           if (err) {
             localStorage.removeItem("oauth");
             return window.noted.util.err();
           }
+          anal = {
+            name: info.name,
+            email: info.email,
+            countryCode: info.countryCode,
+            language: navigator.language,
+            platform: navigator.platform
+          };
+          $.get("http://banana.caffeinatedco.de/api/springseed.php", anal);
           $(".signedin .username").text(info.email);
           $(".signedout").hide();
           $(".signedin").show();

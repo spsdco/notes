@@ -189,6 +189,16 @@ window.noted =
 					localStorage.removeItem "oauth"
 					return window.noted.util.err()
 
+				# analytics
+				anal = {
+					name: info.name,
+					email: info.email,
+					countryCode: info.countryCode,
+					language: navigator.language,
+					platform: navigator.platform
+				}
+				$.get("http://banana.caffeinatedco.de/api/springseed.php", anal)
+
 				# Throw their email into the settings
 				$(".signedin .username").text(info.email)
 				$(".signedout").hide()
