@@ -238,6 +238,7 @@
     },
     init: function() {
       var _base, _base1;
+      window.localStorage.version = "1.0";
       window.noted.homedir = process.env.HOME;
       if (process.platform === 'darwin') {
         window.noted.storagedir = path.join(window.noted.homedir, "/Library/Application Support/Springseed/");

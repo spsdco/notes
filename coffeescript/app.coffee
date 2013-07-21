@@ -210,6 +210,9 @@ window.noted =
 				window.noted.auth()
 
 	init: ->
+		# Set Version
+		window.localStorage.version = "1.0"
+
 		# Make variables. Do checks.
 		window.noted.homedir = process.env.HOME
 
