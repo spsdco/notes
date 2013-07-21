@@ -21,9 +21,6 @@
       if (this.cursor == null) {
         this.cursor = false;
       }
-      if (fs.existsSync(this.notebookdir) === false) {
-        fs.mkdirSync(this.notebookdir);
-      }
       this.queueArr = JSON.parse(window.localStorage.getItem(this.queue));
     }
 

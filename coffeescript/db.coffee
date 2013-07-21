@@ -7,8 +7,6 @@ class noteddb
 		@client ?= no
 		@cursor ?= no
 
-		fs.mkdirSync(@notebookdir) if fs.existsSync(@notebookdir) is false
-
 		@queueArr = JSON.parse(window.localStorage.getItem(@queue))
 
 	generateUid: ->

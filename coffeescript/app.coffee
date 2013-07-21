@@ -3,6 +3,7 @@ gui = global.gui	= require 'nw.gui'
 buffer 				= require 'buffer'
 path 				= require 'path'
 net 				= require 'net'
+fs                  = require 'fs'
 util 				= require 'util'
 global.jQuery = $	= require 'jQuery'
 Dropbox 			= require 'dropbox'
@@ -224,17 +225,56 @@ window.noted =
 		else if process.platform is 'linux'
 			window.noted.storagedir = path.join(window.noted.homedir, '/.config/Springseed/')
 
+		window.noted.notebookdir = path.join(window.noted.storagedir, "Notebooks")
+
+		# THIS IS AWFUL AS SIN. WE NEED TO REFACTOR THIS FUCKING APP.
+		if fs.existsSync(window.noted.notebookdir) is false
+			fs.mkdirSync(window.noted.notebookdir)
+
+			copyFile = (source, target, cb) ->
+				done = (err) ->
+					unless cbCalled
+						cb err
+						cbCalled = true
+				cbCalled = false
+				rd = fs.createReadStream(source)
+				rd.on "error", (err) ->
+					done err
+
+				wr = fs.createWriteStream(target)
+				wr.on "error", (err) ->
+					done err
+
+				wr.on "close", (ex) ->
+					done()
+
+				rd.pipe wr
+
+			defaults = fs.readdirSync(path.join(process.cwd(), "default_notebooks"))
+			doneamount = defaults.length * -1
+
+			copycallback = ->
+				doneamount++
+				if doneamount is 0
+					# Create the DB
+					window.noted.db = new db(window.noted.notebookdir, null, "queue", window.localStorage.cursor)
+
+					# Setup App
+					window.noted.initDropbox()
+					window.noted.initUI()
+
+			defaults.forEach (file) =>
+				copyFile(path.join(process.cwd(), "default_notebooks", file), path.join(window.noted.notebookdir, file), copycallback) if file isnt undefined
+		else
+			# Create the DB
+			window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue", window.localStorage.cursor)
+
+			# Setup App
+			window.noted.initDropbox()
+			window.noted.initUI()
+
 		window.localStorage.queue ?= "{}"
 		window.localStorage.cursor ?= ""
-
-		# Create the DB
-		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue", window.localStorage.cursor)
-
-		# Setup Dropbox
-		window.noted.initDropbox()
-
-		# Pass control onto the initUI function.
-		window.noted.initUI()
 
 	initDropbox: ->
 		window.client = new Dropbox.Client
