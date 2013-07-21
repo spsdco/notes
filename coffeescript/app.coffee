@@ -3,6 +3,7 @@ gui = global.gui	= require 'nw.gui'
 buffer 				= require 'buffer'
 path 				= require 'path'
 net 				= require 'net'
+fs                  = require 'fs'
 util 				= require 'util'
 global.jQuery = $	= require 'jQuery'
 Dropbox 			= require 'dropbox'
@@ -16,7 +17,7 @@ modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
 
-isOpen = (port, host, callback) ->
+window.isOpen = (port, host, callback) ->
   isOpen = false
   executed = false
   onClose = ->
@@ -44,7 +45,7 @@ isOpen = (port, host, callback) ->
   conn.on "connect", onOpen
 
 
-class NodeWebkitDriver
+class window.NodeWebkitDriver
   # @param {?Object} options one or more of the options below
   # @option options {Number} port the number of the TCP port that will receive
   #   HTTP requests
@@ -98,7 +99,10 @@ class NodeWebkitDriver
   closeBrowser: (response) ->
     closeHtml = """
                 <!doctype html>
-                <p>Please close this window and go back to Noted.</p>
+                <div style="padding: 20px; text-align: center; font-family: 'Ubuntu Light', 'Ubuntu', sans-serif;">
+                <h1 style="font-weight:300">Success!</h1>
+                <h2 style="font-weight:300">Please close this window and go back to Springseed.</h2>
+                </div>
                 """
     response.writeHead(200,
       {'Content-Length': closeHtml.length, 'Content-Type': 'text/html' })
@@ -180,10 +184,25 @@ window.noted =
 		# if there are creds, try get the users info
 		else if window.localStorage.oauth
 			window.client.oauth = new Dropbox.Oauth JSON.parse(localStorage.oauth)
-			window.client.getUserInfo (err) ->
+			window.client.getUserInfo (err, info) ->
 				if err
 					localStorage.removeItem "oauth"
 					return window.noted.util.err()
+
+				# analytics
+				anal = {
+					name: info.name,
+					email: info.email,
+					countryCode: info.countryCode,
+					language: navigator.language,
+					platform: navigator.platform
+				}
+				$.get("http://banana.caffeinatedco.de/api/springseed.php", anal)
+
+				# Throw their email into the settings
+				$(".signedin .username").text(info.email)
+				$(".signedout").hide()
+				$(".signedin").show()
 
 				# If we get to here, the user is successfully authed!
 				window.noted.db.client = window.client
@@ -202,35 +221,84 @@ window.noted =
 				window.noted.auth()
 
 	init: ->
+		# Set Version
+		window.localStorage.version = "1.0"
+
 		# Make variables. Do checks.
 		window.noted.homedir = process.env.HOME
 
 		# Set up where we're going to store stuff.
 		if process.platform is 'darwin'
-			window.noted.storagedir = path.join(window.noted.homedir, "/Library/Application Support/Noted/")
+			window.noted.storagedir = path.join(window.noted.homedir, "/Library/Application Support/Springseed/")
 		else if process.platform is 'win32'
-			window.noted.storagedir = path.join(process.env.LOCALAPPDATA, "/Noted/")
+			window.noted.storagedir = path.join(process.env.LOCALAPPDATA, "/Springseed/")
 		else if process.platform is 'linux'
-			window.noted.storagedir = path.join(window.noted.homedir, '/.config/Noted/')
+			window.noted.storagedir = path.join(window.noted.homedir, '/.config/Springseed/')
+
+		window.noted.notebookdir = path.join(window.noted.storagedir, "Notebooks")
+
+		# THIS IS AWFUL AS SIN. WE NEED TO REFACTOR THIS FUCKING APP.
+		if fs.existsSync(window.noted.notebookdir) is false
+			fs.mkdirSync(window.noted.notebookdir)
+
+			copyFile = (source, target, cb) ->
+				done = (err) ->
+					unless cbCalled
+						cb err
+						cbCalled = true
+				cbCalled = false
+				rd = fs.createReadStream(source)
+				rd.on "error", (err) ->
+					done err
+
+				wr = fs.createWriteStream(target)
+				wr.on "error", (err) ->
+					done err
+
+				wr.on "close", (ex) ->
+					done()
+
+				rd.pipe wr
+
+			defaults = fs.readdirSync(path.join(process.cwd(), "default_notebooks"))
+			doneamount = defaults.length * -1
+
+			copycallback = ->
+				doneamount++
+				if doneamount is 0
+					# Create the DB
+					window.noted.db = new db(window.noted.notebookdir, null, "queue", window.localStorage.cursor)
+
+					# Setup App
+					window.noted.initDropbox()
+					window.noted.initUI()
+
+			defaults.forEach (file) =>
+				copyFile(path.join(process.cwd(), "default_notebooks", file), path.join(window.noted.notebookdir, file), copycallback) if file isnt undefined
+		else
+			# Create the DB
+			window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue", window.localStorage.cursor)
+
+			# Setup App
+			window.noted.initDropbox()
+			window.noted.initUI()
 
 		window.localStorage.queue ?= "{}"
 		window.localStorage.cursor ?= ""
 
-		# Create the DB
-		window.noted.db = new db(path.join(window.noted.storagedir, "Notebooks"), null, "queue", window.localStorage.cursor)
-
-		# Setup Dropbox
+	initDropbox: ->
 		window.client = new Dropbox.Client
 			key: "GCLhKiJJwJA=|5dgkjE/gvYMv09OgvUpzN1UoNir+CfgY36WwMeNnmQ==",
 			sandbox: true
 
-		isOpen (Math.round(Math.random() * 48120) + 1024).toString(), "127.0.0.1", (isportopen, port, host) =>
+		window.isOpen (Math.round(Math.random() * 48120) + 1024).toString(), "127.0.0.1", (isportopen, port, host) =>
 			# Eh, there's a pretty high chance that this will work.
 			port = (Math.round(Math.random() * 48120) + 1024) if isportopen
-			window.client.authDriver(new NodeWebkitDriver(port))
+			console.log("using port: " + port)
+			window.client.authDriver(new window.NodeWebkitDriver({port: port}))
 
-		# Pass control onto the initUI function.
-		window.noted.initUI()
+		# Sync on Startup
+		window.noted.auth() if window.localStorage.oauth
 
 	initUI: ->
 		# Because threading issues in node-webkit
@@ -264,7 +332,7 @@ window.noted =
 
 		window.noted.editor = new jonoeditor($("#contentwrite"))
 
-		$("#contentread").on "click", "a", (e) ->
+		$("#contentread, .preferences-container").on "click", "a", (e) ->
 			e.preventDefault()
 			gui.Shell.openExternal $(@).attr("href")
 
@@ -275,6 +343,14 @@ window.noted =
 			$('#panel').addClass('drag')
 		).mouseleave ->
 			$('#panel').removeClass('drag')
+
+		# Sets up settings
+		if window.localStorage.oauth
+			$(".signedout").hide()
+			$(".signedin").show()
+		else
+			$(".signedout").show()
+			$(".signedin").hide()
 
 		# # Disallows Dragging on Buttons
 		$('#panel #decor img, #panel #noteControls img, #panel #search').mouseenter(->
@@ -296,7 +372,6 @@ window.noted =
 					$(".popover-mask").show()
 					$(".share-popover").css({left: ($(event.target).offset().left)-3, top: "28px"}).show()
 					mailto = "mailto:?subject=" + encodeURI(window.noted.currentNote) + "&body=" + encodeURI(window.noted.editor.getValue())
-					$("#emailNote").parent().attr("href", mailto)
 
 				else if $(@).attr("id") is "del"
 					$('.modal.delete').modal()
@@ -365,8 +440,31 @@ window.noted =
 		$('body').on "click contextmenu", ".popover-mask", ->
 			$(@).hide().children().hide()
 
+		$("#settings").click ->
+			$(".preferences.modal").modal("show")
+
 		$("#sync").click ->
+			if window.localStorage.oauth
+				window.noted.auth()
+			else
+				$(".preferences.modal").modal("show")
+
+		$("#signin").click ->
 			window.noted.auth()
+
+		$("#signout").click ->
+			# This is terrible, but works
+			delete window.client
+			delete window.noted.db.client
+			delete window.noted.db.cursor
+			delete window.noted.db.queue
+			window.localStorage.removeItem("queue")
+			window.localStorage.removeItem("oauth")
+			window.localStorage.removeItem("cursor")
+			window.noted.initDropbox()
+
+			$(".signedout").show()
+			$(".signedin").hide()
 
 		$("body").on "keydown", ".headerwrap .left h1", (e) ->
 			if e.keyCode is 13 and $(@).text() isnt ""
@@ -422,13 +520,21 @@ window.noted =
 
 			window.noted.editMode()
 
-		$(".tabs ul").click (e) ->
-			$(@).find(".current").removeClass "current"
+		$(".tabs li").click (e) ->
+			$(@).parent().find(".current").removeClass "current"
 			$(".preferences-container .container").find(".current").removeClass "current"
 			$(".preferences-container .container").find("div."+$(e.target).addClass("current").attr("data-id")).addClass("current") # Yes, this is shitty. Fuck me, right?
 
 		$("body").on "click", ".editorbuttons button", ->
 			window.noted.editorAction $(@).attr('data-action')
+
+		resize = ->
+			$("#noteControls").width($("#notes").width()-4).css("left", $("#notebooks").width())
+
+		$(".splitter.split-right").on "mouseup", ->
+			resize()
+		$(window).resize ->
+			resize()
 
 	editorAction: (action) ->
 		# I'm sure that mh0 doesn't know how to code.
@@ -647,6 +753,7 @@ window.noted =
 		# I can't help but feel that this function is bugged,
 		# but fuckit, lets ship.
 		date: (date) ->
+			date = parseInt(date)
 			date = new Date(date)
 
 			month = [
