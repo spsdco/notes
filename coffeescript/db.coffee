@@ -7,8 +7,6 @@ class noteddb
 		@client ?= no
 		@cursor ?= no
 
-		fs.mkdirSync(@notebookdir) if fs.existsSync(@notebookdir) is false
-
 		@queueArr = JSON.parse(window.localStorage.getItem(@queue))
 
 	generateUid: ->
@@ -29,7 +27,7 @@ class noteddb
 		i = 0
 		while i >= 0
 			# Finds the filename
-			if files[i] is undefined or files[i].match("."+id+".noted")
+			if files[i] is undefined or files[i].match("."+id+".note")
 				return files[i]
 			i++
 
@@ -42,10 +40,10 @@ class noteddb
 		id = @generateUid()
 
 		# there's a 16^16 chance of conflicting, but hey
-		while fs.existsSync(path.join(@notebookdir, id  + ".json"))
+		while fs.existsSync(path.join(@notebookdir, id  + ".list"))
 			id = @generateUid()
 
-		filename = id + ".json"
+		filename = id + ".list"
 		data = {
 			id: id
 			name: name
@@ -70,10 +68,10 @@ class noteddb
 		id = @generateUid()
 
 		# Generates a new id if already exists
-		while fs.existsSync(path.join(@notebookdir, notebook + "." + id  + ".noted"))
+		while fs.existsSync(path.join(@notebookdir, notebook + "." + id  + ".note"))
 			id = @generateUid()
 
-		filename = notebook + "." + id  + ".noted"
+		filename = notebook + "." + id  + ".note"
 		data = {
 			id: id
 			name: name
@@ -98,7 +96,7 @@ class noteddb
 		notebooks = []
 
 		files.forEach (file) =>
-			if file.substr(16,5) is ".json"
+			if file.substr(16,5) is ".list"
 				if names
 					notebooks.push {
 						id: file.substr(0,16)
@@ -125,12 +123,12 @@ class noteddb
 		if id is "all"
 			notebook = {name: "All Notes", id: "all"}
 		else
-			notebook = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+".json")))
+			notebook = JSON.parse(fs.readFileSync(path.join(@notebookdir, id+".list")))
 		notebook.contents = []
 
 		files = fs.readdirSync @notebookdir
 		files.forEach (file) =>
-			if file.match(id) and file.substr(33,6) is ".noted" or id is "all" and file.substr(33,6) is ".noted"
+			if file.match(id) and file.substr(33,5) is ".note" or id is "all" and file.substr(33,5) is ".note"
 				filename = file.substr(17, 16)
 				if names
 					try
@@ -148,7 +146,6 @@ class noteddb
 
 		if names
 			notebook.contents.sort (a,b) ->
-				console.log(a, b)
 				return -1 if a.date < b.date
 				return 1 if a.date > b.date
 				return 0
@@ -178,7 +175,7 @@ class noteddb
 	updateNotebook: (id, data) ->
 		# Ensure that the id does not change
 		data.id = id
-		filename = id + ".json"
+		filename = id + ".list"
 
 		fs.writeFileSync path.join(@notebookdir, filename),
 			JSON.stringify data
@@ -200,7 +197,7 @@ class noteddb
 		# This stuff cannot be set by the user
 		data.id = id
 		data.date = Math.round(new Date() / 1000)
-		filename = data.notebook+"."+id+".noted"
+		filename = data.notebook+"."+id+".note"
 
 		# If the notebook has changed, we need to rename the note
 		if data.notebook != @readNote(id).notebook
@@ -210,7 +207,7 @@ class noteddb
 			}
 			fs.renameSync(
 				path.join(@notebookdir, @filenameNote(id)),
-				path.join(@notebookdir, data.notebook+"."+id+".noted")
+				path.join(@notebookdir, data.notebook+"."+id+".note")
 			)
 			@addToQueue {
 				"operation": "create"
@@ -238,7 +235,7 @@ class noteddb
 		files = fs.readdirSync @notebookdir
 		files.forEach (file) =>
 			id = file.substr(17, 16)
-			if id isnt "json"
+			if id isnt "list"
 				notedata = @readNote(file.substr(17, 16))
 				if notedata.name.match(new RegExp(query, 'i')) or notedata.content.match(new RegExp(query, 'i'))
 					results.push notedata
@@ -252,7 +249,7 @@ class noteddb
 	deleteNotebook: (id) ->
 		# Deletes each note
 		@readNotebook(id).contents.forEach (file) =>
-			filename = id+"."+file+".noted"
+			filename = id+"."+file+".note"
 			fs.unlink path.join(@notebookdir, filename)
 			@addToQueue {
 				"operation": "remove"
@@ -260,7 +257,7 @@ class noteddb
 			}
 
 		# Deletes metadata
-		filename = id+".json"
+		filename = id+".list"
 		fs.unlinkSync path.join(@notebookdir, filename)
 		@addToQueue {
 			"operation": "remove"

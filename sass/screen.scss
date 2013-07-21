@@ -7,6 +7,7 @@ $border-color: #b4b3b1;
 $sidebar-color: #e7e5e4;
 $light-font: "Ubuntu Light", "Ubuntu";
 $purple: #522453;
+$nephritis: #66be7f;
 
 ::-webkit-scrollbar {
   width: 10px;
@@ -32,6 +33,11 @@ body.resizing { cursor: ew-resize; }
 
 .drag {
 	-webkit-app-region: drag;
+	-webkit-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+	cursor: default !important;
 }
 
 #notebooks, #panel, #notes {
@@ -43,6 +49,7 @@ body.resizing { cursor: ew-resize; }
 	-moz-user-drag: none;
 	-ms-user-drag: none;
 	user-drag: none;
+	cursor: default !important;
 }
 
 #panel {
@@ -79,6 +86,10 @@ body.resizing { cursor: ew-resize; }
 		#new {
 			opacity: 0.35;
 		}
+	}
+
+	#share {
+		display: none;
 	}
 
 	&.disabled {
@@ -265,7 +276,6 @@ body.resizing { cursor: ew-resize; }
 		vertical-align: top;
 		margin: 6px 0 6px 8px;
 		opacity: 0.6;
-		-webkit-animation: spin 1000ms linear 1;
 
 		&.spin {
 			-webkit-animation: spin 1000ms linear infinite;
@@ -715,6 +725,8 @@ body.resizing { cursor: ew-resize; }
 		//-webkit-transform: scale(0.75) translate3d(0, 0, 0);
 		background: #fff;
 		font-size: 16px;
+		background: -webkit-linear-gradient(bottom, #fff, #fcfcfc);
+		box-shadow: 0 1px 15px rgba(0,0,0,0.2);
 	}
 
 	.delete-container {
@@ -779,8 +791,8 @@ body.resizing { cursor: ew-resize; }
 		display: inline-block;
 		text-decoration: none;
 		border: 2px solid $red-color;
-		background: #fff;
-		font-size: 16px;
+		background: transparent;
+		font-size: 14px;
 		color: #222;
 		margin-top: 15px;
 		padding: 8px 15px;
@@ -799,11 +811,13 @@ body.resizing { cursor: ew-resize; }
 	margin-left: -228px;
 	text-align: center;
 	font-size: 16px;
-	color: #222;
-	border: 2px solid $border-color;
+	color: #333;
+	border: 2px solid $nephritis;
+	font-weight: 300;
+	font-family: $light-font;
 
 	.tabs {
-		border-bottom: 2px solid $border-color;
+		border-bottom: 2px solid $nephritis;
 
 		ul {
 			list-style: none;
@@ -818,37 +832,55 @@ body.resizing { cursor: ew-resize; }
 			font-size: 15px;
 			padding: 0 15px;
 			font-weight: bold;
-			color: $border-color;
+			color: #444;
 			cursor: default;
-			background: white;
 
 			&:active {
-				color: darken($border-color,15%);
+				color: darken($nephritis,15%);
 			}
 
 			&.current {
-				background: $border-color;
+				background: $nephritis;
 				color: white;
 			}
 		}
 	}
 
-	.conatiner {
-		padding: 25px;
+	a {
+		color: $purple;
+		text-decoration: none;
+
+		&:hover {
+			text-decoration: underline;
+		}
+	}
+
+	.container {
+		padding: 10px 25px;
+	}
+
+	.signedin, .signedout {
+		padding-bottom: 15px;
+		p {
+			margin: 0;
+		}
+		button {
+			font-size: 13px;
+		}
 	}
 
 	input {
 		font-size: 14px;
-		border: 2px solid $border-color;
+		border: 2px solid $nephritis;
 		padding: 5px 10px;
 		outline: 0;
 	}
 
 	button.special, a.special {
-		border: 2px solid $border-color;
+		border: 2px solid $nephritis;
 
 		&:active {
-			background-color: $border-color;
+			background-color: $nephritis;
 		}
 
 	}
@@ -863,13 +895,12 @@ body.resizing { cursor: ew-resize; }
 }
 
 .about {
-	font-family: $light-font;
-
 	.name {
-		font-size: 24px;
+		font-weight: 300;
+		font-size: 32px;
 	}
 
 	p {
-		font-size: 12px;
+		font-size: 13px;
 	}
 }

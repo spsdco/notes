@@ -169,7 +169,7 @@ code,
 kbd,
 pre,
 samp {
-  font-family: "Source Code Pro", monospace;
+  font-family: 'Source Code Pro', monospace;
   font-size: 1em; }
 
 /*
@@ -288,7 +288,7 @@ form {
  * Define consistent border, margin, and padding.
  */
 fieldset {
-  border: 1px solid silver;
+  border: 1px solid #c0c0c0;
   margin: 0 2px;
   padding: 0.35em 0.625em 0.75em; }
 
@@ -446,7 +446,12 @@ body.resizing {
   cursor: ew-resize; }
 
 .drag {
-  -webkit-app-region: drag; }
+  -webkit-app-region: drag;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  cursor: default !important; }
 
 #notebooks, #panel, #notes {
   -webkit-user-select: none;
@@ -456,7 +461,8 @@ body.resizing {
   -webkit-user-drag: none;
   -moz-user-drag: none;
   -ms-user-drag: none;
-  user-drag: none; }
+  user-drag: none;
+  cursor: default !important; }
 
 #panel {
   width: 100%;
@@ -482,9 +488,11 @@ body.resizing {
   position: absolute;
   padding: 5px 0px 5px 4px;
   top: 0;
-  border-right: 1px solid #444444; }
+  border-right: 1px solid #444; }
   #noteControls.all #new {
     opacity: 0.35; }
+  #noteControls #share {
+    display: none; }
   #noteControls.disabled #share, #noteControls.disabled #del {
     opacity: 0.35; }
   #noteControls img {
@@ -514,7 +522,7 @@ body.resizing {
     color: #fff;
     border: 0;
     border-radius: 2px;
-    box-shadow: 0 0 1px #444444; }
+    box-shadow: 0 0 1px #444; }
 
 /* THE PARENT */
 #parent {
@@ -575,7 +583,7 @@ body.resizing {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
-    border-bottom: 1px solid #bbbbbb;
+    border-bottom: 1px solid #bbb;
     padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
@@ -620,13 +628,12 @@ body.resizing {
   height: 29px;
   width: 100%;
   background: -webkit-linear-gradient(top, #eeeeee, #dddddd);
-  border-top: 1px solid #bbbbbb; }
+  border-top: 1px solid #bbb; }
   #settingsbar img {
     height: 17px;
     vertical-align: top;
     margin: 6px 0 6px 8px;
-    opacity: 0.6;
-    -webkit-animation: spin 1000ms linear 1; }
+    opacity: 0.6; }
     #settingsbar img.spin {
       -webkit-animation: spin 1000ms linear infinite; }
     #settingsbar img:active {
@@ -644,7 +651,7 @@ body.resizing {
   #notes li {
     cursor: default;
     border-top: 1px solid #fefefe;
-    border-bottom: 1px solid #cccccc;
+    border-bottom: 1px solid #ccc;
     padding: 0 15px 8px;
     color: #444;
     font-size: 13px;
@@ -726,7 +733,7 @@ body.resizing {
     #content header h1 {
       font-weight: 300;
       font-family: "Ubuntu Light", "Ubuntu";
-      text-shadow: 0 1px 0 white;
+      text-shadow: 0 1px 0 #fff;
       outline: 0;
       margin: 0;
       letter-spacing: -1px;
@@ -736,7 +743,7 @@ body.resizing {
       -ms-user-select: text;
       user-select: text; }
       #content header h1[contenteditable=true]:hover, #content header h1[contenteditable=true]:focus {
-        outline: 1px solid #cccccc; }
+        outline: 1px solid #ccc; }
     #content header time {
       font-family: "Ubuntu Light", "Ubuntu";
       font-size: 13px;
@@ -764,15 +771,15 @@ body.resizing {
       font-weight: bold; }
       #content header .toggle.save {
         font-size: 15px;
-        border: 1px solid #cccccc;
+        border: 1px solid #ccc;
         padding: 5px 10px;
         border-radius: 3px;
-        box-shadow: 0 1px 1px white, 0 1px 1px white inset;
+        box-shadow: 0 1px 1px #fff, 0 1px 1px #fff inset;
         margin-top: 8px;
         color: #888; }
         #content header .toggle.save:active {
           background: -webkit-linear-gradient(top, #fafafa, #fcfcfc);
-          border: 1px solid #bbbbbb;
+          border: 1px solid #bbb;
           color: #444; }
       #content header .toggle:hover {
         color: #444; }
@@ -823,7 +830,7 @@ body.resizing {
   height: 35px;
   width: 100%;
   background: #eee;
-  border-bottom: 1px solid #cccccc;
+  border-bottom: 1px solid #ccc;
   top: -36px;
   -webkit-transition: 200ms ease all; }
   .editorbuttons.show {
@@ -833,7 +840,7 @@ body.resizing {
     margin: 3px auto; }
   .editorbuttons button {
     background: transparent;
-    border: 2px solid #444444;
+    border: 2px solid #444;
     border-radius: 50%;
     width: 26px;
     height: 26px;
@@ -867,7 +874,7 @@ body.resizing {
     padding: 0 0 0 20px; }
   #contentread hr {
     border: 0;
-    border-top: 1px solid #cccccc;
+    border-top: 1px solid#ccc;
     margin: 2em 0; }
   #contentread p {
     margin-top: 0.4em; }
@@ -915,7 +922,7 @@ body.resizing {
     height: 0;
     border-top: 10px solid transparent;
     border-bottom: 10px solid transparent;
-    border-right: 10px solid #222222;
+    border-right: 10px solid #222;
     margin-top: 7px;
     margin-left: 5px;
     vertical-align: top; }
@@ -941,7 +948,7 @@ body.resizing {
     margin-top: 7px;
     margin-left: 5px;
     vertical-align: top;
-    border-bottom: 10px solid #222222;
+    border-bottom: 10px solid #222;
     border-left: 10px solid transparent; }
   .share-popover .container {
     display: inline-block;
@@ -963,7 +970,7 @@ body.resizing {
   opacity: 0;
   z-index: 10;
   position: absolute;
-  -webkit-transition: 0.3s opacity ease;
+  -webkit-transition: .3s opacity ease;
   -webkit-user-select: none;
   -webkit-tap-highlight-color: rgba(0, 0, 0, 0); }
   .modal.show {
@@ -973,7 +980,9 @@ body.resizing {
     top: 15%;
     left: 50%;
     background: #fff;
-    font-size: 16px; }
+    font-size: 16px;
+    background: -webkit-linear-gradient(bottom, white, #fcfcfc);
+    box-shadow: 0 1px 15px rgba(0, 0, 0, 0.2); }
   .modal .delete-container {
     width: 400px;
     margin-left: -228px;
@@ -1021,8 +1030,8 @@ body.resizing {
     display: inline-block;
     text-decoration: none;
     border: 2px solid #e15556;
-    background: #fff;
-    font-size: 16px;
+    background: transparent;
+    font-size: 14px;
     color: #222;
     margin-top: 15px;
     padding: 8px 15px;
@@ -1037,10 +1046,12 @@ body.resizing {
   margin-left: -228px;
   text-align: center;
   font-size: 16px;
-  color: #222;
-  border: 2px solid #b4b3b1; }
+  color: #333;
+  border: 2px solid #66be7f;
+  font-weight: 300;
+  font-family: "Ubuntu Light", "Ubuntu"; }
   .preferences-container .tabs {
-    border-bottom: 2px solid #b4b3b1; }
+    border-bottom: 2px solid #66be7f; }
     .preferences-container .tabs ul {
       list-style: none;
       margin: 0;
@@ -1052,34 +1063,43 @@ body.resizing {
       font-size: 15px;
       padding: 0 15px;
       font-weight: bold;
-      color: #b4b3b1;
-      cursor: default;
-      background: white; }
+      color: #444;
+      cursor: default; }
       .preferences-container .tabs li:active {
-        color: #8f8d8a; }
+        color: #409759; }
       .preferences-container .tabs li.current {
-        background: #b4b3b1;
+        background: #66be7f;
         color: white; }
-  .preferences-container .conatiner {
-    padding: 25px; }
+  .preferences-container a {
+    color: #522453;
+    text-decoration: none; }
+    .preferences-container a:hover {
+      text-decoration: underline; }
+  .preferences-container .container {
+    padding: 10px 25px; }
+  .preferences-container .signedin, .preferences-container .signedout {
+    padding-bottom: 15px; }
+    .preferences-container .signedin p, .preferences-container .signedout p {
+      margin: 0; }
+    .preferences-container .signedin button, .preferences-container .signedout button {
+      font-size: 13px; }
   .preferences-container input {
     font-size: 14px;
-    border: 2px solid #b4b3b1;
+    border: 2px solid #66be7f;
     padding: 5px 10px;
     outline: 0; }
   .preferences-container button.special, .preferences-container a.special {
-    border: 2px solid #b4b3b1; }
+    border: 2px solid #66be7f; }
     .preferences-container button.special:active, .preferences-container a.special:active {
-      background-color: #b4b3b1; }
+      background-color: #66be7f; }
 
 .about, .general {
   display: none; }
   .about.current, .general.current {
     display: block; }
 
-.about {
-  font-family: "Ubuntu Light", "Ubuntu"; }
-  .about .name {
-    font-size: 24px; }
-  .about p {
-    font-size: 12px; }
+.about .name {
+  font-weight: 300;
+  font-size: 32px; }
+.about p {
+  font-size: 13px; }

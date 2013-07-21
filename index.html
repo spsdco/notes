@@ -23,7 +23,7 @@
 				<input type="text" placeholder="New notebook...">
 			</div>
 			<div id="settingsbar">
-				<!-- <img id="settings" src="img/settings.svg" title=""> -->
+				<img id="settings" src="img/settings.svg" title="">
 				<img id="sync" class="spin" src="img/radar.svg" title="Sync with Dropbox">
 			</div>
 		</aside>
@@ -77,14 +77,6 @@
 		<button class="true special">Rename</button>&nbsp;<button class="false special">Cancel</button>
 	</div>
 	</section>
-<section class="modal settings">
-	<div class="settings-container">
-		<h1>Settings</h1>
-		<h2>Default note name</h2>
-		<input type="text"></input><br/>
-		<button class="true special">Apply</button>&nbsp;<button class="false special">Close</button>
-	</div>
-</section>
 <section class="popover-mask">
 	<div class="delete-popover">
 	  <div class="arrow"></div><div class="container">
@@ -108,14 +100,24 @@
 		</nav>
 		<div class="container">
 			<div class="general current">
-				<center><h2>Nothing here yet</h2></center> <!-- Some shit placeholder -->
+				<img src="img/dropbox.png">
+				<div class="signedout">
+					<p>Springseed can sync with Dropbox for access to notes on all your devices.</p>
+					<button id="signin" class="special">Sign In</button>
+				</div>
+				<div class="signedin">
+					<p>Signed in as <strong class="username"></strong></p>
+					<button id="signout" class="special">Sign Out</button>
+				</div>
 			</div>
 			<div class="about">
-				<h1 class="name">Noted 1.0</h1>
-				<p>By Jono Cooper and Micheal Harker<br/>
-				<a href="http://notedapp.com">notedapp.com</a></p>
-				<p>Made in New Zealand and the United Kingdom.</p>
-				<p>Special thanks to George Czabania for the silder plugin.</p>
+				<br>
+				<img src="img/icon.svg" width="128" height="128">
+				<h1 class="name">Springseed 1.0</h1>
+				<p>Copyright &copy; 2013 Jono Cooper and Micheal Harker<br>
+				<a href="http://getspringseed.com">getspringseed.com</a></p>
+				<p>Made in New Zealand and the UK.</p>
+
 			</div>
 		</div>
 	</div>
