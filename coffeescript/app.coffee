@@ -394,8 +394,6 @@ window.noted =
 				$('#notes ul').html()
 				results = window.noted.db.search(query)
 				results.forEach (note) =>
-					console.log note.date
-					console.log window.noted.util.date note.date
 					htmlstr = template({
 						id: note.id
 						name: note.name

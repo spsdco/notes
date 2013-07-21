@@ -433,8 +433,6 @@
           $('#notes ul').html();
           results = window.noted.db.search(query);
           results.forEach(function(note) {
-            console.log(note.date);
-            console.log(window.noted.util.date(note.date));
             return htmlstr = template({
               id: note.id,
               name: note.name,
