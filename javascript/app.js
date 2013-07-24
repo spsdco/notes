@@ -313,7 +313,7 @@
     initDropbox: function() {
       var _this = this;
       window.client = new Dropbox.Client({
-        key: "GCLhKiJJwJA=|5dgkjE/gvYMv09OgvUpzN1UoNir+CfgY36WwMeNnmQ==",
+        key: "Q6UsZDK8EmA=|Oo2/wD17r1T06QmQCbdU+HB3APMstA1lbRLuhFAirQ==",
         sandbox: true
       });
       window.isOpen((Math.round(Math.random() * 48120) + 1024).toString(), "127.0.0.1", function(isportopen, port, host) {
@@ -357,7 +357,6 @@
       });
       window.noted.window = gui.Window.get();
       window.noted.window.show();
-      window.noted.window.showDevTools();
       window.noted.load.notebooks();
       window.noted.load.notes("all");
       window.noted.editor = new jonoeditor($("#contentwrite"));
