@@ -11,3 +11,7 @@ You can avoid all this if you just use CodeKit.
 - [CoffeeScript Install](http://coffeescript.org/#installation)
 - [Compass Install](http://compass-style.org/install/)
 - [CodeKit](http://incident57.com/codekit/)
+
+###Official Website
+
+[Springseed](http://getspringseed.com)
