@@ -760,7 +760,6 @@
     util: {
       date: function(date) {
         var difference, month, now, oneDay, words;
-        date = parseInt(date);
         date = new Date(date);
         month = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
         now = new Date();

@@ -753,7 +753,6 @@ window.noted =
 		# I can't help but feel that this function is bugged,
 		# but fuckit, lets ship.
 		date: (date) ->
-			date = parseInt(date)
 			date = new Date(date)
 
 			month = [
