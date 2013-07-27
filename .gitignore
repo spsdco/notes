@@ -1,8 +1,8 @@
+javascript/*.js
 .sass-cache
-
 node_modules
 *.sublime-project
 *.sublime-workspace
 
 codekit-config.json
-libpeerconnection.log # Fucking hell, node-webkit wants to store this in my $PWD. It's blank and i dont know why it's even there. 
+libpeerconnection.log
