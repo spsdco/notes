@@ -125,6 +125,19 @@ class jonoeditor
 			@timer = setTimeout ->
 				window.noted.save()
 			, 10000
+		.on "keydown", (e) ->
+			# Fixes Tabs
+			if e.keyCode is 9
+				myValue = "    "
+				startPos = @selectionStart
+				endPos = @selectionEnd
+				scrollTop = @scrollTop
+				@value = @value.substring(0, startPos) + myValue + @value.substring(endPos, @value.length)
+				@focus()
+				@selectionStart = startPos + myValue.length
+				@selectionEnd = startPos + myValue.length
+				@scrollTop = scrollTop
+				e.preventDefault()
 
 	getReadOnly: ->
 		@el.prop("disabled")
