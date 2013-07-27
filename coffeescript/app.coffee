@@ -16,6 +16,7 @@ Splitter 			= require './javascript/lib/splitter'
 modal 				= require './javascript/lib/modal'
 autogrow			= require './javascript/lib/autogrow'
 rangyinputs			= require './javascript/lib/rangyinputs'
+mt					= require 'mousetrap'
 
 window.isOpen = (port, host, callback) ->
   isOpen = false
@@ -339,7 +340,11 @@ window.noted =
 		window.noted.window = gui.Window.get()
 		window.noted.window.show()
 		window.noted.window.title = "Springseed"
-		# window.noted.window.showDevTools()
+		window.noted.window.showDevTools()
+
+		# Key Combos
+		mt.bind ['ctrl+w', 'ctrl+q'], (e) ->
+			window.noted.window.close()
 
 		window.noted.load.notebooks()
 		window.noted.load.notes("all")
