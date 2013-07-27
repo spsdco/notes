@@ -340,10 +340,18 @@ window.noted =
 		window.noted.window = gui.Window.get()
 		window.noted.window.show()
 		window.noted.window.title = "Springseed"
-		window.noted.window.showDevTools()
+		#window.noted.window.showDevTools()
+
+		window.noted.window.on 'maximize', ->
+			window.noted.isMaximized = true
+		window.noted.window.on 'unmaximize', ->
+			window.noted.isMaximized = false
+
 
 		# Key Combos
-		mt.bind ['ctrl+w', 'ctrl+q'], (e) ->
+		mt.bind 'ctrl+w', (e) ->
+			window.noted.window.close()
+		mt.bind 'ctrl+q', (e) ->
 			window.noted.window.close()
 
 		window.noted.load.notebooks()
@@ -434,7 +442,10 @@ window.noted =
 			window.noted.window.minimize()
 
 		$('body').on "click", "#maximize", ->
-			window.noted.window.maximize()
+			if window.noted.isMaximized
+				window.noted.window.unmaximize()
+			else
+				window.noted.window.maximize()
 
 		$('body').on "keydown", "#notebooks input", (e) ->
 			if e.keyCode is 13
