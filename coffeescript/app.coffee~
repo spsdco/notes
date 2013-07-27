@@ -125,19 +125,6 @@ class jonoeditor
 			@timer = setTimeout ->
 				window.noted.save()
 			, 10000
-		.on "keydown", (e) ->
-			# Fixes Tabs
-			if e.keyCode is 9
-				myValue = "    "
-				startPos = @selectionStart
-				endPos = @selectionEnd
-				scrollTop = @scrollTop
-				@value = @value.substring(0, startPos) + myValue + @value.substring(endPos, @value.length)
-				@focus()
-				@selectionStart = startPos + myValue.length
-				@selectionEnd = startPos + myValue.length
-				@scrollTop = scrollTop
-				e.preventDefault()
 
 	getReadOnly: ->
 		@el.prop("disabled")
@@ -301,7 +288,7 @@ window.noted =
 
 	initDropbox: ->
 		window.client = new Dropbox.Client
-			key: "Q6UsZDK8EmA=|Oo2/wD17r1T06QmQCbdU+HB3APMstA1lbRLuhFAirQ==",
+			key: "GCLhKiJJwJA=|5dgkjE/gvYMv09OgvUpzN1UoNir+CfgY36WwMeNnmQ==",
 			sandbox: true
 
 		window.isOpen (Math.round(Math.random() * 48120) + 1024).toString(), "127.0.0.1", (isportopen, port, host) =>
@@ -338,8 +325,7 @@ window.noted =
 
 		window.noted.window = gui.Window.get()
 		window.noted.window.show()
-		window.noted.window.title = "Springseed"
-		# window.noted.window.showDevTools()
+		window.noted.window.showDevTools()
 
 		window.noted.load.notebooks()
 		window.noted.load.notes("all")
@@ -767,6 +753,7 @@ window.noted =
 		# I can't help but feel that this function is bugged,
 		# but fuckit, lets ship.
 		date: (date) ->
+			date = parseInt(date)
 			date = new Date(date)
 
 			month = [

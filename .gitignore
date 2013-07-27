@@ -6,3 +6,6 @@ node_modules
 
 codekit-config.json
 libpeerconnection.log
+
+# Becuase mh0 needs to compress for the debian packaging
+*.nw
