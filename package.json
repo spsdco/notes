@@ -1,6 +1,14 @@
 {
-  "name": "app",
-  "version": "0.0.1",
+  "main": "public/index.html",
+  "name": "Springseed",
+  "version": "1.1",
+  "window": {
+    "width": 1200,
+    "height": 600,
+    "position": "mouse",
+    "min_width": 300,
+    "min_height": 500
+  },
   "dependencies": {
     "underscore": "1.4.x",
     "jqueryify": "~1.9.1",
