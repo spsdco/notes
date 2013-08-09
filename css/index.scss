@@ -80,18 +80,13 @@ body.resizing { cursor: ew-resize; }
   width: 295px;
   text-align: right;
   position: absolute;
-  padding: 5px 0px 5px 4px;
-  top: 0;
+  padding: 8px 0px 8px 4px;
   border-right: 1px solid #444;
 
   &.all {
     #new {
       opacity: 0.35;
     }
-  }
-
-  #share {
-    display: none;
   }
 
   &.disabled {
@@ -101,14 +96,13 @@ body.resizing { cursor: ew-resize; }
   }
 
   img {
-    height: 28px;
-    margin-right: 9px;
+    height: 22px;
+    margin-right: 11px;
     opacity: 0.75;
     -webkit-user-drag: none;
     -moz-user-drag: none;
     -ms-user-drag: none;
     user-drag: none;
-    -webkit-transition: 150ms ease opacity;
 
     &:active {
       opacity: 1;
