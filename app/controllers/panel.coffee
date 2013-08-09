@@ -1,4 +1,3 @@
-# Spine
 Spine = require 'spine'
 
 # Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE

@@ -41,9 +41,68 @@
 }).call(this);
 
 
-},{"spine":6}],2:[function(require,module,exports){
+},{"spine":11}],2:[function(require,module,exports){
 (function() {
-  var App, Panel, Spine,
+  var Notebook, Sidebar, Spine,
+    __bind = function(fn, me){ return function(){ return fn.apply(me, arguments); }; },
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Spine = require('spine');
+
+  Notebook = require('../models/notebook.coffee');
+
+  Sidebar = (function(_super) {
+    __extends(Sidebar, _super);
+
+    Sidebar.prototype.template = (function() {
+      require('../views/notebook.js');
+      return Handlebars.templates['notebook'];
+    })();
+
+    Sidebar.prototype.events = {
+      "keyup input": "new"
+    };
+
+    Sidebar.prototype.elements = {
+      "ul": "list",
+      "input": "input"
+    };
+
+    function Sidebar() {
+      this.addOne = __bind(this.addOne, this);
+      Sidebar.__super__.constructor.apply(this, arguments);
+      Notebook.bind("create", this.addOne);
+    }
+
+    Sidebar.prototype.addOne = function(notebook) {
+      this.list.append(this.template(notebook));
+      return console.log("new notebook w/ id: " + notebook);
+    };
+
+    Sidebar.prototype["new"] = function(e) {
+      var val;
+      val = this.input.val();
+      if (e.which === 13 && val) {
+        Notebook.create({
+          name: val
+        });
+        return this.input.val("");
+      }
+    };
+
+    return Sidebar;
+
+  })(Spine.Controller);
+
+  module.exports = Sidebar;
+
+}).call(this);
+
+
+},{"../models/notebook.coffee":8,"../views/notebook.js":9,"spine":11}],3:[function(require,module,exports){
+(function() {
+  var App, Note, Notebook, Panel, Sidebar, Spine, Splitter,
     __hasProp = {}.hasOwnProperty,
     __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
 
@@ -51,20 +110,54 @@
 
   Spine = require('spine');
 
+  Splitter = require('./lib/splitter.js');
+
+  Notebook = require('./models/notebook.coffee');
+
+  Note = require('./models/note.coffee');
+
   Panel = require('./controllers/panel.coffee');
+
+  Sidebar = require('./controllers/sidebar.coffee');
 
   App = (function(_super) {
     __extends(App, _super);
 
     App.prototype.elements = {
-      '#panel': 'panel'
+      '#panel': 'panel',
+      '#sidebar': 'sidebar'
     };
 
     function App() {
       App.__super__.constructor.apply(this, arguments);
-      this.log("stargin");
+      Splitter.init({
+        parent: $('#parent')[0],
+        panels: {
+          left: {
+            el: $("#sidebar")[0],
+            min: 150,
+            width: 200,
+            max: 450
+          },
+          center: {
+            el: $("#notes")[0],
+            min: 250,
+            width: 300,
+            max: 850
+          },
+          right: {
+            el: $("#content")[0],
+            min: 450,
+            width: 550,
+            max: Infinity
+          }
+        }
+      });
       this.panel = new Panel({
         el: this.panel
+      });
+      this.sidebar = new Sidebar({
+        el: this.sidebar
       });
     }
 
@@ -77,7 +170,7 @@
 }).call(this);
 
 
-},{"./controllers/panel.coffee":1,"./lib/setup.coffee":4,"spine":6}],3:[function(require,module,exports){
+},{"./controllers/panel.coffee":1,"./controllers/sidebar.coffee":2,"./lib/setup.coffee":5,"./lib/splitter.js":6,"./models/note.coffee":7,"./models/notebook.coffee":8,"spine":11}],4:[function(require,module,exports){
 (function() {
   var exports, jQuery;
 
@@ -96,7 +189,7 @@
 }).call(this);
 
 
-},{"./index.coffee":2,"jqueryify":5}],4:[function(require,module,exports){
+},{"./index.coffee":3,"jqueryify":10}],5:[function(require,module,exports){
 (function() {
   require('jqueryify');
 
@@ -107,7 +200,365 @@
 }).call(this);
 
 
-},{"jqueryify":5,"spine":6,"spine/lib/local":7}],5:[function(require,module,exports){
+},{"jqueryify":10,"spine":11,"spine/lib/local":12}],6:[function(require,module,exports){
+(function() {
+
+  // Variables
+  var parent;
+  var panels = {};
+  var splitters = {};
+  var parentOffset = 0;
+  var width = 0;
+  var active = false;
+  var offset = {};
+  var minWidth = 0;
+  var last = {
+    pos: 0,
+    width: 0
+  };
+
+
+  // Class Panel
+  var Panel = function(id, options) {
+    this.id = id;
+    this.el = options.el;
+    this.min = options.min || 0;
+    this.max = options.max || Infinity;
+    this.width = options.width || 0;
+
+    switch (this.id) {
+      case "left":
+        this.pos = 0;
+        break;
+      case "center":
+        this.pos = panels.left.width;
+        break;
+      case "right":
+        this.pos = panels.left.width + panels.center.width;
+        break;
+    }
+
+    if (this.id !== "right") { this.el.style.width = this.width + "px"; }
+    this.el.style.left = this.pos + "px";
+
+  };
+
+  Panel.prototype = {
+    move: function(position, relative) {
+      if (relative) { this.pos += position; }
+      else { this.pos = position; }
+      this.el.style.left = this.pos + "px";
+    },
+    resize: function(width, relative) {
+      if (relative) { this.width += width; }
+      else { this.width = width; }
+      if (this.width < this.min) { this.width = this.min; }
+      else if (this.width > this.max) { this.width = this.max; }
+      this.el.style.width = this.width + "px";
+    }
+  };
+
+
+  // Class Splitter
+  var Splitter = function(id) {
+    this.id = id;
+    this.el = doc.createElement("div")
+    this.pos = 0;
+
+    if (this.id === "left") {
+      this.left = panels.left;
+      this.right = panels.center;
+    }
+    else if (this.id === "right") {
+      this.left = panels.center;
+      this.right = panels.right;
+    }
+
+    this.el.className = "splitter split-" + this.id;
+    this.el.style.left = this.right.pos + "px";
+    this.left.el.insertAdjacentElement('afterend', this.el);
+    this.pos = this.el.offsetLeft;
+    this.el.obj = this;
+    this.el.onmousedown = events.mousedown;
+
+  };
+
+  Splitter.prototype = {
+    move: Panel.prototype.move,
+    resize: function(pos) {
+      var resizeWindow = true;
+
+      // Left min
+      if (pos < this.left.min + offset.left) {
+        pos = this.left.min + offset.left;
+      }
+
+      // Left max
+      else if (pos > this.left.max + offset.left) {
+        pos = this.left.max + offset.left;
+      }
+
+      if (this.id === "right") {
+        resizeWindow = false;
+
+        // Right min
+        if (offset.right - pos < this.right.min) {
+          resizeWindow = true;
+        }
+
+        // Right max
+        else if (offset.right - pos > this.right.max) {
+          pos = offset.right - this.right.max;
+        }
+      }
+
+      // Calculate diff
+      var diff = pos - last.pos;
+      if (diff === 0) {
+        this.pos = pos;
+        return true;
+      }
+
+      // Right Splitter
+      if (this.id === "right") {
+        panels.center.resize(pos - offset.left);
+        panels.right.move(pos);
+        splitters.right.move(pos);
+      }
+
+      // Left splitter
+      else if (this.id === "left") {
+        splitters.left.move(pos);
+        splitters.right.move(pos + panels.center.width);
+        panels.left.resize(pos - offset.left);
+        panels.center.move(pos);
+        panels.right.move(splitters.right.pos);
+        minWidth = pos + panels.center.min + panels.right.min;
+      }
+
+      // Resize window frame
+      if (mode === "node" && resizeWindow) {
+        width += diff;
+        offset.right = win.width = width;
+      }
+
+      // Save position
+      this.pos = last.pos = pos;
+    }
+  };
+
+
+  /*
+    Node Webkit Support
+    -------------------
+    global.document = document
+    global.window = window
+  */
+  var win, doc, mode;
+  // Think cake is fucking this.
+  // if (typeof(process) != "undefined") {
+  //   mode = "node";
+  //   console.log("2")
+  //   win = global.gui.Window.get();
+  //   doc = global.document;
+  // } else {
+    console.log("HI")
+    mode = "browser";
+    win = window;
+    doc = document;
+  // }
+
+
+  // Calculate position of cursor on parent.
+  var getPos = function(clientX) {
+    var pos = clientX - parentOffset;
+    if (pos < 0) {
+      pos = 0;
+    }
+    else if (pos > width) {
+      pos = width;
+    }
+    return pos;
+  };
+
+
+  // Events
+  var events = {
+
+    mousedown: function(event) {
+      active = this.obj;
+      offset = {
+        left: 0,
+        right: width
+      };
+      if (active.id === "right") {
+        offset.left = splitters.left.pos;
+      }
+      else if (active.id === "left") {
+        offset.right = splitters.right.pos;
+      }
+      last.pos = getPos(event.clientX);
+      doc.body.className = "resizing";
+    },
+
+    mousemove: function(event) {
+      if (active) {
+        var pos = getPos(event.clientX);
+        active.resize(pos);
+      }
+    },
+
+    mouseup: function() {
+
+      if (mode == "node" && active.id === "left") {
+        win.setMinimumSize(panels.left.max + panels.center.min + panels.right.min, 0);
+      }
+
+      doc.body.className = "";
+      active = false;
+    },
+
+    resize: function() {
+
+      // Only run if triggered by user
+      if (!active) {
+
+        // Get new width and check if it hase changed
+        width = parent.offsetWidth;
+        var diff = width - last.width;
+        if (diff === 0 || width < minWidth) { return false; }
+
+        // If window is shrinking
+        if (diff < 0) {
+          // Check right panel for min width
+          if (panels.right.el.offsetWidth <= panels.right.min) {
+            panels.center.resize(diff, true);
+            panels.right.move(diff, true);
+            splitters.right.move(diff, true);
+          }
+        }
+
+        last.width = width;
+      }
+    }
+  };
+
+  var init = function(options) {
+
+    // Get options
+    parent = options.parent;
+
+    // Create Panels
+    panels.left = new Panel("left", options.panels.left);
+    panels.center = new Panel("center", options.panels.center);
+    panels.right = new Panel("right", options.panels.right);
+
+    // Create Splitters
+    splitters.left = new Splitter("left");
+    splitters.right = new Splitter("right");
+
+    // Get width of parent
+    width = parent.offsetWidth;
+    minWidth = panels.left.min + panels.center.min + panels.right.min;
+
+    // Bind events
+    doc.onmousemove = events.mousemove;
+    doc.onmouseup = events.mouseup;
+    window.onresize = events.resize;
+
+  };
+
+  var exports = {
+    init: init,
+    panels: panels,
+    splitters: splitters
+  };
+
+  if (typeof(module) !== "undefined") {
+    module.exports = exports;
+  }
+  else {
+    window.Splitter = exports;
+  }
+
+}());
+
+},{}],7:[function(require,module,exports){
+(function() {
+  var Spine, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Spine = require('spine');
+
+  window.Note = (function(_super) {
+    __extends(Note, _super);
+
+    function Note() {
+      _ref = Note.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Note.configure('Note', 'name', 'content', 'notebook', 'date');
+
+    return Note;
+
+  })(Spine.Model);
+
+  module.exports = Note;
+
+}).call(this);
+
+
+},{"spine":11}],8:[function(require,module,exports){
+(function() {
+  var Spine, _ref,
+    __hasProp = {}.hasOwnProperty,
+    __extends = function(child, parent) { for (var key in parent) { if (__hasProp.call(parent, key)) child[key] = parent[key]; } function ctor() { this.constructor = child; } ctor.prototype = parent.prototype; child.prototype = new ctor(); child.__super__ = parent.prototype; return child; };
+
+  Spine = require('spine');
+
+  window.Notebook = (function(_super) {
+    __extends(Notebook, _super);
+
+    function Notebook() {
+      _ref = Notebook.__super__.constructor.apply(this, arguments);
+      return _ref;
+    }
+
+    Notebook.configure('Notebook', 'name');
+
+    return Notebook;
+
+  })(Spine.Model);
+
+  module.exports = Notebook;
+
+}).call(this);
+
+
+},{"spine":11}],9:[function(require,module,exports){
+(function() {
+  var template = Handlebars.template, templates = Handlebars.templates = Handlebars.templates || {};
+templates['notebook'] = template(function (Handlebars,depth0,helpers,partials,data) {
+  this.compilerInfo = [4,'>= 1.0.0'];
+helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
+  var buffer = "", stack1, functionType="function", escapeExpression=this.escapeExpression;
+
+
+  buffer += "<li data-id=\"";
+  if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "\">";
+  if (stack1 = helpers.name) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
+  else { stack1 = depth0.name; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
+  buffer += escapeExpression(stack1)
+    + "</li>\n";
+  return buffer;
+  });
+})();
+},{}],10:[function(require,module,exports){
 /*!
  * jQuery JavaScript Library v1.9.1
  * http://jquery.com/
@@ -9709,9 +10160,9 @@ if ( typeof define === "function" && define.amd && define.amd.jQuery ) {
 module.exports = window.jQuery;
 
 
-},{}],6:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 module.exports = require('./lib/spine');
-},{"./lib/spine":8}],7:[function(require,module,exports){
+},{"./lib/spine":13}],12:[function(require,module,exports){
 // Generated by CoffeeScript 1.6.2
 (function() {
   var Spine;
@@ -9749,7 +10200,7 @@ module.exports = require('./lib/spine');
 //@ sourceMappingURL=local.map
 */
 
-},{"spine":6}],8:[function(require,module,exports){
+},{"spine":11}],13:[function(require,module,exports){
 // Generated by CoffeeScript 1.6.2
 (function() {
   var $, Controller, Events, Log, Model, Module, Spine, createObject, isArray, isBlank, makeArray, moduleKeywords,
@@ -10925,5 +11376,5 @@ module.exports = require('./lib/spine');
 //@ sourceMappingURL=spine.map
 */
 
-},{}]},{},[3])
+},{}]},{},[4])
 ;

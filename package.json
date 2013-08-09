@@ -1,7 +1,7 @@
 {
   "main": "public/index.html",
   "name": "Springseed",
-  "version": "1.1",
+  "version": "1.1.0",
   "window": {
     "width": 1200,
     "height": 600,
@@ -15,6 +15,7 @@
     "spine": "~1.1.x"
   },
   "devDependencies": {
+    "handlebars": "1.0.x",
     "browserify": "*",
     "caching-coffeeify": "*",
     "watchify": "*",

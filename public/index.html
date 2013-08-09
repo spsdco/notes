@@ -3,6 +3,9 @@
 <head>
   <meta charset=utf-8>
   <title>Springseed</title>
+  <!-- TODO: Find out how to include this in setup.coffee -->
+  <script src="handlebars.runtime.js"></script>
+
   <link rel="stylesheet" href="application.css">
   <script src="application.js"></script>
 </head>
@@ -18,7 +21,44 @@
       <div id="search">
         <input type="text" placeholder="Search">
       </div>
-    </header>
+    </div>
+    <div id="parent">
+      <aside id="sidebar" class="panel">
+        <div class="container">
+          <ul></ul>
+          <input type="text" placeholder="New notebook...">
+        </div>
+        <div id="settingsbar">
+          <img id="settings" src="img/settings.svg" title="">
+          <img id="sync" class="spin" src="img/radar.svg" title="Sync with Dropbox">
+        </div>
+      </aside>
+      <section id="notes" class="panel">
+        <ul></ul>
+      </section>
+      <section id="content" class="panel deselected">
+        <div class="editorbuttons">
+          <div class="inner">
+            <button data-action="bold"><img src="img/bold.png"></button><button data-action="italics"><img src="img/italic.png"></button><button data-action="hyperlink"><img src="img/link.png"></button><button data-action="heading"><img src="img/heading.png"></button><button data-action="img"><img src="img/image.png"></button>
+          </div>
+        </div>
+        <header>
+          <div class="headerwrap">
+            <div class="left">
+              <h1></h1>
+            </div>
+            <div class="right">
+              <button class="toggle edit">edit</button><br>
+              <time></time>
+            </div>
+          </div>
+        </header>
+        <section id="contentscroller">
+          <section id="contentwrite"></section>
+          <section id="contentread"></section>
+        </section>
+      </section>
+    </div>
   </div>
 </body>
 </html>
