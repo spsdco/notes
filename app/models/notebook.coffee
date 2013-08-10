@@ -2,6 +2,7 @@ Spine = require 'spine'
 
 class window.Notebook extends Spine.Model
   @configure 'Notebook',
-    'name'
+    'name',
+    'categories'
 
 module.exports = Notebook

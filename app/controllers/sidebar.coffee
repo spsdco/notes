@@ -3,6 +3,9 @@ Spine = require 'spine'
 # Models
 Notebook = require '../models/notebook.coffee'
 
+# Controllers
+NotebookItem = require './notebook.item.coffee'
+
 class Sidebar extends Spine.Controller
 
   template: (->
@@ -20,10 +23,16 @@ class Sidebar extends Spine.Controller
   constructor: ->
     super
     Notebook.bind "create", @addOne
+    Notebook.bind "changeNotebook", @change
 
   addOne: (notebook) =>
     @list.append @template notebook
-    console.log "new notebook w/ id: " + notebook
+    view = new NotebookItem
+      el: @list.find("#notebook-#{ notebook.id }")
+      notebook: notebook
+
+  change: (obj) =>
+    Notebook.current = obj
 
   new: (e) ->
     val = @input.val()
@@ -31,6 +40,7 @@ class Sidebar extends Spine.Controller
       # Make a new Notebook
       Notebook.create
         name: val
+        categories: ["General"]
       @input.val ""
 
 module.exports = Sidebar

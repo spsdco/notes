@@ -11,11 +11,13 @@ Note = require './models/note.coffee'
 # Controllers
 Panel = require './controllers/panel.coffee'
 Sidebar = require './controllers/sidebar.coffee'
+Popover = require './controllers/popover.coffee'
 
 class App extends Spine.Controller
   elements:
     '#panel': 'panel'
     '#sidebar': 'sidebar'
+    '.popover-mask': 'popoverMask'
 
   constructor: ->
     super
@@ -43,6 +45,6 @@ class App extends Spine.Controller
     # Init Stuff
     @panel = new Panel( el: @panel )
     @sidebar = new Sidebar( el: @sidebar )
+    @popover = new Popover( el: @popoverMask )
 
 module.exports = App
-

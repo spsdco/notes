@@ -203,38 +203,87 @@ body.resizing { cursor: ew-resize; }
     padding: 0;
     margin: 0;
   }
-  li {
+  li.notebook {
     height: 33px;
     line-height: 33px;
     border-top: 1px solid #f1f1f1;
     border-bottom: 1px solid #bbb;
-    padding: 0 10px 0 34px;
     font-size: 14px;
     color: #222;
     text-shadow: 0 -1px 0 #f1f1f1;
-    background: url(img/book.svg) no-repeat;
+    background-image: url(img/book.svg);
+    background-repeat: no-repeat;
     background-size: 33px;
-    cursor: default;
+    overflow: hidden;
+    position: relative;
+    padding: 0 10px 0 34px;
 
-    &[data-id=all] {
+    &#notebook-all {
       background: url(img/list.svg) no-repeat 3px 40%;
       background-size: 28px;
     }
 
-    &.tag {
-      background: url(img/tag.svg) no-repeat 3px 50%;
-      background-size: 28px;
+    .icon {
+      position: absolute;
+      right: 0;
+      top: 0;
+      height: 33px;
+      background: url(img/add.svg) no-repeat 50% 50%;
+      background-size: 10px;
+      opacity: 0.2;
+      width: 33px;
+      visibility: hidden;
+      top: 0;
+
+      &:hover {
+        opacity: 0.8;
+      }
     }
 
     &.selected {
-      background-color: lighten($sidebar-color, 8%);
+      background-image: url(img/book_open.svg);
+      background-color: lighten($sidebar-color, 7%);
+      padding: 0 34px;
+
+      .icon {
+        visibility: visible;
+      }
+
+      span {
+        font-weight: bold;
+      }
+    }
+
+    &.expanded {
+      overflow-x: hidden;
+      overflow-y: visible;
+      height: inherit;
+    }
+  }
+  .category {
+    padding-bottom: 6px;
+
+    li {
+      font-size: 13px;
+      line-height: 1.5;
+      color: #555;
+
+      &:hover {
+        color: #333;
+      }
+
+      &.selected {
+        color: #555;
+        font-weight: bold;
+      }
     }
   }
   input {
     background-color: $sidebar-color;
-    background-image: url(img/book_input.svg);
+    background-image: url(img/book.svg);
     background-size: 33px;
     background-repeat: no-repeat;
+    opacity: 0.6;
     color: #222;
     width: 100%;
     box-sizing: border-box;
@@ -244,18 +293,26 @@ body.resizing { cursor: ew-resize; }
     font-size: 14px;
     border: 0;
 
+    &::-webkit-input-placeholder {
+     color: #000;
+    }
+
     &:focus {
-      background-image: url(img/book.svg);
+      opacity: 1;
+
+      &::-webkit-input-placeholder {
+       color: #ccc;
+      }
     }
   }
 }
 
 @-webkit-keyframes spin {
   0% {
-    -webkit-transform: rotate(0);
+    -webkit-transform: rotate(0,0,1,0);
   }
   100% {
-    -webkit-transform: rotate(360deg);
+    -webkit-transform: rotate3d(0, 0, 1, 360deg);
   }
 }
 
@@ -274,7 +331,7 @@ body.resizing { cursor: ew-resize; }
     opacity: 0.6;
 
     &.spin {
-      -webkit-animation: spin 1000ms linear infinite;
+      // -webkit-animation: spin 1000ms linear infinite;
     }
 
     &:active {
@@ -608,9 +665,21 @@ body.resizing { cursor: ew-resize; }
   height: 100%;
   position: absolute;
   top: 0;
+  color: #ccc;
 
   & > div {
     display: none;
+
+    input {
+      background: #333;
+      font-size: 12px;
+      border: 0;
+      border-radius: 2px;
+      margin: 4px 5px 4px 0;
+      outline: 0;
+      padding: 5px 6px;
+      color: #fff;
+    }
 
     button {
       color: #ccc;
@@ -632,9 +701,9 @@ body.resizing { cursor: ew-resize; }
   }
 }
 
-.delete-popover {
+.delete-popover, .category-popover {
   display: inline-block;
-  width: 200px;
+  width: 300px;
   height: 34px;
   position: absolute;
 
@@ -652,12 +721,14 @@ body.resizing { cursor: ew-resize; }
   .container {
     display: inline-block;
     background: #222;
-    height: 30px;
     vertical-align: top;
     margin-top: 2px;
     padding: 0 5px;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+  input {
+    width: 100px;
   }
 }
 
@@ -682,7 +753,6 @@ body.resizing { cursor: ew-resize; }
     background: #222;
     height: 30px;
     vertical-align: top;
-    margin-top: 0px;
     padding: 0 5px;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);

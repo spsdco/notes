@@ -1,1 +1,8 @@
-<li data-id="{{id}}">{{name}}</li>
+<li class="notebook" id="notebook-{{id}}"><span>{{name}}</span><span class="icon"></span>
+<ul class="category">
+  <li data-category="all" class="selected">All Notes</li>
+  {{#each categories}}
+  <li data-category="{{@index}}">{{this}}</li>
+  {{/each}}
+</ul>
+</li>

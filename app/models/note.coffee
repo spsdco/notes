@@ -5,6 +5,7 @@ class window.Note extends Spine.Model
     'name',
     'content',
     'notebook',
+    'category',
     'date'
 
 module.exports = Note
