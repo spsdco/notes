@@ -1,6 +1,7 @@
 Spine = require 'spine'
 
 # Models
+Note = require '../models/note.coffee'
 Notebook = require '../models/notebook.coffee'
 
 # Controllers
@@ -33,6 +34,7 @@ class Sidebar extends Spine.Controller
 
   change: (notebook) =>
     # This is defined here, or some weird shit happens
+    Note.trigger "changeNote"
     Notebook.current = notebook
 
   new: (e) ->

@@ -8,12 +8,16 @@ Note = require("../models/note.coffee")
 Notebook = require("../models/notebook.coffee")
 
 class Panel extends Spine.Controller
+  elements:
+    "#noteControls": "noteControls"
+
   events:
     "click #decor img": "windowControl"
     "click #noteControls img": "noteControl"
 
   constructor: ->
     super
+    Note.bind "changeNote", @toggle
 
   windowControl: (e) ->
     switch e.currentTarget.className
@@ -37,5 +41,12 @@ class Panel extends Spine.Controller
         console.log("Sharing")
       when "del"
         console.log("Deleting")
+
+  toggle: (note) =>
+    if note isnt undefined
+      @noteControls.removeClass("disabled")
+    else
+      @noteControls.addClass("disabled")
+
 
 module.exports = Panel
