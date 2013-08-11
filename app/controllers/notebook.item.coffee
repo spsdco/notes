@@ -13,9 +13,18 @@ class NotebookItem extends Spine.Controller
 
   constructor: ->
     super
+    @notebook.bind "changeNotebook", @changeNotebook
     @notebook.bind "update", @update
 
   expand: (e) =>
+    # Categories
+    if $(e.target).attr("data-category")
+      Notebook.trigger("changeNotebook", {id: @notebook.id, category: $(e.target).attr("data-category")})
+    else
+      Notebook.trigger("changeNotebook", {id: @notebook.id, category: "all"})
+
+  changeNotebook: (notebook) =>
+    # This is seperated because we don't want to do DOM triggers.
     @el.parent()
       .children()
       .removeClass('expanded selected')
@@ -24,16 +33,9 @@ class NotebookItem extends Spine.Controller
     # Only show the categories if there's more than one.
     @el.addClass('expanded') if @notebook.categories.length > 1
 
-    # Filters
+    # Select the right one
     @category.find("li").removeClass('selected')
-    if $(e.target).attr("data-category")
-      # Special Call - Not just all
-      $(e.target).addClass("selected")
-      Notebook.trigger("changeNotebook", {id: @notebook.id, category: $(e.target).attr("data-category")})
-    else
-      # Open All Notes
-      @el.find("[data-category='all']").addClass("selected")
-      Notebook.trigger("changeNotebook", {id: @notebook.id, category: "all"})
+    @el.find("[data-category='#{notebook.category}']").addClass("selected")
 
   newCategory: (e) ->
     $(".popover-mask").show()

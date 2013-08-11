@@ -38,9 +38,12 @@ class Sidebar extends Spine.Controller
     val = @input.val()
     if e.which is 13 and val
       # Make a new Notebook
-      Notebook.create
+      newNotebook = Notebook.create
         name: val
         categories: ["General"]
+
+      # Select that notebook for opening
+      Notebook.trigger("changeNotebook", {id: newNotebook.id, category: "all"})
       @input.val ""
 
 module.exports = Sidebar
