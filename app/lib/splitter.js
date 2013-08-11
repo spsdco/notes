@@ -159,7 +159,6 @@
   //   win = global.gui.Window.get();
   //   doc = global.document;
   // } else {
-    console.log("HI")
     mode = "browser";
     win = window;
     doc = document;

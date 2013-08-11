@@ -39,7 +39,7 @@ body.resizing { cursor: ew-resize; }
   cursor: default !important;
 }
 
-#sidebar, #panel, #notes {
+#sidebar, #panel, #browser {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -216,7 +216,10 @@ body.resizing { cursor: ew-resize; }
     background-size: 33px;
     overflow: hidden;
     position: relative;
-    padding: 0 10px 0 34px;
+
+    span {
+      padding: 0 10px 0 34px;
+    }
 
     &#notebook-all {
       background: url(img/list.svg) no-repeat 3px 40%;
@@ -243,14 +246,15 @@ body.resizing { cursor: ew-resize; }
     &.selected {
       background-image: url(img/book_open.svg);
       background-color: lighten($sidebar-color, 7%);
-      padding: 0 34px;
+
+      span {
+        padding: 0 34px;
+        font-weight: bold;
+      }
 
       .icon {
         visibility: visible;
-      }
-
-      span {
-        font-weight: bold;
+        padding: 0;
       }
     }
 
@@ -264,6 +268,7 @@ body.resizing { cursor: ew-resize; }
     padding-bottom: 6px;
 
     li {
+      padding: 0 10px 0 34px;
       font-size: 13px;
       line-height: 1.5;
       color: #555;
@@ -340,7 +345,7 @@ body.resizing { cursor: ew-resize; }
   }
 }
 
-#notes {
+#browser {
   border-right: 1px solid $border-color;
   position: absolute;
   background: darken($white-color, 1%);

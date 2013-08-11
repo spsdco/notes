@@ -11,12 +11,14 @@ Note = require './models/note.coffee'
 # Controllers
 Panel = require './controllers/panel.coffee'
 Sidebar = require './controllers/sidebar.coffee'
+Browser = require './controllers/browser.coffee'
 Popover = require './controllers/popover.coffee'
 
 class App extends Spine.Controller
   elements:
     '#panel': 'panel'
     '#sidebar': 'sidebar'
+    '#browser': 'browser'
     '.popover-mask': 'popoverMask'
 
   constructor: ->
@@ -32,7 +34,7 @@ class App extends Spine.Controller
           width: 200
           max: 450
         center:
-          el: $("#notes")[0]
+          el: $("#browser")[0]
           min: 250
           width: 300
           max: 850
@@ -45,6 +47,7 @@ class App extends Spine.Controller
     # Init Stuff
     @panel = new Panel( el: @panel )
     @sidebar = new Sidebar( el: @sidebar )
+    @browser = new Browser( el: @browser )
     @popover = new Popover( el: @popoverMask )
 
 module.exports = App

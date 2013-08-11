@@ -9,14 +9,13 @@ class NotebookItem extends Spine.Controller
 
   events:
     "click": "expand"
-    "click li": "filter"
     "click .icon": "newCategory"
 
   constructor: ->
     super
     @notebook.bind "update", @update
 
-  expand: ->
+  expand: (e) =>
     @el.parent()
       .children()
       .removeClass('expanded selected')
@@ -25,12 +24,16 @@ class NotebookItem extends Spine.Controller
     # Only show the categories if there's more than one.
     @el.addClass('expanded') if @notebook.categories.length > 1
 
-    # Open All Notes
-    Notebook.trigger("changeNotebook", {id: @notebook.id, category: "all"})
-
-  filter: (e) ->
+    # Filters
     @category.find("li").removeClass('selected')
-    $(e.currentTarget).addClass("selected")
+    if $(e.target).attr("data-category")
+      # Special Call - Not just all
+      $(e.target).addClass("selected")
+      Notebook.trigger("changeNotebook", {id: @notebook.id, category: $(e.target).attr("data-category")})
+    else
+      # Open All Notes
+      @el.find("[data-category='all']").addClass("selected")
+      Notebook.trigger("changeNotebook", {id: @notebook.id, category: "all"})
 
   newCategory: (e) ->
     $(".popover-mask").show()

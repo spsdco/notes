@@ -3,14 +3,19 @@ Spine = require 'spine'
 # Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
 win = window.require('nw.gui').Window.get() if window.require
 
+# Models
+Note = require("../models/note.coffee")
+Notebook = require("../models/notebook.coffee")
+
 class Panel extends Spine.Controller
   events:
-    "click #decor img": "windowcontrol"
+    "click #decor img": "windowControl"
+    "click #noteControls img": "noteControl"
 
   constructor: ->
     super
 
-  windowcontrol: (e) ->
+  windowControl: (e) ->
     switch e.currentTarget.className
       when "close"
         win.close()
@@ -18,5 +23,19 @@ class Panel extends Spine.Controller
         win.minimize()
       when "maximize"
         win.maximize()
+
+  noteControl: (e) ->
+    switch e.currentTarget.id
+      when "new"
+        Note.create
+          name: "Untitled Note"
+          excerpt: "lorem ipsum dol el emit"
+          notebook: Notebook.current.id
+          category: if Notebook.current.category is "all" then Notebook.find(Notebook.current.id).categories[0] else Notebook.find(Notebook.current.id).categories[Notebook.current.category]
+          date: Math.round(new Date().getTime()/1000)
+      when "share"
+        console.log("Sharing")
+      when "del"
+        console.log("Deleting")
 
 module.exports = Panel
