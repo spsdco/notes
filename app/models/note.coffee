@@ -29,7 +29,7 @@ class window.Note extends Spine.Model
       array = Note.all()
     return array
 
-  prettyDate: =>
+  prettyDate: (time) =>
     date = new Date(@date * 1000)
 
     month = [
@@ -71,6 +71,8 @@ class window.Note extends Spine.Model
     else
       pad = (n) -> (if (n < 10) then ("0" + n) else n)
       words = pad(date.getFullYear())+"-"+(pad(date.getMonth()+1))+"-"+pad(date.getDate())
+
+    words += " " + date.getHours() + ":" + date.getMinutes() if time
 
     return words
 

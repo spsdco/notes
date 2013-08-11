@@ -389,7 +389,7 @@ body.resizing { cursor: ew-resize; }
   }
 }
 
-#content {
+#editor {
   position: absolute;
   right: 0;
   background: lighten($white-color, 1%);
@@ -430,7 +430,7 @@ body.resizing { cursor: ew-resize; }
   header {
     margin: 0;
     padding: 0;
-    // @include background(linear-gradient(lighten($white-color, 4%), darken($white-color, 4%)));
+    background: -webkit-linear-gradient(lighten($white-color, 4%), darken($white-color, 4%));
     border-bottom: 1px solid #b4b3b1;
     position: absolute;
     right: 0;
