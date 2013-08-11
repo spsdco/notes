@@ -31,8 +31,9 @@ class Sidebar extends Spine.Controller
       el: @list.find("#notebook-#{ notebook.id }")
       notebook: notebook
 
-  change: (obj) =>
-    Notebook.current = obj
+  change: (notebook) =>
+    # This is defined here, or some weird shit happens
+    Notebook.current = notebook
 
   new: (e) ->
     val = @input.val()
@@ -43,7 +44,7 @@ class Sidebar extends Spine.Controller
         categories: ["General"]
 
       # Select that notebook for opening
-      Notebook.trigger("changeNotebook", {id: newNotebook.id, category: "all"})
+      Notebook.trigger "changeNotebook", {id: newNotebook.id, category: "all"}
       @input.val ""
 
 module.exports = Sidebar
