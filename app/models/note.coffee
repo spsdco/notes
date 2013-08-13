@@ -9,6 +9,8 @@ class window.Note extends Spine.Model
     'category',
     'date'
 
+  @extend @Sync
+
   # since we can't change .find, we can use this to the same effect
   @filter: (notebook, category) ->
     # returns all the notes if no notebook specified

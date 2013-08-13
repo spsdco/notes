@@ -5,4 +5,6 @@ class window.Notebook extends Spine.Model
     'name',
     'categories'
 
+  @extend @Sync
+
 module.exports = Notebook

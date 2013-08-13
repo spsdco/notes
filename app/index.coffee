@@ -26,6 +26,8 @@ class App extends Spine.Controller
   constructor: ->
     super
 
+    Notebook.fetch()
+
     # Init the Splitter so we can see crap.
     Splitter.init
       parent: $('#parent')[0],
