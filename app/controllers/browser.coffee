@@ -44,7 +44,7 @@ class Browser extends Spine.Controller
 
     @noteBrowser.html(noteList)
 
-    # TODO: DEFER BY 300MS
+    # TODO: DEFER BY 100MS
     for note in Note.filter(Notebook.current.id, Notebook.current.category)
       view = new NoteItem
         el: @noteBrowser.find("#note-#{ note.id }")

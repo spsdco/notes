@@ -39,8 +39,18 @@ class Sidebar extends Spine.Controller
     Notebook.current = notebook
 
   refresh: () =>
-    # Called on load
-    @log "HIH"
+    # Called on load from indexeddb
+    html = ""
+    for notebook in Notebook.all()
+      html += @template notebook
+    @list.html(html)
+
+    # TODO: DEFER BY 100MS
+    for notebook in Notebook.all()
+      view = new NotebookItem
+        el: @list.find("#notebook-#{ notebook.id }")
+        notebook: notebook
+
 
   new: (e) ->
     val = @input.val()
