@@ -90,6 +90,19 @@ Model.Sync =
       result = e.target.result
       @refresh(result or [], options)
 
+  saveNote: (content) ->
+    trans = Sync.db.transaction(["notes"], "readwrite");
+    store = trans.objectStore("notes");
+    request = store.put(content, @id)
+
+  loadNote: (callback) ->
+    trans = Sync.db.transaction(["notes"], "readwrite");
+    store = trans.objectStore("notes");
+    request = store.get(@id)
+
+    request.onsuccess = (e) =>
+      result = e.target.result
+      callback(result)
 
 Model.Sync.Methods =
   extended: ->

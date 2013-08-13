@@ -10,6 +10,9 @@ class window.Note extends Spine.Model
     'date'
 
   @extend @Sync
+  @include @Sync
+
+  console.log @Sync
 
   # since we can't change .find, we can use this to the same effect
   @filter: (notebook, category) ->
