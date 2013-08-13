@@ -14,17 +14,16 @@ Sync =
 
   # Run pending actions
   _clearPending: ->
-    for [fn, that, args], i in @pending by - 1
+    for [fn, that, args] in @pending by - 1
       fn.apply(that, args)
       @pending.length--
 
   # If connection is not ready, then we will wait until it is
   defer: (self, fn, args...) ->
     if @state is ONLINE
-      fn(args...)
+      fn.apply(self, args)
     else
       @pending.push [fn, self,  args]
-      console.log @pending
 
   state: OFFLINE
 
@@ -56,8 +55,15 @@ Model.Sync =
 
   extended: ->
 
-    @fetch Sync.defer(this, @loadLocal)
-    @change Sync.defer(this, @saveLocal)
+    console.log '%c> Setting up sync for %s', 'font-weight: bold', this.name
+
+    @fetch ->
+      console.log '%c> Calling fetch', 'background: #eee'
+      Sync.defer(this, @loadLocal)
+
+    @change ->
+      console.log '%c> Calling change', 'background: #eee'
+      Sync.defer(this, @saveLocal)
 
     Sync.connect()
 
@@ -71,7 +77,7 @@ Model.Sync =
 
   loadLocal: (options = {}) ->
 
-    console.log 'loading all'
+    console.log '%c> Fetching notes', 'color: blue'
 
     options.clear = true unless options.hasOwnProperty('clear')
 
