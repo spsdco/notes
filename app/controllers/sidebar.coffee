@@ -25,6 +25,7 @@ class Sidebar extends Spine.Controller
     super
     Notebook.bind "create", @addOne
     Notebook.bind "changeNotebook", @change
+    Notebook.bind "refresh", @refresh
 
   addOne: (notebook) =>
     @list.append @template notebook
@@ -36,6 +37,10 @@ class Sidebar extends Spine.Controller
     # This is defined here, or some weird shit happens
     Note.trigger "changeNote"
     Notebook.current = notebook
+
+  refresh: () =>
+    # Called on load
+    @log "HIH"
 
   new: (e) ->
     val = @input.val()

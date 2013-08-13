@@ -27,6 +27,7 @@ class App extends Spine.Controller
     super
 
     Notebook.fetch()
+    Note.fetch()
 
     # Init the Splitter so we can see crap.
     Splitter.init
