@@ -72,7 +72,7 @@ Model.Sync =
 
     # Save to IndexedDB
     trans = Sync.db.transaction(["meta"], "readwrite")
-    store = trans.objectStore("meta")
+    store = trans.objectStore "meta"
     request = store.put(result, @className)
 
   loadLocal: (options = {}) ->
@@ -82,8 +82,8 @@ Model.Sync =
     options.clear = true unless options.hasOwnProperty('clear')
 
     # Load from IndexedDB
-    trans = Sync.db.transaction(["meta"], "readwrite");
-    store = trans.objectStore("meta");
+    trans = Sync.db.transaction(["meta"], "readwrite")
+    store = trans.objectStore "meta"
     request = store.get(@className)
 
     request.onsuccess = (e) =>
@@ -91,13 +91,13 @@ Model.Sync =
       @refresh(result or [], options)
 
   saveNote: (content) ->
-    trans = Sync.db.transaction(["notes"], "readwrite");
-    store = trans.objectStore("notes");
+    trans = Sync.db.transaction(["notes"], "readwrite")
+    store = trans.objectStore "notes"
     request = store.put(content, @id)
 
   loadNote: (callback) ->
-    trans = Sync.db.transaction(["notes"], "readwrite");
-    store = trans.objectStore("notes");
+    trans = Sync.db.transaction(["notes"], "readwrite")
+    store = trans.objectStore "notes"
     request = store.get(@id)
 
     request.onsuccess = (e) =>

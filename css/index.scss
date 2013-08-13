@@ -554,6 +554,7 @@ body.resizing { cursor: ew-resize; }
 
 #contentwrite {
   margin: 65px auto 35px;
+  display: none;
 
   textarea {
     font-family: "Lato", sans-serif;
@@ -622,7 +623,6 @@ body.resizing { cursor: ew-resize; }
 #contentread {
   margin: 35px auto;
   bottom: auto;
-  display: none;
   z-index: 4;
   color: #333;
   font-family: "Lato", sans-serif;

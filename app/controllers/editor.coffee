@@ -8,6 +8,7 @@ class Editor extends Spine.Controller
   elements:
     ".headerwrap .left h1": "title"
     ".headerwrap .right time": "time"
+    "#contentread": "contentread"
 
   constructor: ->
     super
@@ -20,6 +21,10 @@ class Editor extends Spine.Controller
       @el.removeClass("deselected")
       @title.text currentNote.name
       @time.text currentNote.prettyDate(true)
+
+      # Content
+      currentNote.loadNote (content) =>
+        @contentread.html content
     else
       @el.addClass("deselected")
 
