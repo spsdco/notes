@@ -505,25 +505,39 @@ body.resizing { cursor: ew-resize; }
       cursor: default;
       font-weight: bold;
 
-      &.save {
-        font-size: 15px;
-        border: 1px solid #ccc;
-        padding: 5px 10px;
-        border-radius: 3px;
-        box-shadow: 0 1px 1px #fff, 0 1px 1px #fff inset;
-        margin-top: 8px;
-        color: #888;
-
-        &:active {
-          background: -webkit-linear-gradient(top,#fafafa,#fcfcfc);
-          border: 1px solid #bbb;
-          color: #444;
-        }
-      }
-
       &:hover {
         color: #444;
       }
+    }
+  }
+
+  &.edit {
+    .toggle {
+      font-size: 15px;
+      border: 1px solid #ccc;
+      padding: 5px 10px;
+      border-radius: 3px;
+      box-shadow: 0 1px 1px #fff, 0 1px 1px #fff inset;
+      margin-top: 8px;
+      color: #888;
+
+      &:active {
+        background: -webkit-linear-gradient(top,#fafafa,#fcfcfc);
+        border: 1px solid #bbb;
+        color: #444;
+      }
+    }
+    time {
+      display: none;
+    }
+    .editorbuttons {
+      top: 0;
+    }
+    #contentread {
+      display: none;
+    }
+    #contentwrite {
+      display: block;
     }
   }
 }
@@ -584,10 +598,6 @@ body.resizing { cursor: ew-resize; }
   border-bottom: 1px solid #ccc;
   top: -36px;
   -webkit-transition: 200ms ease all;
-
-  &.show {
-    top: 0;
-  }
 
   .inner {
     max-width: 610px;

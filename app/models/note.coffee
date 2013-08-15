@@ -34,6 +34,7 @@ class window.Note extends Spine.Model
 
   prettyDate: (time) =>
     date = new Date(@date * 1000)
+    pad = (n) -> (if (n < 10) then ("0" + n) else n)
 
     month = [
       "Jan"
@@ -72,10 +73,9 @@ class window.Note extends Spine.Model
     else if difference > -365
       words = month[date.getMonth()] + " " + date.getDate()
     else
-      pad = (n) -> (if (n < 10) then ("0" + n) else n)
       words = pad(date.getFullYear())+"-"+(pad(date.getMonth()+1))+"-"+pad(date.getDate())
 
-    words += " " + date.getHours() + ":" + date.getMinutes() if time
+    words += " " + date.getHours() + ":" + pad(date.getMinutes()) if time
 
     return words
 

@@ -12,7 +12,8 @@
   "dependencies": {
     "underscore": "1.4.x",
     "jqueryify": "~1.9.1",
-    "spine": "~1.1.x"
+    "spine": "~1.1.x",
+    "marked": "0.2.9"
   },
   "devDependencies": {
     "handlebars": "1.0.x",
