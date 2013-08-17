@@ -393,9 +393,6 @@ body.resizing { cursor: ew-resize; }
   position: absolute;
   right: 0;
   background: lighten($white-color, 1%);
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
 
   &.deselected {
     background-color: #ededea;

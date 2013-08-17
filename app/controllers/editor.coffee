@@ -87,5 +87,6 @@ class Editor extends Spine.Controller
       @toggle.text("edit")
       @title.prop "disabled", true
       @mode = "preview"
+      @time.text currentNote.prettyDate(true)
 
 module.exports = Editor
