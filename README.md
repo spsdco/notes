@@ -6,6 +6,7 @@ Open source, under the MIT license.
 
 ## How to use the code
 You'll need node & npm installed.
+
     npm install .
     cake server -w
 
