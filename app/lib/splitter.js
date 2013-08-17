@@ -152,16 +152,17 @@
     global.window = window
   */
   var win, doc, mode;
-  if (typeof(process) !== "undefined") {
-    mode = "node";
-    win = global.gui.Window.get();
-    doc = global.document;
-  }
-  else {
+  // Think cake is fucking this.
+  // if (typeof(process) != "undefined") {
+  //   mode = "node";
+  //   console.log("2")
+  //   win = global.gui.Window.get();
+  //   doc = global.document;
+  // } else {
     mode = "browser";
     win = window;
     doc = document;
-  }
+  // }
 
 
   // Calculate position of cursor on parent.

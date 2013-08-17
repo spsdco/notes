@@ -1,28 +1,26 @@
 {
-  "main": "index.html",
+  "main": "public/index.html",
   "name": "Springseed",
-  "description": "Organise your life with notes.",
-  "version": "1.0.0",
-  "keywords": [ "Springseed", "notes", "planner" ],
+  "version": "1.1.0",
   "window": {
-    "toolbar": false,
     "width": 1200,
     "height": 600,
     "position": "mouse",
     "min_width": 300,
-    "min_height": 500,
-    "frame": false,
-    "show": false
-  },
-  "webkit": {
-    "plugin": false
+    "min_height": 500
   },
   "dependencies": {
-    "jQuery": "1.7.x",
-    "marked": "0.2.x",
+    "underscore": "1.4.x",
+    "jqueryify": "~1.9.1",
+    "spine": "~1.1.x",
+    "marked": "0.2.9"
+  },
+  "devDependencies": {
     "handlebars": "1.0.x",
-    "dropbox": "0.9.x",
-    "string": "1.3.x",
-    "mousetrap": "0.0.1"
+    "browserify": "*",
+    "caching-coffeeify": "*",
+    "watchify": "*",
+    "uglify-js": "*",
+    "node-static": "*"
   }
 }
