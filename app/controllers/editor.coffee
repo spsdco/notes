@@ -70,7 +70,7 @@ class Editor extends Spine.Controller
           lastIndex = info.lastIndexOf(" ")
           info = info.substring(0, lastIndex) + "&hellip;"
         info = $(marked(info)).text()
-        info.split("\n").join(" ")
+        info = info.split("\n").join(" ")
 
         # Update Spine
         currentNote.updateAttributes {
