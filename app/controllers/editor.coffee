@@ -23,7 +23,7 @@ class Editor extends Spine.Controller
 
   enable: (note) =>
     # Put back into the right mode
-    @toggleMode() if @mode = "edit"
+    @toggleMode() if @mode is "edit"
 
     # Loads note
     Note.current = note
@@ -62,8 +62,24 @@ class Editor extends Spine.Controller
       # Save it
       if Note.current isnt undefined
         currentNote = Note.find(Note.current.id)
-        currentNote.updateAttribute("name", @title.val())
-        currentNote.updateAttribute("date", Math.round(new Date()/1000))
+
+        # Excerpts nicely
+        info = noteText
+        if info.length > 90
+          info = info.substring(0, 100)
+          lastIndex = info.lastIndexOf(" ")
+          info = info.substring(0, lastIndex) + "&hellip;"
+        info = $(marked(info)).text()
+        info.split("\n").join(" ")
+
+        # Update Spine
+        currentNote.updateAttributes {
+          "name": @title.val()
+          "excerpt": info
+          "date": Math.round(new Date()/1000)
+        }
+
+        # Update IndexedDB
         currentNote.saveNote(noteText)
 
       # The opposite
