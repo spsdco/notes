@@ -453,7 +453,7 @@ body.resizing { cursor: ew-resize; }
       user-select: none;
     }
 
-    h1 {
+    input {
       font-weight: 300;
       font-family: $light-font;
       text-shadow: 0 1px 0 #fff;
@@ -461,15 +461,15 @@ body.resizing { cursor: ew-resize; }
       margin: 0;
       letter-spacing: -1px;
       color: #222;
-      -webkit-user-select: text;
-      -moz-user-select: text;
-      -ms-user-select: text;
-      user-select: text;
+      background: transparent;
+      font-size: 2em;
+      border: 0;
+      padding: 0;
+      max-width: 490px;
 
-      &[contenteditable=true] {
-        &:hover, &:focus {
-          outline: 1px solid #ccc;
-        }
+      &:hover:not(:disabled), &:focus {
+        outline: 1px solid #ccc;
+        outline-offset: 0px;
       }
     }
 

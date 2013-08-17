@@ -7,11 +7,12 @@ Note = require '../models/note.coffee'
 class Editor extends Spine.Controller
 
   elements:
-    ".headerwrap .left h1": "title"
+    ".headerwrap .left input": "title"
     ".headerwrap .right time": "time"
     "#contentread": "contentread"
     "textarea": "contentwrite"
     ".headerwrap .edit": "toggle"
+    "#focus": "focus"
 
   events:
     "click .headerwrap .edit": "toggleMode"
@@ -21,11 +22,16 @@ class Editor extends Spine.Controller
     Note.bind("changeNote", @enable)
 
   enable: (note) =>
+    # Put back into the right mode
+    @toggleMode() if @mode = "edit"
+
+    # Loads note
+    Note.current = note
     if note isnt undefined
       currentNote = Note.find(note.id)
 
       @el.removeClass("deselected")
-      @title.text currentNote.name
+      @title.val currentNote.name
       @time.text currentNote.prettyDate(true)
 
       # Content
@@ -42,7 +48,7 @@ class Editor extends Spine.Controller
       # UI bits and bobs
       @el.addClass("edit")
       @toggle.text("save")
-      @title.attr "contenteditable", "true"
+      @title.prop "disabled", false
       @mode = "edit"
 
       # Focus the text area
@@ -54,14 +60,16 @@ class Editor extends Spine.Controller
       @contentread.html marked(noteText)
 
       # Save it
-      currentNote = Note.find(Note.current.id)
-      currentNote.updateAttribute("date", Math.round(new Date()/1000))
-      currentNote.saveNote(noteText)
+      if Note.current isnt undefined
+        currentNote = Note.find(Note.current.id)
+        currentNote.updateAttribute("name", @title.val())
+        currentNote.updateAttribute("date", Math.round(new Date()/1000))
+        currentNote.saveNote(noteText)
 
       # The opposite
       @el.removeClass("edit")
       @toggle.text("edit")
-      @title.attr "contenteditable", "false"
+      @title.prop "disabled", true
       @mode = "preview"
 
 module.exports = Editor

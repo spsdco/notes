@@ -20,7 +20,7 @@ class Browser extends Spine.Controller
   constructor: ->
     super
     Note.bind "create", @addOne
-    Note.bind "changeNote", @changeNote
+    # Note.bind "changeNote", @changeNote
     Notebook.bind "changeNotebook", @changeNotebook
 
   addOne: (note) =>
@@ -32,9 +32,6 @@ class Browser extends Spine.Controller
       view = new NoteItem
         el: @noteBrowser.find("#note-#{ note.id }")
         note: note
-
-  changeNote: (note) =>
-    Note.current = note
 
   changeNotebook: =>
     noteList = ""
