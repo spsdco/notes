@@ -63,4 +63,6 @@ module.exports =
           currentNote.deleteNote()
           currentNote.destroy()
 
+          @hide()
+
     
