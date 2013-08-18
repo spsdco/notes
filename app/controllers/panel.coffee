@@ -16,6 +16,10 @@ class Panel extends Spine.Controller
     "click #decor img": "windowControl"
     "click #noteControls img": "noteControl"
 
+  fullscreened: false
+
+  maximized: false
+
   constructor: ->
     super
     Note.bind "changeNote", @toggle
@@ -27,7 +31,22 @@ class Panel extends Spine.Controller
       when "minimize"
         win.minimize()
       when "maximize"
-        win.maximize()
+        win.maximize() unless @maximized is true
+        win.unmaximize() unless @maximized is false
+        @maximized = not @maximized
+      when "fullscreen"
+        @fullscreen()
+
+  fullscreen: ->
+    if @fullscreened is true
+      win.leaveFullscreen()
+      $('.maximize').show()
+      $('.minimize').show()
+    else
+      win.enterFullscreen()
+      $('.maximize').hide()
+      $('.minimize').hide()
+    @fullscreened = not @fullscreened
 
   noteControl: (e) ->
     switch e.currentTarget.id
