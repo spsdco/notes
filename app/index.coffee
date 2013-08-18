@@ -14,6 +14,7 @@ Sidebar = require './controllers/sidebar.coffee'
 Browser = require './controllers/browser.coffee'
 Editor = require './controllers/editor.coffee'
 Popover = require './controllers/popover.coffee'
+Modal = require './controllers/modal.coffee'
 
 class App extends Spine.Controller
   elements:
@@ -48,6 +49,8 @@ class App extends Spine.Controller
           min: 450
           width: 550
           max: Infinity
+
+    Modal.init()
 
     # Init Stuff
     @panel = new Panel( el: @panel )

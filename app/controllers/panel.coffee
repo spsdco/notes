@@ -6,6 +6,7 @@ win = window.require('nw.gui').Window.get() if window.require
 # Models
 Note = require("../models/note.coffee")
 Notebook = require("../models/notebook.coffee")
+Modal = require("../controllers/modal.coffee")
 
 class Panel extends Spine.Controller
   elements:
@@ -45,15 +46,7 @@ class Panel extends Spine.Controller
       when "share"
         console.log("Sharing")
       when "del"
-        if Note.current isnt undefined
-          currentNote = Note.find(Note.current.id)
-
-          # Take it out of editmode
-          Note.trigger("changeNote")
-
-          # Delete from indexeddb first
-          currentNote.deleteNote()
-          currentNote.destroy()
+        Modal.get("delete").run()
 
   toggle: (note) =>
     if note isnt undefined

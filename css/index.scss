@@ -791,3 +791,214 @@ body.resizing { cursor: ew-resize; }
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);
   }
 }
+
+.modal {
+  display: none;
+  font-size: 14px;
+  color: hsl(0,0,30%);
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255,255,255,0.7);
+  opacity: 0;
+  z-index: 10;
+  position: absolute;
+  //-webkit-transform: translate3d(0, 0, 0);
+  -webkit-transition: .3s opacity ease;
+  -webkit-user-select: none;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+
+  &.show {
+    opacity: 1;
+
+    & > div {
+      //-webkit-transform: scale(1) translate3d(0, 0, 0);
+    }
+  }
+
+  & > div {
+    position: absolute;
+    top: 15%;
+    left: 50%;
+    //-webkit-transition: .3s -webkit-transform ease;
+    //-webkit-transform: scale(0.75) translate3d(0, 0, 0);
+    background: #fff;
+    font-size: 16px;
+    background: -webkit-linear-gradient(bottom, #fff, #fcfcfc);
+    box-shadow: 0 1px 15px rgba(0,0,0,0.2);
+  }
+  
+  .delete-container {
+    width: 400px;
+    margin-left: -228px;
+    padding: 25px;
+    text-align: center;
+    font-size: 16px;
+    color: #222;
+    border: 3px solid $red-color;
+    h1 {
+      -webkit-user-select: text;
+      -moz-user-select: text;
+      -ms-user-select: text;
+      user-select: text;
+    }
+  }
+
+  .rename-container {
+    width: 400px;
+    margin-left: -228px;
+    padding: 25px;
+    text-align: center;
+    font-size: 16px;
+    color: #222;
+    border: 3px solid $purple;
+
+    input {
+      font-size: 18px;
+      border: 2px solid $purple;
+      padding: 5px 10px;
+      outline: 0;
+    }
+
+    button.special, a.special {
+      border: 2px solid $purple;
+
+      &:active {
+        background: $purple;
+      }
+    }
+  }
+
+  .error-container {
+    width: 400px;
+    margin-left: -228px;
+    padding: 25px;
+    text-align: center;
+    font-size: 18px;
+    color: #222;
+    border: 3px solid $red-color;
+    font-family: $light-font;
+    font-weight: 300;
+  }
+
+  span {
+    display: inline-block;
+    margin: 5px 0;
+  }
+
+  button.special, a.special {
+    display: inline-block;
+    text-decoration: none;
+    border: 2px solid $red-color;
+    background: transparent;
+    font-size: 14px;
+    color: #222;
+    margin-top: 15px;
+    padding: 8px 15px;
+    font-family: "Ubuntu", sans-serif;
+    cursor: default;
+
+    &:active {
+      background: $red-color;
+      color: #fff;
+    }
+  }
+}
+
+.preferences-container {
+  width: 400px;
+  margin-left: -228px;
+  text-align: center;
+  font-size: 16px;
+  color: #333;
+  border: 2px solid $nephritis;
+  font-weight: 300;
+  font-family: $light-font;
+
+  .tabs {
+    border-bottom: 2px solid $nephritis;
+
+    ul {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+      font-size: 0;
+    }
+
+    li {
+      display: inline-block;
+      line-height: 30px;
+      font-size: 15px;
+      padding: 0 15px;
+      font-weight: bold;
+      color: #444;
+      cursor: default;
+
+      &:active {
+        color: darken($nephritis,15%);
+      }
+
+      &.current {
+        background: $nephritis;
+        color: white;
+      }
+    }
+  }
+
+  a {
+    color: $purple;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .container {
+    padding: 10px 25px;
+  }
+
+  .signedin, .signedout {
+    padding-bottom: 15px;
+    p {
+      margin: 0;
+    }
+    button {
+      font-size: 13px;
+    }
+  }
+
+  input {
+    font-size: 14px;
+    border: 2px solid $nephritis;
+    padding: 5px 10px;
+    outline: 0;
+  }
+
+  button.special, a.special {
+    border: 2px solid $nephritis;
+
+    &:active {
+      background-color: $nephritis;
+    }
+
+  }
+}
+
+.about, .general {
+  display: none;
+
+  &.current {
+    display: block;
+  }
+}
+
+.about {
+  .name {
+    font-weight: 300;
+    font-size: 32px;
+  }
+
+  p {
+    font-size: 13px;
+  }
+}
