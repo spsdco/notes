@@ -16,6 +16,7 @@ class Editor extends Spine.Controller
 
   events:
     "click .headerwrap .edit": "toggleMode"
+    "click .headerwrap .revert": "revert"
 
   constructor: ->
     super
@@ -43,7 +44,7 @@ class Editor extends Spine.Controller
 
     @mode = "preview"
 
-  toggleMode: ->
+  toggleMode: (save) ->
     if @mode is "preview" # enable the editor
       # UI bits and bobs
       @el.addClass("edit")
@@ -55,32 +56,36 @@ class Editor extends Spine.Controller
       @contentwrite.focus()
 
     else # disable the editor
-      # Copy the text in
-      noteText = @contentwrite.val()
-      @contentread.html marked(noteText)
-
-      # Save it
-      if Note.current isnt undefined
+      if save is false and Note.current isnt undefined # We're not saving the content (revert button)
         currentNote = Note.find(Note.current.id)
+        currentNote.loadNote (content) =>
+          @contentwrite.val content
+      else
+        # Copy the text in
+        noteText = @contentwrite.val()
+        @contentread.html marked(noteText)
 
-        # Excerpts nicely
-        info = noteText
-        if info.length > 90
-          info = info.substring(0, 100)
-          lastIndex = info.lastIndexOf(" ")
-          info = info.substring(0, lastIndex) + "&hellip;"
-        info = $(marked(info)).text()
-        info = info.split("\n").join(" ")
+        # Save it
+        if Note.current isnt undefined
 
-        # Update Spine
-        currentNote.updateAttributes {
-          "name": @title.val()
-          "excerpt": info
-          "date": Math.round(new Date()/1000)
-        }
+          # Excerpts nicely
+          info = noteText
+          if info.length > 90
+            info = info.substring(0, 100)
+            lastIndex = info.lastIndexOf(" ")
+            info = info.substring(0, lastIndex) + "&hellip;"
+          info = $(marked(info)).text()
+          info = info.split("\n").join(" ")
 
-        # Update IndexedDB
-        currentNote.saveNote(noteText)
+          # Update Spine
+          currentNote.updateAttributes {
+            "name": @title.val()
+            "excerpt": info
+            "date": Math.round(new Date()/1000)
+          }
+
+          # Update IndexedDB
+          currentNote.saveNote(noteText)
 
       # The opposite
       @el.removeClass("edit")
@@ -88,5 +93,8 @@ class Editor extends Spine.Controller
       @title.prop "disabled", true
       @mode = "preview"
       @time.text currentNote.prettyDate(true)
+
+  revert: ->
+    @toggleMode(false)
 
 module.exports = Editor

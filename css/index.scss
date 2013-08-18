@@ -491,9 +491,27 @@ body.resizing { cursor: ew-resize; }
       color: #999;
     }
 
-    .toggle {
+    .revert {
+      border: 0;
+      background: url(img/history.svg) no-repeat center;
+      font-size: 13px;
       color: #999;
-      display: inline-block;
+      display: none;
+      height: 29px;
+      width: 18px;
+      vertical-align: top;
+      background-size: 18px;
+      margin: 8px 8px 0;
+      opacity: 0.4;
+
+      &:hover {
+        opacity: 0.75;
+      }
+    }
+
+    .toggle {
+      vertical-align: top;
+      color: #999;
       border: 0;
       font-size: 14px;
       margin: 4px 0 1px;
@@ -509,6 +527,9 @@ body.resizing { cursor: ew-resize; }
   }
 
   &.edit {
+    .revert {
+      display: inline-block;
+    }
     .toggle {
       font-size: 15px;
       border: 1px solid #ccc;
