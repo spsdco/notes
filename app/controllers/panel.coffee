@@ -45,7 +45,15 @@ class Panel extends Spine.Controller
       when "share"
         console.log("Sharing")
       when "del"
-        console.log("Deleting")
+        if Note.current isnt undefined
+          currentNote = Note.find(Note.current.id)
+
+          # Take it out of editmode
+          Note.trigger("changeNote")
+
+          # Delete from indexeddb first
+          currentNote.deleteNote()
+          currentNote.destroy()
 
   toggle: (note) =>
     if note isnt undefined

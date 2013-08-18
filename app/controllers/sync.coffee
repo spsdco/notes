@@ -104,6 +104,11 @@ Model.Sync =
       result = e.target.result
       callback(result)
 
+  deleteNote: ->
+    trans = Sync.db.transaction(["notes"], "readwrite")
+    store = trans.objectStore "notes"
+    request = store.delete(@id)
+
 Model.Sync.Methods =
   extended: ->
     @extend Extend

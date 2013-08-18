@@ -17,6 +17,7 @@ class NoteItem extends Spine.Controller
     super
     @note.bind "changeNote", @changeNote
     @note.bind "change", @updateNote
+    @note.bind "destroy", @deleteNote
 
   select: ->
     Note.trigger "changeNote", {id: @note.id}
@@ -29,6 +30,9 @@ class NoteItem extends Spine.Controller
     @title.text @note.name
     @time.text @note.prettyDate() + " -"
     @excerpt.text @note.excerpt
+
+  deleteNote: =>
+    @el.remove()
 
 
 module.exports = NoteItem
