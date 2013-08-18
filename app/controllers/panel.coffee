@@ -16,9 +16,15 @@ class Panel extends Spine.Controller
     "click #decor img": "windowControl"
     "click #noteControls img": "noteControl"
 
+  maximized: false
+
   constructor: ->
     super
     Note.bind "changeNote", @toggle
+    win.on 'maximize', =>
+      @maximized = true
+    win.on 'unmaximize', =>
+      @maximized = false
 
   windowControl: (e) ->
     switch e.currentTarget.className
@@ -27,7 +33,8 @@ class Panel extends Spine.Controller
       when "minimize"
         win.minimize()
       when "maximize"
-        win.maximize()
+        win.maximize() if @maximized is false
+        win.unmaximize() if @maximized is true
 
   noteControl: (e) ->
     switch e.currentTarget.id
