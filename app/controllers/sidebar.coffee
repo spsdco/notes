@@ -6,6 +6,7 @@ Notebook = require '../models/notebook.coffee'
 
 # Controllers
 NotebookItem = require './notebook.item.coffee'
+Settings = require './settings.coffee'
 
 class Sidebar extends Spine.Controller
 
@@ -16,10 +17,12 @@ class Sidebar extends Spine.Controller
 
   events:
     "keyup input": "new"
+    "click #settings": "toggleSettings"
 
   elements:
     "ul": "list"
     "input": "input"
+    "#settings": "settings"
 
   constructor: ->
     super
@@ -63,5 +66,8 @@ class Sidebar extends Spine.Controller
       # Select that notebook for opening
       Notebook.trigger "changeNotebook", {id: newNotebook.id, category: "all"}
       @input.val ""
+
+  toggleSettings: (e) ->
+    Settings.get().show()
 
 module.exports = Sidebar

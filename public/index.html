@@ -68,6 +68,40 @@
     <button class="true special">Yes, delete it</button>&nbsp;<button class="false special">No, keep it</button>
   </div>
 </section>
+<!-- Stolen from 1.0.x -->
+<section class="modal preferences">
+  <div class="preferences-container">
+    <nav class="tabs">
+      <ul>
+        <li data-id="general" class="current">General</li>
+        <li data-id="about">About</li>
+      </ul>
+    </nav>
+    <div class="container">
+      <div class="general current">
+        <img src="img/dropbox.png">
+        <div class="signedout">
+          <p>Springseed can sync with Dropbox for access to notes on all your devices.</p>
+          <button id="signin" class="special">Sign In</button>
+        </div>
+        <div class="signedin">
+          <p>Signed in as <strong class="username"></strong></p>
+          <button id="signout" class="special">Sign Out</button>
+        </div>
+      </div>
+      <div class="about">
+        <br>
+        <img src="img/icon.svg" width="128" height="128">
+        <h1 class="name">Springseed 1.1</h1>
+        <p>Copyright &copy; 2013 Jono Cooper and Micheal Harker<br>
+        <a href="http://getspringseed.com">getspringseed.com</a></p>
+        <p>Made in New Zealand and the UK.</p>
+
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- Popovers -->
 <section class="popover-mask">
   <div class="delete-popover">

@@ -15,6 +15,7 @@ Browser = require './controllers/browser.coffee'
 Editor = require './controllers/editor.coffee'
 Popover = require './controllers/popover.coffee'
 Modal = require './controllers/modal.coffee'
+Settings = require './controllers/settings.coffee'
 
 class App extends Spine.Controller
   elements:
@@ -23,6 +24,7 @@ class App extends Spine.Controller
     '#browser': 'browser'
     '#editor': 'editor'
     '.popover-mask': 'popoverMask'
+    '.modal.preferences': 'settings'
 
   constructor: ->
     super
@@ -51,6 +53,10 @@ class App extends Spine.Controller
           max: Infinity
 
     Modal.init()
+
+    Settings.init()
+
+    @settings = Settings.get()
 
     # Init Stuff
     @panel = new Panel( el: @panel )
