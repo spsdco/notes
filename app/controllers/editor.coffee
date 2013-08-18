@@ -67,6 +67,7 @@ class Editor extends Spine.Controller
 
         # Save it
         if Note.current isnt undefined
+          currentNote = Note.find(Note.current.id)
 
           # Excerpts nicely
           info = noteText
