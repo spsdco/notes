@@ -4,6 +4,9 @@ marked = require 'marked'
 # Models
 Note = require '../models/note.coffee'
 
+# Controllers
+Modal = require './modal.coffee'
+
 class Editor extends Spine.Controller
 
   elements:
@@ -96,6 +99,6 @@ class Editor extends Spine.Controller
       @time.text currentNote.prettyDate(true)
 
   revert: ->
-    @toggleMode(false)
+    Modal.get('revert').run()
 
 module.exports = Editor

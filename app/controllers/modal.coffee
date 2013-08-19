@@ -65,4 +65,18 @@ module.exports =
 
           @hide()
 
+    modals['revert'] = new Modal
+      el: $('.modal.revert')
+      events:
+        'click .true': 'revert'
+        'click .false': 'hide'
+      
+      run: ->
+        @show()
+      
+      revert: ->
+        @toggleMode(false)
+
+        @hide()
+
     
