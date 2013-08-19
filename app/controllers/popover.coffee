@@ -3,6 +3,8 @@ Spine = require 'spine'
 # Models
 Notebook = require '../models/notebook.coffee'
 
+Modal = require './modal.coffee'
+
 class Popover extends Spine.Controller
 
   elements:
@@ -13,6 +15,9 @@ class Popover extends Spine.Controller
     "click": "hidePopover"
     "click .category-popover button": "addCategory"
     "keyup .category-popover input": "addCategory"
+    "click .delete-popover #deleteNotebook": "deleteNotebook"
+    "click .delete-popover #renameNotebook": "renameNotebook"
+
 
   constructor: ->
     super
@@ -30,6 +35,14 @@ class Popover extends Spine.Controller
       notebook.updateAttribute("categories", cat)
 
       @el.hide()
+
+  renameNotebook: (e) =>
+    # All renaming gets implemented in modal.coffee
+    Modal.get('renameNotebook').run()
+
+  deleteNotebook: (e) =>
+    # All deletion gets implemented in modal.coffee
+    Modal.get('deleteNotebook').run()
 
 
 module.exports = Popover

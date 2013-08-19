@@ -79,4 +79,30 @@ module.exports =
 
         @hide()
 
+    modals['deleteNotebook'] = new Modal
+      el: $('.modal.deleteNotebook')
+      events:
+        'click .true': 'delete'
+        'click .false': 'hide'
+      
+      run: ->
+        @show()
+      
+      delete: ->
+        # Placeholder
+        @hide()
+
+    modals['renameNotebook'] = new Modal
+      el: $('.modal.renameNotebook')
+      events:
+        'click .true': 'rename'
+        'click .false': 'hide'
+      
+      run: ->
+        @show()
+      
+      rename: =>
+        # Placeholder
+        @hide()
+
     

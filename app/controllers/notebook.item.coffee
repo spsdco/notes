@@ -9,6 +9,7 @@ class NotebookItem extends Spine.Controller
 
   events:
     "click": "expand"
+    "contextmenu": "toggleMore"
     "click .icon": "newCategory"
 
   constructor: ->
@@ -22,6 +23,18 @@ class NotebookItem extends Spine.Controller
       Notebook.trigger("changeNotebook", {id: @notebook.id, category: $(e.target).attr("data-category")})
     else
       Notebook.trigger("changeNotebook", {id: @notebook.id, category: "all"})
+
+  toggleMore: (e) =>
+    if $(e.target).attr("data-category")
+      $(".popover-mask").show()
+      target = $(e.target).parent()
+
+      $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top-($(".delete-popover").height()/3)}).show()
+    else
+      $(".popover-mask").show()
+      target = $(e.target).parent()
+
+      $(".delete-popover").css({left: target.outerWidth(), top: target.offset().top}).show()
 
   changeNotebook: (notebook) =>
     # This is seperated because we don't want to do DOM triggers.
