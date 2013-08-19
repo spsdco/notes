@@ -21,10 +21,11 @@ class Panel extends Spine.Controller
   constructor: ->
     super
     Note.bind "changeNote", @toggle
-    win.on 'maximize', =>
-      @maximized = true
-    win.on 'unmaximize', =>
-      @maximized = false
+    if win
+      win.on 'maximize', =>
+        @maximized = true
+      win.on 'unmaximize', =>
+        @maximized = false
 
   windowControl: (e) ->
     switch e.currentTarget.className
