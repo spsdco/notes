@@ -27,7 +27,7 @@ class Popover extends Spine.Controller
   hidePopover: (e) ->
     # Not sure where to put this, but it is global
     e.preventDefault()
-    @el.hide() if $(e.target)[0].nodeName isnt "INPUT"
+    @el.hide().children().hide() if $(e.target)[0].nodeName isnt "INPUT"
 
   addCategory: (e) ->
     if e.type is "keyup" and e.which is 13 or e.type is "click"

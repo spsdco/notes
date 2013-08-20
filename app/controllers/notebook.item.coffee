@@ -9,6 +9,7 @@ class NotebookItem extends Spine.Controller
 
   events:
     "click": "expand"
+    "contextmenu": "expand"
     "contextmenu": "toggleMore"
     "click .icon": "newCategory"
 
@@ -31,18 +32,16 @@ class NotebookItem extends Spine.Controller
 
   toggleMore: (e) =>
     e.preventDefault()
-    if $(e.target).attr("data-category")
+    if !$(e.target).hasClass("icon")
       $(".popover-mask").show()
       target = $(e.target).parent()
 
-      $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top-($(".delete-popover").height()/3)}).show()
-    else
-      $(".popover-mask").show()
-      target = $(e.target).parent()
-
-      # THIS LINE IS AMAZING o.o
-      id = @el.attr('id').replace('notebook-','')
-      $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top}).attr('current-notebook', id).show()
+      if $(e.target).attr("data-category")
+        $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top-($(".delete-popover").height()/3)}).show()
+      else
+        # THIS LINE IS AMAZING o.o
+        id = @el.attr('id').replace('notebook-','')
+        $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top - 8}).attr('current-notebook', id).show()
 
   changeNotebook: (notebook) =>
     # This is seperated because we don't want to do DOM triggers.

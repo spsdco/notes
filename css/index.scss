@@ -726,7 +726,7 @@ body.resizing { cursor: ew-resize; }
       height: 22px;
       font-size: 12px;
       border-radius: 2px;
-      margin-top: 4px;
+      margin: 4px 0;
       padding: 0 10px;
 
       &:hover {
@@ -760,7 +760,7 @@ body.resizing { cursor: ew-resize; }
     display: inline-block;
     background: #222;
     vertical-align: top;
-    margin-top: 4px;
+    margin-top: 2px;
     padding: 0 5px;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);
