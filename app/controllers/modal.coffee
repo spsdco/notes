@@ -3,6 +3,7 @@ $ = Spine.$
 
 # Needed.
 Note = require("../models/note.coffee")
+Notebook = require '../models/notebook.coffee'
 
 # Base Modal Class.
 class Modal extends Spine.Controller
@@ -98,11 +99,16 @@ module.exports =
         'click .true': 'rename'
         'click .false': 'hide'
       
-      run: ->
+      run: (@notebookid) ->
+        @el.find('input').val(Notebook.find(@notebookid).name)
         @show()
       
-      rename: =>
+      rename: ->
         # Placeholder
+        Notebook.find(@notebookid).updateAttributes {
+          "name": @el.find('input').val()
+        }
+        Notebook.trigger('refresh')
         @hide()
 
     

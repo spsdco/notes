@@ -10,6 +10,7 @@ class Popover extends Spine.Controller
   elements:
     ".category-popover": "categoryPopover"
     ".category-popover input": "categoryInput"
+    ".delete-popover": "delpopover"
 
   events:
     "click": "hidePopover"
@@ -40,7 +41,8 @@ class Popover extends Spine.Controller
 
   renameNotebook: (e) =>
     # All renaming gets implemented in modal.coffee
-    Modal.get('renameNotebook').run()
+    notebookid = @delpopover.attr('current-notebook')
+    Modal.get('renameNotebook').run(notebookid)
 
   deleteNotebook: (e) =>
     # All deletion gets implemented in modal.coffee

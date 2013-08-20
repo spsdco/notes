@@ -14,9 +14,8 @@ class NotebookItem extends Spine.Controller
 
   constructor: ->
     super
-    if @notebook.id isnt "all"
-      @notebook.bind "changeNotebook", @changeNotebook
-      @notebook.bind "update", @update
+    #@notebook.bind "changeNotebook", @changeNotebook
+    #@notebook.bind "update", @update
 
   expand: (e) =>
     # Categories
@@ -24,9 +23,6 @@ class NotebookItem extends Spine.Controller
       Notebook.trigger("changeNotebook", {id: @notebook.id, category: $(e.target).attr("data-category")})
     else
       Notebook.trigger("changeNotebook", {id: @notebook.id, category: "all"})
-
-    # Hacky, but whatever.
-    @changeNotebook({id: "all", category: "all"}) if @notebook.id is "all"
 
   toggleMore: (e) =>
     e.preventDefault()
@@ -39,10 +35,11 @@ class NotebookItem extends Spine.Controller
       $(".popover-mask").show()
       target = $(e.target).parent()
 
-      $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top}).show()
+      # THIS LINE IS AMAZING o.o
+      id = @el.attr('id').replace('notebook-','')
+      $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top}).attr('current-notebook', id).show()
 
   changeNotebook: (notebook) =>
-    @log notebook
     # This is seperated because we don't want to do DOM triggers.
     @el.parent()
       .children()
