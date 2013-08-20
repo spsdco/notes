@@ -736,7 +736,7 @@ body.resizing { cursor: ew-resize; }
 .delete-popover, .category-popover {
   display: inline-block;
   width: 300px;
-  height: 34px;
+  height: 36px;
   position: absolute;
 
   .arrow {
@@ -754,7 +754,7 @@ body.resizing { cursor: ew-resize; }
     display: inline-block;
     background: #222;
     vertical-align: top;
-    margin-top: 2px;
+    margin-top: 4px;
     padding: 0 5px;
     border-radius: 3px;
     box-shadow: 0 1px 3px rgba(0,0,0,0.4);
