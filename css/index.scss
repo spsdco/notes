@@ -582,27 +582,28 @@ body.resizing { cursor: ew-resize; }
   background: lighten($white-color, 1%);
   max-width: 610px;
   padding: 0 20px;
+  color: #333;
+  font-family: "Lato", sans-serif;
+}
+
+#psuedoinput {
+  position: fixed;
+  top: -9999px;
 }
 
 #contentwrite {
   margin: 65px auto 35px;
   display: none;
 
-  textarea {
-    font-family: "Lato", sans-serif;
-    outline: 0;
-    border: 0;
-    resize: none;
-    max-width: 600px;
+  > .inner {
+    max-width: 610px;
     width: 100%;
     margin: 0 auto;
-    min-height: 200px;
     font-size: 15px;
     line-height: 1.1;
-    min-height: 100%;
     padding: 0 0 30px;
-    color: #444;
-    background: lighten($white-color, 1%);
+    outline: 0;
+    white-space: pre;
   }
 }
 
@@ -652,8 +653,6 @@ body.resizing { cursor: ew-resize; }
   margin: 35px auto;
   bottom: auto;
   z-index: 4;
-  color: #333;
-  font-family: "Lato", sans-serif;
   line-height: 1.3;
   font-size: 15px;
 

@@ -13,13 +13,15 @@ class Editor extends Spine.Controller
     ".headerwrap .left input": "title"
     ".headerwrap .right time": "time"
     "#contentread": "contentread"
-    "textarea": "contentwrite"
+    "#contentwrite > .inner": "contentwrite"
     ".headerwrap .edit": "toggle"
-    "#focus": "focus"
+    "#psuedoinput": "psuedoinput"
 
   events:
     "click .headerwrap .edit": "toggleMode"
     "click .headerwrap .revert": "revert"
+    "keydown #contentwrite > .inner": "keydown"
+    "paste #contentwrite > .inner": "paste"
 
   constructor: ->
     super
@@ -41,7 +43,7 @@ class Editor extends Spine.Controller
       # Content
       currentNote.loadNote (content) =>
         @contentread.html marked(content)
-        @contentwrite.val content
+        @contentwrite.text content
     else
       @el.addClass("deselected")
 
@@ -62,10 +64,10 @@ class Editor extends Spine.Controller
       if save is false and Note.current isnt undefined # We're not saving the content (revert button)
         currentNote = Note.find(Note.current.id)
         currentNote.loadNote (content) =>
-          @contentwrite.val content
+          @contentwrite.text content
       else
         # Copy the text in
-        noteText = @contentwrite.val()
+        noteText = @contentwrite.text()
         @contentread.html marked(noteText)
 
         # Save it
@@ -100,5 +102,41 @@ class Editor extends Spine.Controller
 
   revert: ->
     Modal.get('revert').run()
+
+  # Pops the text into the contenteditable
+  insertText: (text) ->
+    sel = window.getSelection()
+    range = sel.getRangeAt(0)
+    range.deleteContents()
+    textNode = document.createTextNode(text)
+    range.insertNode(textNode)
+    range.setStartAfter(textNode)
+    sel.removeAllRanges()
+    sel.addRange(range)
+
+  keydown: (e) ->
+    # Some keys are special
+    if e.keyCode is 13 #return
+      e.preventDefault()
+      @insertText "\n"
+    else if e.keyCode is 9 #tab
+      e.preventDefault()
+      @insertText "    "
+
+  paste: (e) ->
+    # Keeps the range for later
+    @range = window.getSelection().getRangeAt(0)
+
+    # Paste it into a textarea (removes formatting)
+    @psuedoinput.val("").focus()
+
+    # As the paste event isn't instant, put it back in a few secs.
+    setTimeout( =>
+      s = window.getSelection()
+      s.removeAllRanges()
+      s.addRange(@range)
+
+      @insertText @psuedoinput.val()
+    , 10)
 
 module.exports = Editor

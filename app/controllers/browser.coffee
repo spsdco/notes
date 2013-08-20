@@ -34,8 +34,11 @@ class Browser extends Spine.Controller
         note: note
 
   changeNotebook: =>
+    dateSort = (a, b) ->
+      return b.date - a.date
+
     noteList = ""
-    for note in Note.filter(Notebook.current.id, Notebook.current.category)
+    for note in Note.filter(Notebook.current.id, Notebook.current.category).sort(dateSort)
       note.date = note.prettyDate()
       noteList += @template note
 
