@@ -14,8 +14,10 @@ class NotebookItem extends Spine.Controller
 
   constructor: ->
     super
-    #@notebook.bind "changeNotebook", @changeNotebook
-    #@notebook.bind "update", @update
+    if @notebook.id isnt "all"
+      @notebook.bind "changeNotebook", @changeNotebook
+      @notebook.bind "update", @update
+
 
   expand: (e) =>
     # Categories
@@ -23,6 +25,9 @@ class NotebookItem extends Spine.Controller
       Notebook.trigger("changeNotebook", {id: @notebook.id, category: $(e.target).attr("data-category")})
     else
       Notebook.trigger("changeNotebook", {id: @notebook.id, category: "all"})
+
+    # Hacky, but whatever.
+    @changeNotebook({id: "all", category: "all"}) if @notebook.id is "all"
 
   toggleMore: (e) =>
     e.preventDefault()
