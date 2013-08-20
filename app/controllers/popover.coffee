@@ -13,6 +13,7 @@ class Popover extends Spine.Controller
 
   events:
     "click": "hidePopover"
+    "contextmenu": "hidePopover"
     "click .category-popover button": "addCategory"
     "keyup .category-popover input": "addCategory"
     "click .delete-popover #deleteNotebook": "deleteNotebook"
@@ -24,6 +25,7 @@ class Popover extends Spine.Controller
 
   hidePopover: (e) ->
     # Not sure where to put this, but it is global
+    e.preventDefault()
     @el.hide() if $(e.target)[0].nodeName isnt "INPUT"
 
   addCategory: (e) ->
