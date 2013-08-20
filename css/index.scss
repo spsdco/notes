@@ -222,8 +222,14 @@ body.resizing { cursor: ew-resize; }
     }
 
     &#notebook-all {
-      background: url(img/list.svg) no-repeat 3px 40%;
+      background-image: url(img/list.svg);
+      background-position: 4px 1px;
+      background-repeat: no-repeat;
       background-size: 28px;
+
+      .icon {
+        display: none;
+      }
     }
 
     .icon {
@@ -825,7 +831,7 @@ body.resizing { cursor: ew-resize; }
     background: -webkit-linear-gradient(bottom, #fff, #fcfcfc);
     box-shadow: 0 1px 15px rgba(0,0,0,0.2);
   }
-  
+
   .delete-container {
     width: 400px;
     margin-left: -228px;
