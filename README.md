@@ -10,7 +10,7 @@ You'll need node & npm installed.
     npm install .
     cake server -w
 
-If you're feeling awesome, you should contribute eitehr with code or a [donation](http://getspringseed.com/donate). Check out the [issue tracker](https://github.com/consindo/notes/issues) and tackle an issue.
+If you're feeling awesome, you should contribute either with code or a [donation](http://getspringseed.com/donate). Check out the [issue tracker](https://github.com/consindo/notes/issues) and tackle an issue.
 
 Springseed is written in CoffeeScript and uses Spine.JS for MVC.
 
