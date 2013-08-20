@@ -20,7 +20,6 @@ class Browser extends Spine.Controller
   constructor: ->
     super
     Note.bind "create", @addOne
-    # Note.bind "changeNote", @changeNote
     Notebook.bind "changeNotebook", @changeNotebook
 
   addOne: (note) =>
@@ -44,10 +43,12 @@ class Browser extends Spine.Controller
 
     @noteBrowser.html(noteList)
 
-    # TODO: DEFER BY 100MS
-    for note in Note.filter(Notebook.current.id, Notebook.current.category)
-      view = new NoteItem
-        el: @noteBrowser.find("#note-#{ note.id }")
-        note: note
+    # Defers for speed
+    setTimeout( =>
+      for note in Note.filter(Notebook.current.id, Notebook.current.category)
+        view = new NoteItem
+          el: @noteBrowser.find("#note-#{ note.id }")
+          note: note
+    , 100)
 
 module.exports = Browser

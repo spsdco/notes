@@ -43,16 +43,26 @@ class Sidebar extends Spine.Controller
 
   refresh: () =>
     # Called on load from indexeddb
-    html = ""
+    html = @template {id: "all", name: "All Notes"}
     for notebook in Notebook.all()
       html += @template notebook
     @list.html(html)
 
-    # TODO: DEFER BY 100MS
-    for notebook in Notebook.all()
-      view = new NotebookItem
-        el: @list.find("#notebook-#{ notebook.id }")
-        notebook: notebook
+    # Defers for speed
+    setTimeout( =>
+      # All Notes
+      new NotebookItem
+        el: @list.find("#notebook-all")
+        notebook: {id: "all", name: "All Notes", categories: []}
+      # This feels so bad :(
+      $("#notebook-all").trigger("click")
+
+      # Normal Notes
+      for notebook in Notebook.all()
+        view = new NotebookItem
+          el: @list.find("#notebook-#{ notebook.id }")
+          notebook: notebook
+    , 100)
 
 
   new: (e) ->
