@@ -31,17 +31,20 @@ class NotebookItem extends Spine.Controller
     @changeNotebook({id: "all", category: "all"}) if @notebook.id is "all"
 
   toggleMore: (e) =>
+    @expand(e)
     e.preventDefault()
-    if !$(e.target).hasClass("icon")
+    if !$(e.target).hasClass("icon") and @notebook.id isnt "all"
       $(".popover-mask").show()
       target = $(e.target).parent()
 
-      if $(e.target).attr("data-category")
+      if $(e.target).attr("data-category") is "all"
+        return
+      else if $(e.target).attr("data-category")
         $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top-($(".delete-popover").height()/3)}).show()
       else
         # THIS LINE IS AMAZING o.o
         id = @el.attr('id').replace('notebook-','')
-        $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top - 8}).attr('current-notebook', id).show()
+        $(".delete-popover").css({left: target.outerWidth(), top: @el.offset().top}).attr('current-notebook', id).show()
 
   changeNotebook: (notebook) =>
     # This is seperated because we don't want to do DOM triggers.
