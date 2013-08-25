@@ -27,11 +27,10 @@ class Editor extends Spine.Controller
   constructor: ->
     super
     Note.bind("changeNote", @enable)
-    aliases = { 'js' : 'javascript' }
+    aliases = { 'js' : 'javascript', 'py': 'python', 'coffee', 'coffeescript' }
     marked.setOptions {
-       gfm: true,
-       highlight: (code, lang) ->
-        hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase(), code).value
+      highlight: (code, lang) ->
+        hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase() || null, code).value
     }
 
   enable: (note) =>
