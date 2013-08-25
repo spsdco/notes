@@ -1,5 +1,6 @@
 Spine = require 'spine'
 marked = require 'marked'
+hljs = require ("highlight.js")
 
 # Models
 Note = require '../models/note.coffee'
@@ -26,6 +27,12 @@ class Editor extends Spine.Controller
   constructor: ->
     super
     Note.bind("changeNote", @enable)
+    aliases = { 'js' : 'javascript' }
+    marked.setOptions {
+       gfm: true,
+       highlight: (code, lang) ->
+        hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase(), code).value
+    }
 
   enable: (note) =>
     # Put back into the right mode
