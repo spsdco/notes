@@ -36,7 +36,6 @@ class Modal extends Spine.Controller
 modals = []
 
 module.exports =
-
   get: (name) ->
     # Return a Modal object. Like a pro.
     return modals[name]

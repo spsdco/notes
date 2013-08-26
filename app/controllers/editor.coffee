@@ -6,7 +6,7 @@ hljs = require ("highlight.js")
 Note = require '../models/note.coffee'
 
 # Controllers
-Modal = require './modal.coffee'
+Modal = require('./modal.coffee')
 
 class Editor extends Spine.Controller
 
@@ -107,7 +107,8 @@ class Editor extends Spine.Controller
       @time.text currentNote.prettyDate(true)
 
   revert: ->
-    Modal.get('revert').run()
+    console.log(Modal)
+    Modal.get("revert").run()
 
   # Pops the text into the contenteditable
   insertText: (text) ->

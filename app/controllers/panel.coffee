@@ -6,15 +6,25 @@ win = window.require('nw.gui').Window.get() if window.require
 # Models
 Note = require("../models/note.coffee")
 Notebook = require("../models/notebook.coffee")
-Modal = require("../controllers/modal.coffee")
+
+# Controllers
+Modal = require("./modal.coffee")
+NoteItem = require("./note.item.coffee")
 
 class Panel extends Spine.Controller
+
+  noteTemplate: (->
+    require '../views/note.js'
+    Handlebars.templates['note']
+  )()
+
   elements:
     "#noteControls": "noteControls"
 
   events:
     "click #decor img": "windowControl"
     "click #noteControls img": "noteControl"
+    "keyup #search": "search"
 
   maximized: false
 
@@ -41,7 +51,7 @@ class Panel extends Spine.Controller
   noteControl: (e) ->
     switch e.currentTarget.id
       when "new"
-        if Notebook.current.id isnt "all"
+        if Notebook.current.id isnt "all" or Notebook.current.id isnt "searches"
 
           # Create the note meta
           note = Note.create
@@ -65,9 +75,26 @@ class Panel extends Spine.Controller
       @noteControls.addClass "disabled"
 
   toggleNotebook: (notebook) =>
-    if notebook.id is "all"
+    if notebook.id is "all" or notebook.id is "searches"
       @noteControls.addClass "all"
     else
       @noteControls.removeClass "all"
+
+  search: (e) ->
+    console.log "Panel.search called"
+    results = Note.search($(e.target).val())
+
+    # This is ugly and hacky and shitty and fucking horrible as sin, but it works, I guess.
+    # Also, I could not seemingly access the Browser object without it being itialised, and 
+    # I don't know how to get it from index.coffee, so yeah.
+    $('#sidebar ul').find('#notebook-searches').show().trigger('click')
+    noteList = ''
+    for result in results
+      noteList += @noteTemplate result
+      view = new NoteItem
+        el: $('#browser ul').find("#note-#{ result.id }")
+        note: result
+    $('#browser ul').html(noteList)
+
 
 module.exports = Panel
