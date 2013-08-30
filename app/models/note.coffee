@@ -32,17 +32,6 @@ class window.Note extends Spine.Model
       array = Note.all()
     return array
 
-  @search: (string) ->
-    results = []
-    console.log "Note.search called"
-    console.log Note.all()
-    notes = Note.all()
-    for note in notes
-      if note.name.match(new RegExp(string, 'i'))
-        note.date = note.prettyDate()
-        results.push(note)
-    return results
-
   prettyDate: (time) =>
     date = new Date(@date * 1000)
     pad = (n) -> (if (n < 10) then ("0" + n) else n)

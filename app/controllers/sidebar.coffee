@@ -44,7 +44,6 @@ class Sidebar extends Spine.Controller
   refresh: () =>
     # Called on load from indexeddb
     html = @template {id: "all", name: "All Notes"}
-    html += @template {id: "searches", name: "Search Results"}
     for notebook in Notebook.all()
       html += @template notebook
     @list.html(html)
@@ -57,10 +56,6 @@ class Sidebar extends Spine.Controller
         notebook: {id: "all", name: "All Notes", categories: []}
       # This feels so bad :(
       $("#notebook-all").trigger("click")
-
-      new NotebookItem
-        el: @list.find("#notebook-searches").hide()
-        notebook: {id: "searches", name: "Search Results", categories: []}
 
       # Normal Notes
       for notebook in Notebook.all()

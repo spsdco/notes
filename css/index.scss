@@ -232,17 +232,6 @@ body.resizing { cursor: ew-resize; }
       }
     }
 
-    &#notebook-searches {
-      background-image: url(img/search-results.png);
-      background-position: 10px 8px;
-      background-repeat: no-repeat;
-      background-size: 16px;
-
-      .icon {
-        display: none;
-      }
-    }
-
     .icon {
       position: absolute;
       right: 0;

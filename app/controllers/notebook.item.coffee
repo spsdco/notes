@@ -15,7 +15,7 @@ class NotebookItem extends Spine.Controller
 
   constructor: ->
     super
-    if @notebook.id isnt "all" and @notebook.id isnt "searches"
+    if @notebook.id isnt "all"
       @notebook.bind "changeNotebook", @changeNotebook
       @notebook.bind "update", @update
 
@@ -29,12 +29,11 @@ class NotebookItem extends Spine.Controller
 
     # Hacky, but whatever.
     @changeNotebook({id: "all", category: "all"}) if @notebook.id is "all"
-    @changeNotebook({id: "searches", category: "all"}) if @notebook.id is "searches"
 
   toggleMore: (e) =>
     @expand(e)
     e.preventDefault()
-    if !$(e.target).hasClass("icon") and @notebook.id isnt "all" and @notebook.id isnt "searches"
+    if !$(e.target).hasClass("icon") and @notebook.id isnt "all"
       $(".popover-mask").show()
       target = $(e.target).parent()
 
