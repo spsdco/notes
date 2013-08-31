@@ -15,6 +15,7 @@ class Panel extends Spine.Controller
   events:
     "click #decor img": "windowControl"
     "click #noteControls img": "noteControl"
+    "keyup #search input": "search"
 
   maximized: false
 
@@ -69,5 +70,10 @@ class Panel extends Spine.Controller
       @noteControls.addClass "all"
     else
       @noteControls.removeClass "all"
+
+  search: (e) =>
+    # This feels so ugly :/
+    searchstring = $(e.target).val()
+    Note.search(searchstring)
 
 module.exports = Panel

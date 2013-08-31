@@ -32,23 +32,32 @@ class Browser extends Spine.Controller
         el: @noteBrowser.find("#note-#{ note.id }")
         note: note
 
-  changeNotebook: =>
+  changeNotebook: (notebook) =>
     dateSort = (a, b) ->
       return b.date - a.date
+    
+    if notebook.search is true or notebook.search is not undefined
+      noteList = ""
+      for note in notebook.result
+        note.date = note.prettyDate
+        noteList += @template note
 
-    noteList = ""
-    for note in Note.filter(Notebook.current.id, Notebook.current.category).sort(dateSort)
-      note.date = note.prettyDate()
-      noteList += @template note
+      @noteBrowser.html noteList
 
-    @noteBrowser.html(noteList)
+    else
+      noteList = ""
+      for note in Note.filter(Notebook.current.id, Notebook.current.category).sort(dateSort)
+        note.date = note.prettyDate()
+        noteList += @template note
 
-    # Defers for speed
-    setTimeout( =>
-      for note in Note.filter(Notebook.current.id, Notebook.current.category)
-        view = new NoteItem
-          el: @noteBrowser.find("#note-#{ note.id }")
-          note: note
-    , 100)
+      @noteBrowser.html(noteList)
+
+      # Defers for speed
+      setTimeout( =>
+        for note in Note.filter(Notebook.current.id, Notebook.current.category)
+          view = new NoteItem
+            el: @noteBrowser.find("#note-#{ note.id }")
+            note: note
+      , 100)
 
 module.exports = Browser

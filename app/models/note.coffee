@@ -32,6 +32,18 @@ class window.Note extends Spine.Model
       array = Note.all()
     return array
 
+  @search: (string) ->
+    # Ported from 1.0
+    results = []
+    notes = Note.all()
+    for note in notes
+      if note.name.match(new RegExp(string, 'i'))# or content.match(new RegExp(string, 'i'))
+        note.date = note.prettyDate()
+        results.push(note)
+
+    console.log(results)
+    Notebook.trigger 'changeNotebook', {id: 'all', category: 'all', search: true, result: results}
+
   prettyDate: (time) =>
     date = new Date(@date * 1000)
     pad = (n) -> (if (n < 10) then ("0" + n) else n)
