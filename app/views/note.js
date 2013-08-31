@@ -10,7 +10,7 @@ helpers = this.merge(helpers, Handlebars.helpers); data = data || {};
   if (stack1 = helpers.id) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.id; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)
-    + "\" data-notebook=\"";
+    + "\" draggable=\"true\" data-notebook=\"";
   if (stack1 = helpers.notebook) { stack1 = stack1.call(depth0, {hash:{},data:data}); }
   else { stack1 = depth0.notebook; stack1 = typeof stack1 === functionType ? stack1.apply(depth0) : stack1; }
   buffer += escapeExpression(stack1)

@@ -12,13 +12,15 @@ class NotebookItem extends Spine.Controller
     "contextmenu": "expand"
     "contextmenu": "toggleMore"
     "click .icon": "newCategory"
+    "dragenter": "onDragEnter"
+    "dragover": "onDragOver"
+    "drop": "onDrop"
 
   constructor: ->
     super
     if @notebook.id isnt "all"
       @notebook.bind "changeNotebook", @changeNotebook
       @notebook.bind "update", @update
-
 
   expand: (e) =>
     # Categories
@@ -75,5 +77,21 @@ class NotebookItem extends Spine.Controller
     @category.html(str)
 
     @el.addClass('expanded') if @notebook.categories.length > 1
+
+  onDragEnter: (e) =>
+    e.preventDefault()
+
+  onDragOver: (e) =>
+    e.preventDefault()
+
+  onDrop: (e) =>
+    # Create the note in this Notebook, delete the old one. Seems like it would work.
+    # Get the notebook id!
+    noteid = e.originalEvent.dataTransfer.getData('noteid')
+    note = Note.find(noteid)
+    note.updateAttributes {
+      "notebook": @notebook.id
+    }
+    Notebook.trigger('refresh')
 
 module.exports = NotebookItem

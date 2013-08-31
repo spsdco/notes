@@ -12,6 +12,8 @@ class NoteItem extends Spine.Controller
 
   events:
     "click": "select"
+    "dragstart": "startdrag"
+    "dragend": "stopdrag"
 
   constructor: ->
     super
@@ -33,6 +35,16 @@ class NoteItem extends Spine.Controller
 
   deleteNote: =>
     @el.remove()
+
+  startdrag: (e) =>
+    @el.css {opacity: 0.4}
+
+    noteid = $(e.target).attr('id').replace("note-", "")
+    e.originalEvent.dataTransfer.setData('noteid', noteid)
+
+
+  stopdrag: (e) =>
+    @el.css {opacity: 1}
 
 
 module.exports = NoteItem
