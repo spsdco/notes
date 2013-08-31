@@ -83,15 +83,34 @@ class NotebookItem extends Spine.Controller
 
   onDragOver: (e) =>
     e.preventDefault()
+    if @notebook.id is "all"
+      # No.
+      return false;
+    else
+      setTimeout(=>
+        @expand(e)
+      ,500)
 
   onDrop: (e) =>
     # Create the note in this Notebook, delete the old one. Seems like it would work.
     # Get the notebook id!
-    noteid = e.originalEvent.dataTransfer.getData('noteid')
-    note = Note.find(noteid)
-    note.updateAttributes {
-      "notebook": @notebook.id
-    }
-    Notebook.trigger('refresh')
+    if @notebook.id is "all"
+      # OMG PLS NO.
+      return false;
+    else
+      noteid = e.originalEvent.dataTransfer.getData('noteid')
+      note = Note.find(noteid)
+      if $(e.target).attr("data-category")
+        category = $(e.target).text()
+      else
+        category = "all"
+
+      note.updateAttributes {
+        "notebook": @notebook.id,
+        "category": category
+      }
+
+      # Finally, refresh!
+      Notebook.trigger('refresh')
 
 module.exports = NotebookItem
