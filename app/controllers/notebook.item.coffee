@@ -13,6 +13,7 @@ class NotebookItem extends Spine.Controller
     "contextmenu": "toggleMore"
     "click .icon": "newCategory"
     "dragenter": "onDragEnter"
+    "dragleave": "onDragLeave"
     "dragover": "onDragOver"
     "drop": "onDrop"
 
@@ -80,12 +81,19 @@ class NotebookItem extends Spine.Controller
 
   onDragEnter: (e) =>
     e.preventDefault()
+    console.log $(e.target).attr('data-category')
+    if $(e.target).attr('data-category') and $(e.target).attr('data-category') isnt "all"
+      $(e.target).css {'font-weight': 'bold', 'color': '#FF6600'} 
+
+  onDragLeave: (e) =>
+    e.preventDefault()
+    $(e.target).css {'font-weight': '', 'color': ''} if $(e.target).attr('data-category')
 
   onDragOver: (e) =>
     e.preventDefault()
     if @notebook.id is "all" or $(e.target).attr('data-category') is "all"
       # No.
-      return false;
+      return false
 
   onDrop: (e) =>
     # Create the note in this Notebook, delete the old one. Seems like it would work.
@@ -98,6 +106,7 @@ class NotebookItem extends Spine.Controller
       note = Note.find(noteid)
       if $(e.target).attr("data-category")
         category = $(e.target).text()
+        $(e.target).css {'font-weight': '', 'color': ''} # Reset CSS changes
       else
         console.log @notebook.categories[0]
         category = @notebook.categories[0] # Default Category
