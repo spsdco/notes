@@ -16,6 +16,10 @@ class Panel extends Spine.Controller
     "click #decor img": "windowControl"
     "click #noteControls img": "noteControl"
     "keyup #search input": "search"
+    "mouseenter": "enter"
+    "mouseleave": "leave"
+    "mouseenter img": "leave"
+    "mouseleave img": "enter"
 
   maximized: false
 
@@ -75,5 +79,11 @@ class Panel extends Spine.Controller
     # This feels so ugly :/
     searchstring = $(e.target).val()
     Note.search(searchstring)
+
+  enter: (e) =>
+    @el.addClass('drag')
+
+  leave: (e) =>
+    @el.removeClass('drag')
 
 module.exports = Panel
