@@ -6,8 +6,9 @@ OFFLINE = 0
 IN_PROGRESS = 1
 ONLINE = 2
 
-
 Sync =
+
+  queue: JSON.parse localStorage.Queue or '{"Note": {}, "Notebook": {}}'
 
   # Hold pending actions
   pending: []
@@ -51,6 +52,24 @@ Sync =
       fn() if typeof fn is 'function'
       @_clearPending()
 
+  # Check an event, and if it is a model update add it to the queue
+  addToQueue: (event, args) ->
+    if @queue[args.constructor.name][args.id] and @queue[args.constructor.name][args.id][0] is "create"
+      # create + destroy = nothing
+      if event is "destroy"
+        delete @queue[args.constructor.name][args.id]
+    else
+      # Otherwiswe, add it to the queue
+      @queue[args.constructor.name][args.id] = [event, new Date().getTime()]
+    @saveQueue()
+
+  saveQueue: ->
+    # Save queue to localstorage
+    localStorage.Queue = JSON.stringify @queue
+
+# Just in case you need any default values
+class Base
+
 Model.Sync =
 
   extended: ->
@@ -61,8 +80,9 @@ Model.Sync =
       console.log '%c> Calling fetch', 'background: #eee'
       Sync.defer(this, @loadLocal)
 
-    @change ->
-      console.log '%c> Calling change', 'background: #eee'
+    @change (record, event) ->
+      Sync.addToQueue(event, record)
+      console.log '%c> Calling change: ' + event, 'background: #eee'
       Sync.defer(this, @saveLocal)
 
     Sync.connect()
