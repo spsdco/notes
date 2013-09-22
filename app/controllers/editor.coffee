@@ -23,6 +23,11 @@ class Editor extends Spine.Controller
     "click .headerwrap .revert": "revert"
     "keydown #contentwrite > .inner": "keydown"
     "paste #contentwrite > .inner": "paste"
+    "mousedown #contentwrite > .inner": "mousedown"
+    "mouseup #contentwrite > .inner": "mouseup"
+    "click #editorcontrols li[data-action='bold']": "boldtext"
+    "click #editorcontrols li[data-action='italics']": "italictext"
+    "click #editorcontrols li[data-action='heading']": "headingtext"
 
   constructor: ->
     super
@@ -32,6 +37,7 @@ class Editor extends Spine.Controller
       highlight: (code, lang) ->
         hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase() || null, code).value
     }
+    @controls = $("#editorcontrols")
 
   enable: (note) =>
     # Put back into the right mode
@@ -144,5 +150,37 @@ class Editor extends Spine.Controller
 
       @insertText @psuedoinput.val()
     , 10)
+
+  mousedown: (e) ->
+    @checkSelWrap(e)
+
+  mouseup: (e) ->
+    @checkSelWrap(e)
+
+  checkSelWrap: (e) ->
+    setTimeout =>
+      @checkSel(e)
+    , 50
+
+  checkSel: (e) ->
+    sel = window.getSelection()
+    if sel.toString().trim() is ''
+      @controls.hide()
+    else
+      @sel = sel
+      @selrange = sel.getRangeAt(0)
+      @controls.show()
+      toppos = @selrange.getBoundingClientRect().top - 55 - @controls.height() + 'px'
+      leftpos = @selrange.getBoundingClientRect().right - (@controls.width() / 2) + 'px'
+      @controls.css {top: toppos, left: leftpos}
+
+  boldtext: (e) ->
+    return
+
+  italictext: (e) ->
+    return
+
+  headingtext: (e) ->
+    return
 
 module.exports = Editor

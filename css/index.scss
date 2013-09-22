@@ -39,7 +39,7 @@ body.resizing { cursor: ew-resize; }
   cursor: default !important;
 }
 
-#sidebar, #panel, #browser {
+#sidebar, #panel, #browser, #editorcontrols {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -1006,4 +1006,24 @@ body.resizing { cursor: ew-resize; }
   p {
     font-size: 13px;
   }
+}
+
+#editorcontrols {
+  position: absolute;
+  z-index: 1000;
+  list-style: none;
+  border-radius: 3px;
+  background: $sidebar-color;
+  border: 1px solid $border-color;
+  float: left;
+}
+
+#editorcontrols li {
+  -webkit-transition: 500ms;
+  padding: 10px 15px;
+  float: left;
+}
+
+#editorcontrols li:hover {
+  background: rgba(0,0,0,0.5);
 }
