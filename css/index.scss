@@ -80,7 +80,7 @@ body.resizing { cursor: ew-resize; }
   width: 295px;
   text-align: right;
   position: absolute;
-  padding: 8px 0px 8px 4px;
+  padding: 8px 0 8px 4px;
   border-right: 1px solid #444;
 
   &.all {
@@ -472,7 +472,7 @@ body.resizing { cursor: ew-resize; }
 
       &:hover:not(:disabled), &:focus {
         outline: 1px solid #ccc;
-        outline-offset: 0px;
+        outline-offset: 0;
       }
     }
 
