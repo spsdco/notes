@@ -29,6 +29,7 @@ class Sidebar extends Spine.Controller
     Notebook.bind "create", @addOne
     Notebook.bind "changeNotebook", @change
     Notebook.bind "refresh", @refresh
+    Notebook.bind "destroy", @destroy
 
   addOne: (notebook) =>
     @list.append @template notebook
@@ -64,6 +65,10 @@ class Sidebar extends Spine.Controller
           notebook: notebook
     , 100)
 
+  destroy: ->
+    # This is bad practice, but I knew this would happen.
+    # We'll revamp it when we get Smart Lists
+    $("#notebook-all").trigger("click")
 
   new: (e) ->
     val = @input.val()

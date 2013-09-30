@@ -22,6 +22,7 @@ class NotebookItem extends Spine.Controller
     if @notebook.id isnt "all"
       @notebook.bind "changeNotebook", @changeNotebook
       @notebook.bind "update", @update
+      @notebook.bind "destroy", @destroy
 
   expand: (e) =>
     # Categories
@@ -79,11 +80,14 @@ class NotebookItem extends Spine.Controller
 
     @el.addClass('expanded') if @notebook.categories.length > 1
 
+  destroy: =>
+    @el.remove()
+
   onDragEnter: (e) =>
     e.preventDefault()
     console.log $(e.target).attr('data-category')
     if $(e.target).attr('data-category') and $(e.target).attr('data-category') isnt "all"
-      $(e.target).css {'font-weight': 'bold', 'color': '#FF6600'} 
+      $(e.target).css {'font-weight': 'bold', 'color': '#FF6600'}
 
   onDragLeave: (e) =>
     e.preventDefault()
