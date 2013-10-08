@@ -67,6 +67,122 @@ Sync =
     # Save queue to localstorage
     localStorage.Queue = JSON.stringify @queue
 
+  # Merges the client & server, using a queue
+  # Spits out the result, id changes & fs changes
+  merger = (client, server, queue) ->
+
+    # Creates an array index
+    indexer = (db) ->
+      result = {}
+      for k,v of db
+        # Sets Up Index
+        result[k] = {}
+        result[k].max = 0
+
+        # Indexes Items
+        for key, index in db[k]
+          result[k][key.id] = index
+
+          # Checks for the highest number
+          num = parseInt(key.id.substring(2, key.id.length))
+          result[k].max = num if num > result[k].max
+
+      result #return
+
+    clientindex = indexer(client)
+    resultant = JSON.parse(JSON.stringify(server))
+    resultantindex = indexer(resultant)
+    namechanges = {"Notebook": [], "Note": []}
+    fschanges = {"Notebook": [], "Note": []}
+
+    # Add Changes from client
+    for type of queue
+      for key, value of queue[type]
+        switch value[0]
+          when "create"
+            # we copy the change into the resultant
+            oldId = key
+            newId = "c-" + (resultantindex[type].max += 1)
+            client[type][clientindex[type][key]].id = newId
+            resultant[type].push(client[type][clientindex[type][key]])
+
+            # update the index
+            resultantindex[type][newId] = resultant[type].length
+
+            # add to fschanges
+            fschanges[type].push(["upload", newId])
+
+            # add to name changes
+            namechanges[type].push([oldId, newId]) if oldId isnt newId
+
+          when "update"
+            # If the item update was before the update on the server, create a conflicted copy
+            if Math.round(value[1]/1000) < resultant[type][resultantindex[type][key]].date
+              # bad case of DRY here
+
+              # we copy the change into the resultant
+              oldId = key
+              newId = "c-" + (resultantindex[type].max += 1)
+              client[type][clientindex[type][key]].id = newId
+              client[type][clientindex[type][key]].name += " (Conflicted Copy)"
+              resultant[type].push(client[type][clientindex[type][key]])
+
+              # update the index
+              resultantindex[type][newId] = resultant[type].length
+
+              # add to fschanges
+              fschanges[type].push(["download", resultant[type][resultantindex[type][key]].id])
+              fschanges[type].push(["upload", newId])
+
+              # add to name changes
+              namechanges[type].push([oldId, newId]) if oldId isnt newId
+            else
+              # copies the new change in
+              resultant[type][resultantindex[type][key]] = client[type][clientindex[type][key]]
+
+              fschanges[type].push(["upload", resultant[type][resultantindex[type][key]].id])
+          when "destroy"
+            # If the item was after before the delete event, don't do anything
+            if Math.round(value[1]/1000) > resultant[type][resultantindex[type][key]].date
+              # tell the server to delete it
+              fschanges[type].push(["destroy", resultant[type][resultantindex[type][key]].id])
+
+              # destroy the change from the resultant
+              resultant[type].splice([clientindex[type][key]], 1)
+
+              # reindex
+              resultantindex = indexer(resultant)
+
+    # All the changes from the client should be added at this point
+    # Now we detect the differences between the server copy and our client.
+
+    # Basically, find timestamps that are newer on the server and stuff
+    # that exists on the server but not the client.
+
+    # We start by cloning the resultant
+    original = JSON.parse(JSON.stringify(resultant))
+    originalindex = indexer(original)
+
+    # Removing all the stuff that is changed
+    for type of fschanges
+      for item in fschanges[type]
+        original[type].splice(originalindex[type][item[1]], 1)
+        originalindex = indexer(original)
+
+    for type of original
+      for key, value of original[type]
+        # We only need to do this for stuff with dates, not anything else
+        if value.date
+          if client[type][clientindex[type][value.id]]
+            if client[type][clientindex[type][value.id]].date < value.date
+              # Server is newer than client, download from server
+              fschanges[type].push(["download", value.id])
+          else
+            # Doesn't exist on client, download from server
+            fschanges[type].push(["download", value.id])
+
+    return [resultant, namechanges, fschanges]
+
 # Just in case you need any default values
 class Base
 
