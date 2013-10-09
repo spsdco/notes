@@ -69,7 +69,7 @@ Sync =
 
   # Merges the client & server, using a queue
   # Spits out the result, id changes & fs changes
-  merger = (client, server, queue) ->
+  merger: (client, server, queue) ->
 
     # Creates an array index
     indexer = (db) ->
