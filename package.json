@@ -14,6 +14,7 @@
     "jqueryify": "~1.9.1",
     "spine": "~1.1.x",
     "marked": "0.2.9",
+    "socket.io-client": "0.9.16",
     "highlight.js": "7.3.0"
   },
   "devDependencies": {

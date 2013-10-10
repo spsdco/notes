@@ -1,4 +1,5 @@
 Spine = @Spine or require('spine')
+io = require 'socket.io-client'
 Model = Spine.Model
 
 # Connection states
@@ -6,7 +7,7 @@ OFFLINE = 0
 IN_PROGRESS = 1
 ONLINE = 2
 
-Sync =
+window.Sync =
 
   queue: JSON.parse localStorage.Queue or '{"Note": {}, "Notebook": {}}'
 
@@ -27,6 +28,29 @@ Sync =
       @pending.push [fn, self,  args]
 
   state: OFFLINE
+
+  auth: ->
+    socket = io.connect("https://springseed-oauth.herokuapp.com:443")
+    socket.on "meta", (data) ->
+      console.log(data)
+
+    socket.on "authorized", (data) ->
+      # We have a token. We can do anything!
+      localStorage.Token = data.access_token
+
+      # Get user accountinfo because yolo
+      $.ajax(
+        type: "get"
+        crossDomain: true
+        dataType: "json"
+        url: "https://api.dropbox.com/1/account/info"
+        beforeSend: (xhr) ->
+          xhr.setRequestHeader "Authorization", "Bearer " + data.access_token
+      ).done (accountinfo) ->
+        console.log accountinfo
+
+      # Free up server resources. Cause why not.
+      socket.disconnect()
 
   connect: (fn) ->
 
