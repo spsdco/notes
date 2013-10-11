@@ -45,12 +45,62 @@ window.Sync =
         dataType: "json"
         url: "https://api.dropbox.com/1/account/info"
         beforeSend: (xhr) ->
-          xhr.setRequestHeader "Authorization", "Bearer " + data.access_token
+          xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
       ).done (accountinfo) ->
         console.log accountinfo
 
       # Free up server resources. Cause why not.
       socket.disconnect()
+
+  dosync: ->
+
+    # Downloads a meta file.
+    $.ajax(
+      type: "get"
+      crossDomain: true
+      dataType: "json"
+      url: "https://api-content.dropbox.com/1/files/sandbox/meta.seed"
+      beforeSend: (xhr) ->
+        xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
+    ).done((data) ->
+      console.log data
+    ).error (data) ->
+      console.log "we should check if the bearer token is wrong"
+      console.log "meta does not exist. uploading a new meta w/ every single file"
+
+      promises = []
+      $(Note.all()).each (i, e) ->
+        e.loadNote (data) ->
+
+          # make ajax request based on inputs from current loop element
+          promises.push($.ajax(
+              type: "put"
+              crossDomain: true
+              contentType: "application/octet-stream"
+              url: "https://api-content.dropbox.com/1/files_put/sandbox/" + e.id + ".seed"
+              data: data
+              beforeSend: (xhr) ->
+                xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+            )
+          )
+
+      # stuff
+      $.when(promises).done ->
+        console.log 'All files uploaded, uploading the meta file'
+
+        $.ajax(
+          type: "put"
+          crossDomain: true
+          contentType: "application/octet-stream"
+          dataType: "json"
+          url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
+          data: Sync.exportData()
+          beforeSend: (xhr) ->
+            xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+        ).done (data) ->
+          console.log("all done! Delete the queue")
+          localStorage.Queue = '{"Note": {}, "Notebook": {}}'
+
 
   connect: (fn) ->
 
@@ -90,6 +140,14 @@ window.Sync =
   saveQueue: ->
     # Save queue to localstorage
     localStorage.Queue = JSON.stringify @queue
+
+  exportData: (keys=["Note", "Notebook"]) ->
+    # Export local data to JSON
+    output = {
+      "Note": Note.toJSON()
+      "Notebook": Notebook.toJSON()
+    }
+    JSON.stringify(output)
 
   # Merges the client & server, using a queue
   # Spits out the result, id changes & fs changes
