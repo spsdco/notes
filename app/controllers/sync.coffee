@@ -52,7 +52,10 @@ window.Sync =
       # Free up server resources. Cause why not.
       socket.disconnect()
 
-  dosync: ->
+  # The main syncing function.
+  # It downloads the meta, then updates it to latest version as well as doing various other io.
+  # It's magic. Trust me.
+  doSync: ->
 
     # Downloads a meta file.
     $.ajax(
@@ -63,43 +66,160 @@ window.Sync =
       beforeSend: (xhr) ->
         xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
     ).done((data) ->
-      console.log data
-    ).error (data) ->
-      console.log "we should check if the bearer token is wrong"
-      console.log "meta does not exist. uploading a new meta w/ every single file"
+      result = Sync.merger(JSON.parse(Sync.exportData()), data, JSON.parse(localStorage.Queue))
 
+      console.log(result)
+
+      # First, we rename the keys in our current DB
       promises = []
-      $(Note.all()).each (i, e) ->
-        e.loadNote (data) ->
+      for item in result[1].Note
 
-          # make ajax request based on inputs from current loop element
-          promises.push($.ajax(
-              type: "put"
-              crossDomain: true
-              contentType: "application/octet-stream"
-              url: "https://api-content.dropbox.com/1/files_put/sandbox/" + e.id + ".seed"
-              data: data
-              beforeSend: (xhr) ->
-                xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+        promises.push((->
+          deferred = $.Deferred()
+
+          Note.find(item[0]).loadNote (oldcontent) ->
+            trans = Sync.db.transaction(["notes"], "readwrite")
+            store = trans.objectStore "notes"
+            request = store.put(oldcontent, item[1])
+
+            request.onsuccess = (e) =>
+              Note.find(item[0]).deleteNote ->
+                deferred.resolve()
+
+          return deferred.promise()
+        )())
+
+      # All files renamed, doing da internet IO.
+      $.when.apply($, promises).then ->
+
+        promises = []
+        dbrequests = []
+        trans = Sync.db.transaction(["notes"], "readwrite")
+        store = trans.objectStore "notes"
+
+        for item in result[2].Note
+
+          promises.push((->
+            deferred = $.Deferred()
+
+            switch item[0]
+              when "upload"
+                itemid = item[1]
+                dbrequests[itemid] = store.get(itemid)
+                dbrequests[itemid].onsuccess = (e) =>
+                  # Upload file to my butt.
+                  $.ajax(
+                    type: "put"
+                    crossDomain: true
+                    contentType: "application/octet-stream"
+                    dataType: "text"
+                    url: "https://api-content.dropbox.com/1/files_put/sandbox/" + itemid + ".seed"
+                    data: e.target.result
+                    beforeSend: (xhr) ->
+                      xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+                  ).done (data) ->
+                    deferred.resolve()
+
+              when "download"
+                # Download from my butt
+                $.ajax(
+                  type: "get"
+                  crossDomain: true
+                  dataType: "text"
+                  url: "https://api-content.dropbox.com/1/files/sandbox/" + item[1] + ".seed"
+                  beforeSend: (xhr) ->
+                    xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
+                ).done (data) ->
+                  # We now have to store the new data in the database.
+                  trans = Sync.db.transaction(["notes"], "readwrite")
+                  store = trans.objectStore "notes"
+                  request = store.put(data, item[1])
+
+                  request.onsuccess = (e) =>
+                    deferred.resolve()
+
+              when "destroy"
+                dbrequests[item[1]] = store.delete(item[1])
+                file = item[1] + ".seed"
+
+                # Delete in the butt
+                $.ajax(
+                  type: "post"
+                  crossDomain: true
+                  dataType: "json"
+                  url: "https://api.dropbox.com/1/fileops/delete"
+                  data: {
+                    root: "sandbox"
+                    path: file
+                  }
+                  beforeSend: (xhr) ->
+                    xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
+                ).done (data) ->
+                  deferred.resolve()
+
+            return deferred.promise()
+          )())
+
+        # Almost all io done, replace metas now.
+        $.when.apply($, promises).then ->
+
+          # Copy into the app
+          Sync.importData JSON.stringify(result[0])
+
+          # Send it to my butt yo
+          $.ajax(
+            type: "put"
+            crossDomain: true
+            contentType: "application/octet-stream"
+            dataType: "json"
+            url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
+            data: Sync.exportData()
+            beforeSend: (xhr) ->
+              xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+          ).done (data) ->
+            console.log("all done! Delete the queue")
+            localStorage.Queue = '{"Note": {}, "Notebook": {}}'
+
+    ).error (data) ->
+      if data.status is 401
+        console.log "the bearer token is wrong. deleting token & please reauth"
+        localStorage.removeItem "Token"
+
+      else if data.status is 404
+        console.log "meta does not exist. uploading a new meta w/ every single file"
+
+        promises = []
+        $(Note.all()).each (i, e) ->
+          e.loadNote (data) ->
+
+            # make ajax request based on inputs from current loop element
+            promises.push($.ajax(
+                type: "put"
+                crossDomain: true
+                contentType: "application/octet-stream"
+                url: "https://api-content.dropbox.com/1/files_put/sandbox/" + e.id + ".seed"
+                data: data
+                beforeSend: (xhr) ->
+                  xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+              )
             )
-          )
 
-      # stuff
-      $.when(promises).done ->
-        console.log 'All files uploaded, uploading the meta file'
+        # stuff
+        $.when(promises).done ->
+          console.log 'All files uploaded, uploading the meta file'
 
-        $.ajax(
-          type: "put"
-          crossDomain: true
-          contentType: "application/octet-stream"
-          dataType: "json"
-          url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
-          data: Sync.exportData()
-          beforeSend: (xhr) ->
-            xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
-        ).done (data) ->
-          console.log("all done! Delete the queue")
-          localStorage.Queue = '{"Note": {}, "Notebook": {}}'
+          $.ajax(
+            type: "put"
+            crossDomain: true
+            contentType: "application/octet-stream"
+            dataType: "json"
+            url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
+            data: Sync.exportData()
+            beforeSend: (xhr) ->
+              xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+          ).done (data) ->
+            console.log("all done! Delete the queue")
+            localStorage.Queue = '{"Note": {}, "Notebook": {}}'
 
 
   connect: (fn) ->
@@ -148,6 +268,11 @@ window.Sync =
       "Notebook": Notebook.toJSON()
     }
     JSON.stringify(output)
+
+  importData: (obj) ->
+    input = JSON.parse(obj)
+    Note.refresh(input.Note)
+    Notebook.refresh(input.Notebook)
 
   # Merges the client & server, using a queue
   # Spits out the result, id changes & fs changes
@@ -308,10 +433,13 @@ Model.Sync =
       result = e.target.result
       @refresh(result or [], options)
 
-  saveNote: (content) ->
+  saveNote: (content, callback) ->
     trans = Sync.db.transaction(["notes"], "readwrite")
     store = trans.objectStore "notes"
     request = store.put(content, @id)
+
+    request.onsuccess = (e) =>
+      callback() if callback
 
   loadNote: (callback) ->
     trans = Sync.db.transaction(["notes"], "readwrite")
@@ -320,12 +448,15 @@ Model.Sync =
 
     request.onsuccess = (e) =>
       result = e.target.result
-      callback(result)
+      callback(result) if callback
 
-  deleteNote: ->
+  deleteNote: (callback) ->
     trans = Sync.db.transaction(["notes"], "readwrite")
     store = trans.objectStore "notes"
     request = store.delete(@id)
+
+    request.onsuccess = (e) =>
+      callback() if callback
 
 Model.Sync.Methods =
   extended: ->
