@@ -49,10 +49,10 @@ module.exports =
       events:
         'click .true': 'delete'
         'click .false': 'hide'
-      
+
       run: ->
         @show()
-      
+
       delete: ->
         # Taken from controllers/panel.coffee.
         if Note.current isnt undefined
@@ -60,9 +60,6 @@ module.exports =
 
           # Take it out of editmode
           Note.trigger("changeNote")
-
-          # Delete from indexeddb first
-          currentNote.deleteNote()
           currentNote.destroy()
 
           @hide()
@@ -72,10 +69,10 @@ module.exports =
       events:
         'click .true': 'revert'
         'click .false': 'hide'
-      
+
       run: ->
         @show()
-      
+
       revert: ->
         Editor.toggleMode(false)
 
@@ -86,10 +83,10 @@ module.exports =
       events:
         'click .true': 'delete'
         'click .false': 'hide'
-      
+
       run: ->
         @show()
-      
+
       delete: ->
         # Placeholder
         @hide()
@@ -99,11 +96,11 @@ module.exports =
       events:
         'click .true': 'rename'
         'click .false': 'hide'
-      
+
       run: (@notebookid) ->
         @el.find('input').val(Notebook.find(@notebookid).name)
         @show()
-      
+
       rename: ->
         # Placeholder
         Notebook.find(@notebookid).updateAttributes {
@@ -112,4 +109,4 @@ module.exports =
         Notebook.trigger('refresh')
         @hide()
 
-    
+
