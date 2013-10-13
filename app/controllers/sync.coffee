@@ -66,7 +66,8 @@ window.Sync =
       beforeSend: (xhr) ->
         xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
     ).done((data) ->
-      result = Sync.merger(JSON.parse(Sync.exportData()), data, JSON.parse(localStorage.Queue))
+      console.log(JSON.parse(Sync.exportData()), data, JSON.parse(localStorage.Queue))
+      result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.Queue)
 
       console.log(result)
 
@@ -173,12 +174,13 @@ window.Sync =
             contentType: "application/octet-stream"
             dataType: "json"
             url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
-            data: Sync.exportData()
+            data: JSON.stringify(result[0])
             beforeSend: (xhr) ->
               xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
           ).done (data) ->
             console.log("all done! Delete the queue")
-            localStorage.Queue = '{"Note": {}, "Notebook": {}}'
+            Sync.queue = {"Note": {}, "Notebook": {}}
+            Sync.saveQueue()
 
     ).error (data) ->
       if data.status is 401
@@ -219,7 +221,8 @@ window.Sync =
               xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
           ).done (data) ->
             console.log("all done! Delete the queue")
-            localStorage.Queue = '{"Note": {}, "Notebook": {}}'
+            Sync.queue = {"Note": {}, "Notebook": {}}
+            Sync.saveQueue()
 
 
   connect: (fn) ->
@@ -271,8 +274,8 @@ window.Sync =
 
   importData: (obj) ->
     input = JSON.parse(obj)
-    Note.refresh(input.Note)
-    Notebook.refresh(input.Notebook)
+    Note.refresh(input.Note, clear: true)
+    Notebook.refresh(input.Notebook, clear: true)
 
   # Merges the client & server, using a queue
   # Spits out the result, id changes & fs changes
