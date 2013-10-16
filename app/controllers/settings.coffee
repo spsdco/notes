@@ -23,11 +23,17 @@ class Settings extends Spine.Controller
     return unless @state is off
     @state = on
     @el.show(0).addClass("show")
+    setTimeout ( =>
+    @el.on "click.modal", (event) =>
+      if event.target.className.indexOf("modal") >= 0 then @hide()
+    ), 500
 
   hide: ->
     return unless @state is on
     @state = off
     @el.removeClass("show")
+    setTimeout ( => @el.hide(0)), 350
+    @el.off("click.modal")
 
 settings = null # Temp
 
