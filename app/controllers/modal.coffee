@@ -85,10 +85,14 @@ module.exports =
         'click .false': 'hide'
 
       run: ->
+        @el.find('i').text Notebook.find(Notebook.current.id).name
         @show()
 
       delete: ->
-        # Placeholder
+        notebook = Notebook.find(Notebook.current.id)
+
+        Note.trigger("changeNote")
+        notebook.destroy()
         @hide()
 
     modals['renameNotebook'] = new Modal
