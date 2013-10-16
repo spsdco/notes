@@ -644,7 +644,7 @@ body.resizing { cursor: ew-resize; }
     }
 
     &:hover {
-      -webkit-filter: invert(100%);
+      -webkit-filter: #{'invert(100%)'};
       background: #bbb;
     }
 
@@ -1019,12 +1019,16 @@ body.resizing { cursor: ew-resize; }
   float: left;
 }
 
-#editorcontrols li {
+#editorcontrols button {
   -webkit-transition: 500ms;
   padding: 10px 15px;
   float: left;
+  border: 0;
+  border-radius: 0.1px; /* Stop Webkit rendering it as a normal button */
 }
 
-#editorcontrols li:hover {
+#editorcontrols button:hover {
+  border-radius: 0.1px;
+  border: 0;
   background: rgba(0,0,0,0.5);
 }

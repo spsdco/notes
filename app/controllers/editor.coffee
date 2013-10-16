@@ -25,9 +25,6 @@ class Editor extends Spine.Controller
     "paste #contentwrite > .inner": "paste"
     "mousedown #contentwrite > .inner": "mousedown"
     "mouseup #contentwrite > .inner": "mouseup"
-    "click #editorcontrols li[data-action='bold']": "boldtext"
-    "click #editorcontrols li[data-action='italics']": "italictext"
-    "click #editorcontrols li[data-action='heading']": "headingtext"
 
   constructor: ->
     super
@@ -38,6 +35,9 @@ class Editor extends Spine.Controller
         hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase() || null, code).value
     }
     @controls = $("#editorcontrols")
+    @controls.find('#bold').click @formatBold
+    @controls.find('#italics').click @formatItalics
+    @controls.find('#heading').click @formatHead
 
   enable: (note) =>
     # Put back into the right mode
@@ -78,6 +78,7 @@ class Editor extends Spine.Controller
         currentNote.loadNote (content) =>
           @contentwrite.text content
       else
+        @controls.hide()
         # Copy the text in
         noteText = @contentwrite.text()
         @contentread.html marked(noteText)
@@ -174,13 +175,25 @@ class Editor extends Spine.Controller
       leftpos = @selrange.getBoundingClientRect().right - (@controls.width() / 2) + 'px'
       @controls.css {top: toppos, left: leftpos}
 
-  boldtext: (e) ->
-    return
+  formatBold: (e) =>
+    @selrange.surroundContents(document.createElement("span"))
+    text = @el.find("span").text()
+    @el.find("span").text("**"+text+"**").contents().unwrap()
 
-  italictext: (e) ->
-    return
+  formatItalics: (e) =>
+    @selrange.surroundContents(document.createElement("span"))
+    text = @el.find("span").text()
+    @el.find("span").text("*"+text+"*").contents().unwrap()
 
-  headingtext: (e) ->
-    return
+  formatHead: (e) =>
+    console.log @selrange.toString().substring(0,3)
+    if @selrange.toString().substring(0,3) isnt "###"
+      @selrange.surroundContents(document.createElement("span"))
+      text = @el.find("span").text()
+      @el.find("span").text("#"+text+"").contents().unwrap()
+    else
+      @selrange.surroundContents(document.createElement("span"))
+      text = @el.find("span").text()
+      @el.find("span").text(text.substring(3)).contents().unwrap()
 
 module.exports = Editor
