@@ -25,6 +25,7 @@ class Editor extends Spine.Controller
     "paste #contentwrite > .inner": "paste"
     "mousedown #contentwrite > .inner": "mousedown"
     "mouseup #contentwrite > .inner": "mouseup"
+    "dblclick #contentread": "toggleMode"
 
   constructor: ->
     super

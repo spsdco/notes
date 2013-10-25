@@ -44,11 +44,11 @@ class NotebookItem extends Spine.Controller
       if $(e.target).attr("data-category") is "all"
         return
       else if $(e.target).attr("data-category")
-        $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top-($(".delete-popover").height()/3)}).show()
+        $(".delete-popover").css({left: target.outerWidth(), top: $(e.target).offset().top-($(".delete-popover").height()/3)}).attr('current-notebook', id).attr('current-category', @category.find('.selected').attr('data-category')).show()
       else
         # THIS LINE IS AMAZING o.o
         id = @el.attr('id').replace('notebook-','')
-        $(".delete-popover").css({left: target.outerWidth(), top: @el.offset().top}).attr('current-notebook', id).show()
+        $(".delete-popover").css({left: target.outerWidth(), top: @el.offset().top}).attr('current-notebook', id).attr('current-category', 'all').show()
 
   changeNotebook: (notebook) =>
     # This is seperated because we don't want to do DOM triggers.
