@@ -66,8 +66,8 @@ window.Sync =
       beforeSend: (xhr) ->
         xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
     ).done((data) ->
-      console.log(JSON.parse(Sync.exportData()), data, JSON.parse(localStorage.Queue))
-      result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.Queue)
+      console.log(JSON.parse(Sync.exportData()), data, Sync.queue)
+      result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue)
 
       console.log(result)
 
@@ -257,7 +257,7 @@ window.Sync =
         delete @queue[args.constructor.name][args.id]
     else
       # Otherwiswe, add it to the queue
-      @queue[args.constructor.name][args.id] = [event, new Date().getTime()]
+      @queue[args.constructor.name][args.id] = [event, Math.round(new Date()/1000)]
     @saveQueue()
 
   saveQueue: ->
@@ -327,7 +327,7 @@ window.Sync =
 
           when "update"
             # If the item update was before the update on the server, create a conflicted copy
-            if Math.round(value[1]/1000) < resultant[type][resultantindex[type][key]].date
+            if value[1] < resultant[type][resultantindex[type][key]].date
               # bad case of DRY here
 
               # we copy the change into the resultant
@@ -353,7 +353,7 @@ window.Sync =
               fschanges[type].push(["upload", resultant[type][resultantindex[type][key]].id])
           when "destroy"
             # If the item was after before the delete event, don't do anything
-            if Math.round(value[1]/1000) > resultant[type][resultantindex[type][key]].date
+            if value[1] > resultant[type][resultantindex[type][key]].date
               # tell the server to delete it
               fschanges[type].push(["destroy", resultant[type][resultantindex[type][key]].id])
 

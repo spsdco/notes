@@ -77,6 +77,7 @@ class Sidebar extends Spine.Controller
       newNotebook = Notebook.create
         name: val
         categories: ["General"]
+        date: Math.round(new Date()/1000)
 
       # Select that notebook for opening
       Notebook.trigger "changeNotebook", {id: newNotebook.id, category: "all"}
