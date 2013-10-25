@@ -39,7 +39,7 @@ body.resizing { cursor: ew-resize; }
   cursor: default !important;
 }
 
-#sidebar, #panel, #browser, #editorcontrols {
+#sidebar, #panel, #browser {
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
@@ -407,10 +407,6 @@ body.resizing { cursor: ew-resize; }
     background-position: 50% 100px;
     background-size: 140px;
 
-    .editorbuttons {
-      display: none;
-    }
-
     &::after {
       position: absolute;
       top: 240px;
@@ -554,9 +550,6 @@ body.resizing { cursor: ew-resize; }
     time {
       display: none;
     }
-    .editorbuttons {
-      top: 0;
-    }
     #contentread {
       display: none;
     }
@@ -598,7 +591,7 @@ body.resizing { cursor: ew-resize; }
 }
 
 #contentwrite {
-  margin: 65px auto 35px;
+  margin: 35px auto 35px;
   display: none;
 
   > .inner {
@@ -610,48 +603,6 @@ body.resizing { cursor: ew-resize; }
     padding: 0 0 30px;
     outline: 0;
     white-space: pre;
-  }
-}
-
-.editorbuttons {
-  z-index: 9;
-  position: absolute;
-  margin-top: 60px;
-  height: 35px;
-  width: 100%;
-  background: #eee;
-  border-bottom: 1px solid #ccc;
-  top: -36px;
-  -webkit-transition: 200ms ease all;
-
-  .inner {
-    max-width: 610px;
-    margin: 3px auto;
-  }
-
-  button {
-    background: transparent;
-    border: 2px solid #444;
-    border-radius: 50%;
-    width: 26px;
-    height: 26px;
-    margin: 2px 3px;
-    text-align: center;
-    padding: 0;
-
-    &:first-child {
-      margin-left: 0;
-    }
-
-    &:hover {
-      -webkit-filter: #{'invert(100%)'};
-      background: #bbb;
-    }
-
-    img {
-      padding-top: 3px;
-      vertical-align: top;
-    }
   }
 }
 
@@ -1012,23 +963,20 @@ body.resizing { cursor: ew-resize; }
   display: none;
   position: absolute;
   z-index: 1000;
-  list-style: none;
-  border-radius: 3px;
-  background: $sidebar-color;
-  border: 1px solid $border-color;
-  float: left;
+  border-radius: 5px;
+  background: #222;
+  border: 1px solid #b4b3b1;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 #editorcontrols button {
-  -webkit-transition: 500ms;
+  -webkit-transition: 200ms ease all;
   padding: 10px 15px;
   float: left;
   border: 0;
-  border-radius: 0.1px; /* Stop Webkit rendering it as a normal button */
+  background: transparent;
 }
 
 #editorcontrols button:hover {
-  border-radius: 0.1px;
-  border: 0;
-  background: rgba(0,0,0,0.5);
+  background: rgba(255,255,255, 0.15);
 }
