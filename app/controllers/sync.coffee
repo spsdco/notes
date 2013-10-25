@@ -363,6 +363,20 @@ window.Sync =
               # reindex
               resultantindex = indexer(resultant)
 
+    # Er, well if notebook name id changes we have to change note ids
+    # @consindo is an idiot. Please send him angry messages.
+    # This code is also annoying because it's not a keyvalue pair. That's what happens if you loop try to dry.
+    # So, we'll build an index
+    notebooknamechangesindex = {}
+    for item in namechanges.Notebook
+      notebooknamechangesindex[item[0]] = item[1]
+
+    # Simple, right? Now we loop throught the notes and change the ids
+    for k, v of resultant.Note
+      if notebooknamechangesindex[v.notebook] isnt undefined
+        v.notebook = notebooknamechangesindex[v.notebook]
+        resultant.Note[k] = v
+
     # All the changes from the client should be added at this point
     # Now we detect the differences between the server copy and our client.
 
