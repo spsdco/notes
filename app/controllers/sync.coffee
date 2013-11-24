@@ -9,6 +9,7 @@ ONLINE = 2
 
 window.Sync =
 
+  oauth: JSON.parse localStorage.oauth
   queue: JSON.parse localStorage.Queue or '{"Note": {}, "Notebook": {}}'
 
   # Hold pending actions
@@ -36,18 +37,10 @@ window.Sync =
 
     socket.on "authorized", (data) ->
       # We have a token. We can do anything!
-      localStorage.Token = data.access_token
+      data.expires = new Date().getTime() + parseInt(data.expires_in)*1000 if data.hasOwnProperty("expires_in")
 
-      # Get user accountinfo because yolo
-      $.ajax(
-        type: "get"
-        crossDomain: true
-        dataType: "json"
-        url: "https://api.dropbox.com/1/account/info"
-        beforeSend: (xhr) ->
-          xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
-      ).done (accountinfo) ->
-        console.log accountinfo
+      Sync.oauth = data
+      localStorage.oauth = JSON.stringify(data)
 
       # Free up server resources. Cause why not.
       socket.disconnect()
@@ -64,7 +57,7 @@ window.Sync =
       dataType: "json"
       url: "https://api-content.dropbox.com/1/files/sandbox/meta.seed"
       beforeSend: (xhr) ->
-        xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
+        xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
     ).done((data) ->
       console.log(JSON.parse(Sync.exportData()), data, Sync.queue)
       result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue)
@@ -117,7 +110,7 @@ window.Sync =
                     url: "https://api-content.dropbox.com/1/files_put/sandbox/" + itemid + ".seed"
                     data: e.target.result
                     beforeSend: (xhr) ->
-                      xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+                      xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
                   ).done (data) ->
                     deferred.resolve()
 
@@ -129,7 +122,7 @@ window.Sync =
                   dataType: "text"
                   url: "https://api-content.dropbox.com/1/files/sandbox/" + item[1] + ".seed"
                   beforeSend: (xhr) ->
-                    xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
+                    xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
                 ).done (data) ->
                   # We now have to store the new data in the database.
                   trans = Sync.db.transaction(["notes"], "readwrite")
@@ -154,7 +147,7 @@ window.Sync =
                     path: file
                   }
                   beforeSend: (xhr) ->
-                    xhr.setRequestHeader "Authorization", "Bearer " + localStorage.Token
+                    xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
                 ).done (data) ->
                   deferred.resolve()
 
@@ -176,7 +169,7 @@ window.Sync =
             url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
             data: JSON.stringify(result[0])
             beforeSend: (xhr) ->
-              xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+              xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
           ).done (data) ->
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
@@ -202,7 +195,7 @@ window.Sync =
                 url: "https://api-content.dropbox.com/1/files_put/sandbox/" + e.id + ".seed"
                 data: data
                 beforeSend: (xhr) ->
-                  xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+                  xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
               )
             )
 
@@ -218,7 +211,7 @@ window.Sync =
             url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
             data: Sync.exportData()
             beforeSend: (xhr) ->
-              xhr.setRequestHeader 'Authorization', 'Bearer ' + localStorage.Token
+              xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
           ).done (data) ->
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
