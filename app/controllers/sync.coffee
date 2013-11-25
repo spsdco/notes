@@ -52,12 +52,9 @@ window.Sync =
 
     # Downloads a meta file.
     $.ajax(
-      type: "get"
-      crossDomain: true
-      dataType: "json"
-      url: "https://api-content.dropbox.com/1/files/sandbox/meta.seed"
-      beforeSend: (xhr) ->
-        xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
+      Sync.generateRequest
+        request: "download"
+        filename: "meta"
     ).done((data) ->
       console.log(JSON.parse(Sync.exportData()), data, Sync.queue)
       result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue)
@@ -103,26 +100,21 @@ window.Sync =
                 dbrequests[itemid].onsuccess = (e) =>
                   # Upload file to my butt.
                   $.ajax(
-                    type: "put"
-                    crossDomain: true
-                    contentType: "application/octet-stream"
-                    dataType: "text"
-                    url: "https://api-content.dropbox.com/1/files_put/sandbox/" + itemid + ".seed"
-                    data: e.target.result
-                    beforeSend: (xhr) ->
-                      xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
+                    Sync.generateRequest
+                      request: "upload"
+                      filename: itemid
+                      dataType: "text"
+                      data: e.target.result
                   ).done (data) ->
                     deferred.resolve()
 
               when "download"
                 # Download from my butt
                 $.ajax(
-                  type: "get"
-                  crossDomain: true
-                  dataType: "text"
-                  url: "https://api-content.dropbox.com/1/files/sandbox/" + item[1] + ".seed"
-                  beforeSend: (xhr) ->
-                    xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
+                  Sync.generateRequest
+                    request: "download"
+                    filename: item[1]
+                    dataType: "text"
                 ).done (data) ->
                   # We now have to store the new data in the database.
                   trans = Sync.db.transaction(["notes"], "readwrite")
@@ -134,20 +126,14 @@ window.Sync =
 
               when "destroy"
                 dbrequests[item[1]] = store.delete(item[1])
-                file = item[1] + ".seed"
+                file = item[1]
 
                 # Delete in the butt
                 $.ajax(
-                  type: "post"
-                  crossDomain: true
-                  dataType: "json"
-                  url: "https://api.dropbox.com/1/fileops/delete"
-                  data: {
-                    root: "sandbox"
-                    path: file
-                  }
-                  beforeSend: (xhr) ->
-                    xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
+                  Sync.generateRequest
+                    request: "destroy"
+                    filename: file
+                    dataType: "text"
                 ).done (data) ->
                   deferred.resolve()
 
@@ -162,14 +148,10 @@ window.Sync =
 
           # Send it to my butt yo
           $.ajax(
-            type: "put"
-            crossDomain: true
-            contentType: "application/octet-stream"
-            dataType: "json"
-            url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
-            data: JSON.stringify(result[0])
-            beforeSend: (xhr) ->
-              xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
+            Sync.generateRequest
+              request: "upload"
+              filename: "meta"
+              data: JSON.stringify(result[0])
           ).done (data) ->
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
@@ -189,13 +171,11 @@ window.Sync =
 
             # make ajax request based on inputs from current loop element
             promises.push($.ajax(
-                type: "put"
-                crossDomain: true
-                contentType: "application/octet-stream"
-                url: "https://api-content.dropbox.com/1/files_put/sandbox/" + e.id + ".seed"
-                data: data
-                beforeSend: (xhr) ->
-                  xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
+                Sync.generateRequest
+                  request: "upload"
+                  filename: e.id
+                  dataType: "text"
+                  data: JSON.stringify(result[0])
               )
             )
 
@@ -204,19 +184,42 @@ window.Sync =
           console.log 'All files uploaded, uploading the meta file'
 
           $.ajax(
-            type: "put"
-            crossDomain: true
-            contentType: "application/octet-stream"
-            dataType: "json"
-            url: "https://api-content.dropbox.com/1/files_put/sandbox/meta.seed"
-            data: Sync.exportData()
-            beforeSend: (xhr) ->
-              xhr.setRequestHeader 'Authorization', 'Bearer ' + Sync.oauth.access_token
+            Sync.generateRequest
+              request: "upload"
+              filename: "meta"
+              data: Sync.exportData()
           ).done (data) ->
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
             Sync.saveQueue()
 
+  generateRequest: (opts) ->
+    if Sync.oauth.service is "dropbox"
+      params =
+        crossDomain: true
+        dataType: opts.dataType || "json"
+        beforeSend: (xhr) ->
+          xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
+
+      if opts.request is "download"
+        params.type = "get"
+        params.url = "https://api-content.dropbox.com/1/files/sandbox/" + opts.filename + ".seed"
+
+      else if opts.request is "upload"
+        params.type = "put"
+        params.contentType = opts.contentType || "application/octet-stream"
+        params.url = "https://api-content.dropbox.com/1/files_put/sandbox/" + opts.filename + ".seed"
+        data: opts.data
+
+      else if opts.request is "destroy"
+        params.type = "post"
+        params.url = "https://api.dropbox.com/1/fileops/delete"
+        params.data = {
+          root: "sandbox"
+          path: opts.filename + ".seed"
+        }
+
+      params # return
 
   connect: (fn) ->
 
