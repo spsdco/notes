@@ -9,7 +9,7 @@ ONLINE = 2
 
 window.Sync =
 
-  oauth: JSON.parse localStorage.oauth
+  oauth: JSON.parse localStorage.oauth or '{"service": "undefined"}'
   queue: JSON.parse localStorage.Queue or '{"Note": {}, "Notebook": {}}'
 
   # Hold pending actions
@@ -30,20 +30,33 @@ window.Sync =
 
   state: OFFLINE
 
-  auth: ->
-    socket = io.connect("https://springseed-oauth.herokuapp.com:443")
-    socket.on "meta", (data) ->
-      console.log(data)
+  auth: (callback) ->
 
-    socket.on "authorized", (data) ->
-      # We have a token. We can do anything!
+    # Saves data after getting it from the auth server
+    onData = (data) ->
+      # Calc expiration date
       data.expires = new Date().getTime() + parseInt(data.expires_in)*1000 if data.hasOwnProperty("expires_in")
-
       Sync.oauth = data
       localStorage.oauth = JSON.stringify(data)
 
-      # Free up server resources. Cause why not.
-      socket.disconnect()
+    if Sync.oauth.service is "undefined"
+      socket = io.connect("https://springseed-oauth.herokuapp.com:443")
+      socket.on "meta", (data) ->
+        console.log(data)
+
+      socket.on "authorized", (data) ->
+        onData(data)
+        socket.disconnect() # Free up server resources
+
+    # If it expires in the next ten minutes, we'll refresh the token
+    else if Sync.oauth.service is "skydrive" and new Date().getTime() > (Sync.oauth.expires - 6000000)
+      $.ajax(
+        Sync.generateRequest
+          request: "refresh"
+      ).done((data) ->
+        onData(data)
+        callback() if callback
+      )
 
   # The main syncing function.
   # It downloads the meta, then updates it to latest version as well as doing various other io.
@@ -160,7 +173,7 @@ window.Sync =
     ).error (data) ->
       if data.status is 401
         console.log "the bearer token is wrong. deleting token & please reauth"
-        localStorage.removeItem "Token"
+        localStorage.removeItem "oauth"
 
       else if data.status is 404
         console.log "meta does not exist. uploading a new meta w/ every single file"
@@ -219,7 +232,16 @@ window.Sync =
           path: opts.filename + ".seed"
         }
 
-      params # return
+    else if Sync.oauth.service is "skydrive"
+      params =
+        crossDomain: true
+        dataType: opts.dataType || "json"
+
+      if opts.request is "refresh"
+        params.type = "get"
+        params.url = "https://springseed-oauth.herokuapp.com:443/refresh/skydrive?code=" + Sync.oauth.refresh_token
+
+    params # return
 
   connect: (fn) ->
 
