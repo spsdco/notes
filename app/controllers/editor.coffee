@@ -23,14 +23,13 @@ class Editor extends Spine.Controller
     "click .headerwrap .revert": "revert"
     "keydown #contentwrite > .inner": "keydown"
     "paste #contentwrite > .inner": "paste"
-    "mousedown #contentwrite > .inner": "mousedown"
-    "mouseup #contentwrite > .inner": "mouseup"
     "dblclick #contentread": "toggleMode"
 
   constructor: ->
     super
     Note.bind("changeNote", @enable)
     Note.bind("revert", @revertNote)
+    @.bind("checkSel", @checkSelWrap)
 
     aliases = { 'js' : 'javascript', 'py': 'python', 'coffee', 'coffeescript' }
     marked.setOptions {
@@ -158,18 +157,12 @@ class Editor extends Spine.Controller
       @insertText @psuedoinput.val()
     , 10)
 
-  mousedown: (e) ->
-    @checkSelWrap(e)
-
-  mouseup: (e) ->
-    @checkSelWrap(e)
-
-  checkSelWrap: (e) ->
+  checkSelWrap: ->
     setTimeout =>
-      @checkSel(e)
+      @checkSel()
     , 50
 
-  checkSel: (e) ->
+  checkSel: ->
     sel = window.getSelection()
     if sel.toString().trim() is ''
       @controls.hide()

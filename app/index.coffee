@@ -26,6 +26,10 @@ class App extends Spine.Controller
     '.popover-mask': 'popoverMask'
     '.modal.preferences': 'settings'
 
+  events:
+    'mousedown': 'checkSel'
+    'mouseup': 'checkSel'
+
   constructor: ->
     super
 
@@ -64,5 +68,9 @@ class App extends Spine.Controller
     @browser = new Browser( el: @browser )
     @editor = new Editor( el: @editor )
     @popover = new Popover( el: @popoverMask )
+
+  # We're sending an event to the editor here because we need the checksel to be global
+  checkSel: ->
+    @editor.trigger("checkSel")
 
 module.exports = App
