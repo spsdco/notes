@@ -6,7 +6,7 @@ hljs = require ("highlight.js")
 Note = require '../models/note.coffee'
 
 # Controllers
-Modal = require './modal.coffee'
+window.Modal = require '../controllers/modal.coffee'
 
 class Editor extends Spine.Controller
 
@@ -30,6 +30,8 @@ class Editor extends Spine.Controller
   constructor: ->
     super
     Note.bind("changeNote", @enable)
+    Note.bind("revert", @revertNote)
+
     aliases = { 'js' : 'javascript', 'py': 'python', 'coffee', 'coffeescript' }
     marked.setOptions {
       highlight: (code, lang) ->
@@ -116,6 +118,9 @@ class Editor extends Spine.Controller
 
   revert: ->
     Modal.get('revert').run()
+
+  revertNote: =>
+    @toggleMode(false)
 
   # Pops the text into the contenteditable
   insertText: (text) ->

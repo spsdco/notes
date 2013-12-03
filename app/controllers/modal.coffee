@@ -2,9 +2,8 @@ Spine = require "spine"
 $ = Spine.$
 
 # Needed.
-Note = require("../models/note.coffee")
+Note = require '../models/note.coffee'
 Notebook = require '../models/notebook.coffee'
-Editor = require './editor.coffee'
 
 # Base Modal Class.
 class Modal extends Spine.Controller
@@ -74,8 +73,7 @@ module.exports =
         @show()
 
       revert: ->
-        Editor.toggleMode(false)
-
+        Note.trigger("revert")
         @hide()
 
     modals['deleteNotebook'] = new Modal
