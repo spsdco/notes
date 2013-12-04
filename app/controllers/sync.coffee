@@ -11,6 +11,7 @@ window.Sync =
 
   oauth: JSON.parse localStorage.oauth or '{"service": "undefined"}'
   queue: JSON.parse localStorage.Queue or '{"Note": {}, "Notebook": {}}'
+  syncMeta: {}
 
   # Hold pending actions
   pending: []
@@ -58,10 +59,40 @@ window.Sync =
         callback() if callback
       )
 
+  preSync: ->
+    deferred = new $.Deferred()
+
+    if Sync.oauth.service is "skydrive"
+      $.ajax(
+        Sync.generateRequest
+          request: "findappdir"
+      ).done((data) ->
+        for item in data.data
+          # Break when we find the springseed folder
+          if item.name.toLowerCase() is "springseed"
+            Sync.syncMeta.folderid = item.id
+            break
+        $.ajax(
+          Sync.generateRequest
+            request: "listappdir"
+        ).done((data) ->
+          Sync.syncMeta.map = {}
+          for item in data.data
+            Sync.syncMeta.map[item.name] = item.id
+          deferred.resolve()
+        )
+      )
+    else
+      deferred.resolve()
+
+    return deferred.promise()
+
   # The main syncing function.
   # It downloads the meta, then updates it to latest version as well as doing various other io.
   # It's magic. Trust me.
   doSync: ->
+
+    console.log("bosh")
 
     # Downloads a meta file.
     $.ajax(
@@ -206,6 +237,7 @@ window.Sync =
             Sync.queue = {"Note": {}, "Notebook": {}}
             Sync.saveQueue()
 
+  # It's *slightly* nicer having a function generating requests
   generateRequest: (opts) ->
     if Sync.oauth.service is "dropbox"
       params =
@@ -214,7 +246,11 @@ window.Sync =
         beforeSend: (xhr) ->
           xhr.setRequestHeader "Authorization", "Bearer " + Sync.oauth.access_token
 
-      if opts.request is "download"
+      if opts.request is "me"
+        params.type = "get"
+        params.url = "https://api.dropbox.com/1/account/info"
+
+      else if opts.request is "download"
         params.type = "get"
         params.url = "https://api-content.dropbox.com/1/files/sandbox/" + opts.filename + ".seed"
 
@@ -240,6 +276,32 @@ window.Sync =
       if opts.request is "refresh"
         params.type = "get"
         params.url = "https://springseed-oauth.herokuapp.com:443/refresh/skydrive?code=" + Sync.oauth.refresh_token
+
+      else if opts.request is "me"
+        params.type = "get"
+        params.url = "https://apis.live.net/v5.0/me?access_token=" + Sync.oauth.access_token
+
+      else if opts.request is "root"
+        params.type = "get"
+        params.url = "https://apis.live.net/v5.0/me/skydrive?access_token=" + Sync.oauth.access_token
+
+      else if opts.request is "makeappdir"
+        params.type = "post"
+        params.contentType = "application/json"
+        params.url = "https://apis.live.net/v5.0/me/skydrive/my_documents?access_token=" + Sync.oauth.access_token
+        params.data = '{"name": "Springseed", "description": "Springseed App Data"}'
+
+      else if opts.request is "findappdir"
+        params.type = "get"
+        params.url = "https://apis.live.net/v5.0/me/skydrive/my_documents/files?access_token=" + Sync.oauth.access_token
+
+      else if opts.request is "listappdir"
+        params.type = "get"
+        params.url = "https://apis.live.net/v5.0/" + Sync.syncMeta.folderid + "/files?access_token=" + Sync.oauth.access_token
+
+      else if opts.request is "download"
+        params.type = "get"
+        params.url = "https://apis.live.net/v5.0/" + Sync.syncMeta.map[opts.filename + ".seed"] + "/content?access_token=" + Sync.oauth.access_token
 
     params # return
 
