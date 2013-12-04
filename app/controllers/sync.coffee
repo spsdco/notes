@@ -219,7 +219,7 @@ window.Sync =
                   request: "upload"
                   filename: e.id
                   dataType: "text"
-                  data: JSON.stringify(result[0])
+                  data: data
               )
             )
 
@@ -258,7 +258,7 @@ window.Sync =
         params.type = "put"
         params.contentType = opts.contentType || "application/octet-stream"
         params.url = "https://api-content.dropbox.com/1/files_put/sandbox/" + opts.filename + ".seed"
-        data: opts.data
+        params.data = opts.data
 
       else if opts.request is "destroy"
         params.type = "post"
