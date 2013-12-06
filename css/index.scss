@@ -217,6 +217,10 @@ body.resizing { cursor: ew-resize; }
     overflow: hidden;
     position: relative;
 
+    &.dragover {
+      background-color: lighten($sidebar-color, 9%);
+    }
+
     span {
       padding: 0 10px 0 34px;
     }
@@ -278,6 +282,11 @@ body.resizing { cursor: ew-resize; }
       font-size: 13px;
       line-height: 1.5;
       color: #555;
+
+      &.dragover {
+        font-weight: bold;
+        color: #ff6600;
+      }
 
       &:hover {
         color: #333;
@@ -364,6 +373,7 @@ body.resizing { cursor: ew-resize; }
   }
 
   li {
+    background: darken($white-color, 1%);
     cursor: default;
     border-top: 1px solid #fefefe;
     border-bottom: 1px solid #ccc;

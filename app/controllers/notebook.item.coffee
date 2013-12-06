@@ -85,13 +85,12 @@ class NotebookItem extends Spine.Controller
 
   onDragEnter: (e) =>
     e.preventDefault()
-    console.log $(e.target).attr('data-category')
-    if $(e.target).attr('data-category') and $(e.target).attr('data-category') isnt "all"
-      $(e.target).css {'font-weight': 'bold', 'color': '#FF6600'}
+    if ($(e.target).attr('data-category') and $(e.target).attr('data-category') isnt "all") or $(e.currentTarget).attr("id") isnt "notebook-all"
+      $(e.target).addClass("dragover")
 
   onDragLeave: (e) =>
     e.preventDefault()
-    $(e.target).css {'font-weight': '', 'color': ''} if $(e.target).attr('data-category')
+    $(e.target).removeClass("dragover") if $(e.target).attr('data-category')
 
   onDragOver: (e) =>
     e.preventDefault()
@@ -110,7 +109,7 @@ class NotebookItem extends Spine.Controller
       note = Note.find(noteid)
       if $(e.target).attr("data-category")
         category = $(e.target).text()
-        $(e.target).css {'font-weight': '', 'color': ''} # Reset CSS changes
+        $(e.target).removeClass("dragover") # Reset CSS changes
       else
         console.log @notebook.categories[0]
         category = @notebook.categories[0] # Default Category
