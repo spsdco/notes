@@ -8,10 +8,11 @@ class window.Notebook extends Spine.Model
 
   @extend @Sync
 
-  @.bind "beforeUpdate", (notebook) ->
-    notebook.updateAttributes {
-      "date": Math.round(new Date()/1000)
-    }
+  @.bind "beforeUpdate", (notebook, context) ->
+    if context isnt "date"
+      notebook.updateAttributes {
+        "date": Math.round(new Date()/1000)
+      }, "date"
 
   @.bind "beforeDestroy", (notebook) ->
     for note in Note.filter(notebook.id, "all")
