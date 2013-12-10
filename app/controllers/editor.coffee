@@ -185,7 +185,10 @@ class Editor extends Spine.Controller
     @el.find("span").text("*"+text+"*").contents().unwrap()
 
   formatHead: (e) =>
-    console.log @selrange.toString().substring(0,3)
+    @sel.modify("extend", "backward", "paragraphboundary")
+    @sel.modify("extend", "forward", "paragraphboundary")
+    @selrange = @sel.getRangeAt(0)
+
     if @selrange.toString().substring(0,3) isnt "###"
       @selrange.surroundContents(document.createElement("span"))
       text = @el.find("span").text()
