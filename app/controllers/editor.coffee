@@ -174,15 +174,39 @@ class Editor extends Spine.Controller
       leftpos = @selrange.getBoundingClientRect().right - (@controls.width() / 2) + 'px'
       @controls.css {top: toppos, left: leftpos}
 
+  newString: (str) ->
+    @selrange.surroundContents(document.createElement("span"))
+    text = @el.find("span").text()
+    @el.find("span").text(str).contents().unwrap()
+
   formatBold: (e) =>
     @selrange.surroundContents(document.createElement("span"))
     text = @el.find("span").text()
     @el.find("span").text("**"+text+"**").contents().unwrap()
 
   formatItalics: (e) =>
-    @selrange.surroundContents(document.createElement("span"))
-    text = @el.find("span").text()
-    @el.find("span").text("*"+text+"*").contents().unwrap()
+
+    str = @selrange.toString()
+    if str.substring(0,1) is "*" and str.substring(str.length-1,str.length) is "*"
+      @newString(str.substring(1,str.length-1))
+    else
+      @sel.collapseToStart()
+      @sel.modify("move", "backward", "character")
+      @sel.modify("extend", "forward", "word")
+      @sel.modify("extend", "forward", "character")
+      @selrange = @sel.getRangeAt(0)
+      str = @selrange.toString()
+      console.log(str)
+
+      if str.substring(0,1) is "*" and str.substring(str.length-1,str.length) is "*"
+        @newString(str.substring(1,str.length-1))
+      else
+        @sel.collapseToStart()
+        @sel.modify("extend", "forward", "word")
+        @selrange = @sel.getRangeAt(0)
+        str = @selrange.toString()
+        @newString(" *" + str.substring(1,str.length) + "*")
+        console.log("creating astericks")
 
   formatHead: (e) =>
     @sel.modify("extend", "backward", "paragraphboundary")
