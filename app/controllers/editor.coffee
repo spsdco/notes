@@ -180,9 +180,29 @@ class Editor extends Spine.Controller
     @el.find("span").text(str).contents().unwrap()
 
   formatBold: (e) =>
-    @selrange.surroundContents(document.createElement("span"))
-    text = @el.find("span").text()
-    @el.find("span").text("**"+text+"**").contents().unwrap()
+    str = @selrange.toString()
+    if str.substring(0,2) is "**" and str.substring(str.length-2,str.length) is "**"
+      @newString(str.substring(2,str.length-2))
+    else
+      @sel.collapseToStart()
+      @sel.modify("move", "backward", "character")
+      @sel.modify("move", "backward", "character")
+      @sel.modify("extend", "forward", "word")
+      @sel.modify("extend", "forward", "character")
+      @sel.modify("extend", "forward", "character")
+      @selrange = @sel.getRangeAt(0)
+      str = @selrange.toString()
+
+      if str.substring(0,2) is "**" and str.substring(str.length-2,str.length) is "**"
+        @newString(str.substring(2,str.length-2))
+      else
+        @sel.collapseToStart()
+        @sel.modify("move", "forward", "character")
+        @sel.modify("move", "forward", "character")
+        @sel.modify("extend", "forward", "word")
+        @selrange = @sel.getRangeAt(0)
+        str = @selrange.toString()
+        @newString("**" + str + "**")
 
   formatItalics: (e) =>
 
@@ -196,17 +216,16 @@ class Editor extends Spine.Controller
       @sel.modify("extend", "forward", "character")
       @selrange = @sel.getRangeAt(0)
       str = @selrange.toString()
-      console.log(str)
 
       if str.substring(0,1) is "*" and str.substring(str.length-1,str.length) is "*"
         @newString(str.substring(1,str.length-1))
       else
         @sel.collapseToStart()
+        @sel.modify("move", "forward", "character")
         @sel.modify("extend", "forward", "word")
         @selrange = @sel.getRangeAt(0)
         str = @selrange.toString()
-        @newString(" *" + str.substring(1,str.length) + "*")
-        console.log("creating astericks")
+        @newString("*" + str + "*")
 
   formatHead: (e) =>
     @sel.modify("extend", "backward", "paragraphboundary")
