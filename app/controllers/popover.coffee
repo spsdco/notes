@@ -34,8 +34,10 @@ class Popover extends Spine.Controller
       # adds the new category on
       notebook = Notebook.find(Notebook.current.id)
       cat = notebook.categories
-      cat.push(@categoryInput.val())
-      notebook.updateAttribute("categories", cat)
+      name = @categoryInput.val().replace(/\\/g, '')
+      if name isnt ''
+        cat.push(name)
+        notebook.updateAttribute("categories", cat)
 
       @el.hide()
 
@@ -47,7 +49,9 @@ class Popover extends Spine.Controller
 
   deleteNotebook: (e) =>
     # All deletion gets implemented in modal.coffee
-    Modal.get('deleteNotebook').run()
+    notebookid = @delpopover.attr('data-notebook')
+    categoryid = @delpopover.attr('data-category')
+    Modal.get('deleteNotebook').run(notebookid, categoryid)
 
 
 module.exports = Popover

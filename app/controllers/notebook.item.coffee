@@ -41,8 +41,6 @@ class NotebookItem extends Spine.Controller
       $('.popover-mask').show()
       target = $(e.target).parent()
 
-      console.log @notebook.id
-
       if $(e.target).attr('data-category') is 'all'
         return
 

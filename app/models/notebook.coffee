@@ -17,6 +17,15 @@ class window.Notebook extends Spine.Model
   @.bind "beforeDestroy", (notebook) ->
     for note in Note.filter(notebook.id, "all")
       note.destroy()
-    console.log("destroyinghinginig")
+
+  subcategoryDestroy: (category) ->
+    for note in Note.filter(Notebook.current.id, category)
+      note.destroy()
+
+    # this is a terrible hack. I will fix it maybe
+    # in theory, they can't an empty subcategory string
+    arr = @categories.slice(0)
+    arr[category] = ""
+    @updateAttribute 'categories', arr
 
 module.exports = Notebook

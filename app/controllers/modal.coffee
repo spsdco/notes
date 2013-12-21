@@ -83,15 +83,23 @@ module.exports =
         'click .true': 'delete'
         'click .false': 'hide'
 
-      run: ->
-        @el.find('i').text Notebook.find(Notebook.current.id).name
+      run: (notebookid, @category) ->
+        @notebook = Notebook.find(notebookid)
+        if @category is "all"
+          @el.find('.type').text "Notebook"
+          @el.find('i').text @notebook.name
+        else
+          @el.find('.type').text "Subcategory"
+          @el.find('i').text @notebook.categories[@category]
+
         @show()
 
       delete: ->
-        notebook = Notebook.find(Notebook.current.id)
-
         Note.trigger 'changeNote'
-        notebook.destroy()
+        if @category is "all"
+          @notebook.destroy()
+        else
+          @notebook.subcategoryDestroy(@category)
         @hide()
 
     modals['renameNotebook'] = new Modal
@@ -110,17 +118,21 @@ module.exports =
         @show()
 
       rename: ->
+        # Backslashes only seem to be an issue here
         input = @el.find('input').val()
+        input = input.replace(/\\/g, '')
         notebook = Notebook.find(@notebookid)
 
-        if @category is 'all'
-          notebook.updateAttribute 'name', input
-        else
-          # Subcategories need to be cloned then updated
-          # Also, I wish there was a better way to do pointers.
-          arr = notebook.categories.slice(0)
-          arr[@category] = input
-          notebook.updateAttribute 'categories', arr
+        # Check for Empty String
+        if input isnt ''
+          if @category is 'all'
+            notebook.updateAttribute 'name', input
+          else
+            # Subcategories need to be cloned then updated
+            # Also, I wish there was a better way to do pointers.
+            arr = notebook.categories.slice(0)
+            arr[@category] = input
+            notebook.updateAttribute 'categories', arr
 
-        Notebook.trigger 'refresh'
+          Notebook.trigger 'refresh'
         @hide()

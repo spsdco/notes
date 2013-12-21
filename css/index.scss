@@ -51,6 +51,12 @@ body.resizing { cursor: ew-resize; }
   cursor: default !important;
 }
 
+// Going to leave this declaration here until the next release
+// where I refactor all the css.
+button {
+  outline: 0;
+}
+
 /************
     PANEL
 *************/
