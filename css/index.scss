@@ -419,13 +419,12 @@ body.resizing { cursor: ew-resize; }
 
     &::after {
       position: absolute;
-      top: 240px;
-      font-family: $light-font;
-      font-weight: 300;
-      content: "No note selected.";
+      top: 230px;
+      font-weight: bold;
+      content: "No note selected";
       letter-spacing: -1px;
-      color: #666;
-      font-size: 22px;
+      color: #888;
+      font-size: 19px;
       text-align: center;
       left: 0;
       right: 0;
