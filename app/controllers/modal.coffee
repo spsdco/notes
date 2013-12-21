@@ -1,4 +1,4 @@
-Spine = require "spine"
+Spine = require 'spine'
 $ = Spine.$
 
 # Needed.
@@ -15,22 +15,23 @@ class Modal extends Spine.Controller
   show: ->
     return unless @state is off
     @state = on
-    @el.show(0).addClass("show")
+    @el.show(0).addClass 'show'
     if @onShow then @onShow()
     setTimeout ( =>
       @el.on "click.modal", (event) =>
-        if event.target.className.indexOf("modal") >= 0 then @hide()
+        if event.target.className.indexOf('modals') > -1
+          @hide()
     ), 500
 
   hide: ->
     return unless @state is on
     @state = off
-    @el.removeClass("show")
+    @el.removeClass 'show'
     setTimeout ( =>
       @el.hide(0)
       if @onHide then @onHide()
     ), 350
-    @el.off("click.modal")
+    @el.off 'click.modal'
 
 modals = []
 
@@ -58,7 +59,7 @@ module.exports =
           currentNote = Note.find(Note.current.id)
 
           # Take it out of editmode
-          Note.trigger("changeNote")
+          Note.trigger 'changeNote'
           currentNote.destroy()
 
           @hide()
@@ -73,7 +74,7 @@ module.exports =
         @show()
 
       revert: ->
-        Note.trigger("revert")
+        Note.trigger 'revert'
         @hide()
 
     modals['deleteNotebook'] = new Modal
@@ -89,7 +90,7 @@ module.exports =
       delete: ->
         notebook = Notebook.find(Notebook.current.id)
 
-        Note.trigger("changeNote")
+        Note.trigger 'changeNote'
         notebook.destroy()
         @hide()
 
@@ -99,16 +100,27 @@ module.exports =
         'click .true': 'rename'
         'click .false': 'hide'
 
-      run: (@notebookid) ->
-        @el.find('input').val(Notebook.find(@notebookid).name)
+      run: (@notebookid, @category) ->
+        # Subcategories need a proper lookup
+        input = @el.find('input')
+        if @category is 'all'
+          input.val(Notebook.find(@notebookid).name)
+        else
+          input.val(Notebook.find(@notebookid).categories[@category])
         @show()
 
       rename: ->
-        # Placeholder
-        Notebook.find(@notebookid).updateAttributes {
-          "name": @el.find('input').val()
-        }
-        Notebook.trigger('refresh')
+        input = @el.find('input').val()
+        notebook = Notebook.find(@notebookid)
+
+        if @category is 'all'
+          notebook.updateAttribute 'name', input
+        else
+          # Subcategories need to be cloned then updated
+          # Also, I wish there was a better way to do pointers.
+          arr = notebook.categories.slice(0)
+          arr[@category] = input
+          notebook.updateAttribute 'categories', arr
+
+        Notebook.trigger 'refresh'
         @hide()
-
-

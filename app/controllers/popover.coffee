@@ -41,8 +41,9 @@ class Popover extends Spine.Controller
 
   renameNotebook: (e) =>
     # All renaming gets implemented in modal.coffee
-    notebookid = @delpopover.attr('current-notebook')
-    Modal.get('renameNotebook').run(notebookid)
+    notebookid = @delpopover.attr('data-notebook')
+    categoryid = @delpopover.attr('data-category')
+    Modal.get('renameNotebook').run(notebookid, categoryid)
 
   deleteNotebook: (e) =>
     # All deletion gets implemented in modal.coffee
