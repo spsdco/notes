@@ -938,6 +938,10 @@ button {
     }
   }
 
+  .signedin {
+    display: none;
+  }
+
   input {
     font-size: 14px;
     border: 2px solid $nephritis;

@@ -69,6 +69,9 @@ class App extends Spine.Controller
     @editor = new Editor( el: @editor )
     @popover = new Popover( el: @popoverMask )
 
+    # We'll put the sync conenct here as well.
+    $('body').trigger('authorized.sync') if Sync.oauth.service != "undefined"
+
   # We're sending an event to the editor here because we need the checksel to be global
   checkSel: ->
     @editor.trigger("checkSel")

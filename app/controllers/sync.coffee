@@ -31,6 +31,12 @@ window.Sync =
 
   state: OFFLINE
 
+  signOut: ->
+    # Deletes everything. Should work right?
+    localStorage.removeItem 'oauth'
+    Sync.oauth = JSON.parse localStorage.oauth or '{"service": "undefined"}'
+    $('body').trigger('unauthorized.sync')
+
   auth: (callback) ->
 
     # Saves data after getting it from the auth server
@@ -39,11 +45,12 @@ window.Sync =
       data.expires = new Date().getTime() + parseInt(data.expires_in)*1000 if data.hasOwnProperty("expires_in")
       Sync.oauth = data
       localStorage.oauth = JSON.stringify(data)
+      $('body').trigger('authorized.sync')
 
     if Sync.oauth.service is "undefined"
       socket = io.connect("https://springseed-oauth.herokuapp.com:443")
       socket.on "meta", (data) ->
-        console.log(data)
+        callback(data)
 
       socket.on "authorized", (data) ->
         onData(data)
@@ -204,7 +211,7 @@ window.Sync =
     ).error (data) ->
       if data.status is 401
         console.log "the bearer token is wrong. deleting token & please reauth"
-        localStorage.removeItem "oauth"
+        Sync.signOut()
 
       else if data.status is 404
         console.log "meta does not exist. uploading a new meta w/ every single file"
