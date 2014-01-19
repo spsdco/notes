@@ -96,7 +96,7 @@ window.Sync =
 
     else if method is "destroyclient"
       # Delete all the notes in the app
-      Notebook.all().forEach (item) ->
+      Notebook.all().forEach (notebook) ->
         notebook.destroy()
 
       # Then delete the queue so nothing tries to sync
@@ -148,7 +148,6 @@ window.Sync =
         filename: "meta"
     ).done((data) ->
       # Merge all the magical data together
-      console.log(Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue))
       result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue)
 
       # First, we rename the keys in our current DB
@@ -178,8 +177,6 @@ window.Sync =
         trans = Sync.db.transaction(["notes"], "readwrite")
         store = trans.objectStore "notes"
 
-        console.log(result[2])
-
         result[2].Note.forEach (item) ->
 
           promises.push((->
@@ -202,14 +199,12 @@ window.Sync =
 
               when "download"
                 # Download from my butt
-                console.log(item)
                 $.ajax(
                   Sync.generateRequest
                     request: "download"
                     filename: item[1]
                     dataType: "text"
                 ).done (data) ->
-                  console.log(item)
                   # We now have to store the new data in the database.
                   trans = Sync.db.transaction(["notes"], "readwrite")
                   store = trans.objectStore "notes"
