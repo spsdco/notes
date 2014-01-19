@@ -357,7 +357,7 @@ button {
     opacity: 0.6;
 
     &.spin {
-      // -webkit-animation: spin 1000ms linear infinite;
+      -webkit-animation: spin 1000ms linear infinite;
     }
 
     &:active {

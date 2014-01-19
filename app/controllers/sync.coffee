@@ -36,6 +36,7 @@ window.Sync =
     localStorage.removeItem 'oauth'
     Sync.oauth = JSON.parse localStorage.oauth or '{"service": "undefined"}'
     $('body').trigger('unauthorized.sync')
+    $('body').trigger('stop.sync')
 
   auth: (callback) ->
 
@@ -99,7 +100,7 @@ window.Sync =
   # It's magic. Trust me.
   doSync: ->
 
-    console.log("bosh")
+    $('body').trigger('start.sync')
 
     # Downloads a meta file.
     $.ajax(
@@ -107,10 +108,8 @@ window.Sync =
         request: "download"
         filename: "meta"
     ).done((data) ->
-      console.log(JSON.parse(Sync.exportData()), data, Sync.queue)
+      # Merge all the magical data together
       result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue)
-
-      console.log(result)
 
       # First, we rename the keys in our current DB
       promises = []
@@ -207,6 +206,7 @@ window.Sync =
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
             Sync.saveQueue()
+            $('body').trigger('stop.sync')
 
     ).error (data) ->
       if data.status is 401
@@ -243,6 +243,7 @@ window.Sync =
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
             Sync.saveQueue()
+            $('body').trigger('stop.sync')
 
   # It's *slightly* nicer having a function generating requests
   generateRequest: (opts) ->

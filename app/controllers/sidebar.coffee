@@ -7,6 +7,7 @@ Notebook = require '../models/notebook.coffee'
 # Controllers
 NotebookItem = require './notebook.item.coffee'
 Settings = require './settings.coffee'
+Sync = require './sync.coffee'
 
 class Sidebar extends Spine.Controller
 
@@ -18,11 +19,13 @@ class Sidebar extends Spine.Controller
   events:
     "keyup input": "new"
     "click #settings": "toggleSettings"
+    "click #sync": "doSync"
 
   elements:
     "ul": "list"
     "input": "input"
     "#settings": "settings"
+    "#sync": "sync"
 
   constructor: ->
     super
@@ -30,6 +33,12 @@ class Sidebar extends Spine.Controller
     Notebook.bind "changeNotebook", @change
     Notebook.bind "refresh", @refresh
     Notebook.bind "destroy", @destroy
+
+    # Starts and stops the animation
+    $('body').on 'start.sync', =>
+      @sync.addClass 'spin'
+    $('body').on 'stop.sync', =>
+      @sync.removeClass 'spin'
 
   addOne: (notebook) =>
     @list.append @template notebook
@@ -85,5 +94,11 @@ class Sidebar extends Spine.Controller
 
   toggleSettings: (e) ->
     Settings.get().show()
+
+  doSync: ->
+    if localStorage.oauth
+      Sync.doSync()
+    else
+      @toggleSettings()
 
 module.exports = Sidebar
