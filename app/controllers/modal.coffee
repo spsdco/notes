@@ -10,6 +10,10 @@ class Modal extends Spine.Controller
   constructor: (opts) ->
     super
 
+    # Probably shouldn't be in here, but whatever
+    $('body').on 'meta.sync', =>
+      modals['syncmeta'].run()
+
   state: off
 
   show: ->
@@ -76,6 +80,23 @@ module.exports =
       revert: ->
         Note.trigger 'revert'
         @hide()
+
+    modals['syncmeta'] = new Modal
+      el: $('.modal.syncmeta')
+      events:
+        'click .destroyclient': 'destroyclient'
+        'click .destroyserver': 'destroyserver'
+
+      destroyclient: ->
+        Sync.firstSync("destroyclient")
+        @hide()
+
+      destroyserver: ->
+        Sync.firstSync("destroyserver")
+        @hide()
+
+      run: ->
+        @show()
 
     modals['deleteNotebook'] = new Modal
       el: $('.modal.deleteNotebook')

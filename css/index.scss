@@ -814,6 +814,30 @@ button {
     }
   }
 
+  .syncmeta-container {
+    width: 600px;
+    margin-left: -328px;
+    padding: 25px;
+    text-align: center;
+    font-size: 16px;
+    color: #222;
+    border: 3px solid $nephritis;
+
+    .special {
+      border-color: lighten($red-color, 10);
+      &:active {
+        background: lighten($red-color, 10);
+      }
+    }
+
+    .special.green {
+      border-color: $nephritis;
+      &:active {
+        background: $nephritis;
+      }
+    }
+  }
+
   .rename-container {
     width: 400px;
     margin-left: -228px;

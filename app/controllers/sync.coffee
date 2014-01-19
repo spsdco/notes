@@ -48,6 +48,19 @@ window.Sync =
       localStorage.oauth = JSON.stringify(data)
       $('body').trigger('authorized.sync')
 
+      # Weird? Do a sync on error. Nope. We're checking if a meta file exists and then asking the user if they
+      # want to copy from the server, or copy to the server. I did tests and if we don't have this step, we get
+      # some really weird fuckery. File systems are great, yes. But databases are sometimes better.
+      $.ajax(
+        Sync.generateRequest
+          request: "download"
+          filename: "meta"
+      ).done((data) ->
+         $('body').trigger('meta.sync')
+      ).error((data) ->
+        Sync.doSync()
+      )
+
     if Sync.oauth.service is "undefined"
       socket = io.connect("https://springseed-oauth.herokuapp.com:443")
       socket.on "meta", (data) ->
@@ -66,6 +79,32 @@ window.Sync =
         onData(data)
         callback() if callback
       )
+
+  # There's two options of destroying stuff.
+  # Destroy the server, or destroy the client.
+  firstSync: (method) ->
+    deferred = new $.Deferred()
+    if method is "destroyserver"
+      $.ajax(
+        Sync.generateRequest
+          request: "destroy"
+          filename: "meta"
+          dataType: "text"
+      ).done (data) ->
+        # Do the real initial sync
+        Sync.doSync()
+
+    else if method is "destroyclient"
+      # Delete all the notes in the app
+      Notebook.all().forEach (item) ->
+        notebook.destroy()
+
+      # Then delete the queue so nothing tries to sync
+      Sync.queue = {"Note": {}, "Notebook": {}}
+      Sync.saveQueue()
+
+      # Do the real initial sync
+      Sync.doSync()
 
   preSync: ->
     deferred = new $.Deferred()
@@ -109,11 +148,12 @@ window.Sync =
         filename: "meta"
     ).done((data) ->
       # Merge all the magical data together
+      console.log(Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue))
       result = Sync.merger(JSON.parse(Sync.exportData()), data, Sync.queue)
 
       # First, we rename the keys in our current DB
       promises = []
-      for item in result[1].Note
+      result[1].Note.forEach (item) ->
 
         promises.push((->
           deferred = $.Deferred()
@@ -138,7 +178,9 @@ window.Sync =
         trans = Sync.db.transaction(["notes"], "readwrite")
         store = trans.objectStore "notes"
 
-        for item in result[2].Note
+        console.log(result[2])
+
+        result[2].Note.forEach (item) ->
 
           promises.push((->
             deferred = $.Deferred()
@@ -160,12 +202,14 @@ window.Sync =
 
               when "download"
                 # Download from my butt
+                console.log(item)
                 $.ajax(
                   Sync.generateRequest
                     request: "download"
                     filename: item[1]
                     dataType: "text"
                 ).done (data) ->
+                  console.log(item)
                   # We now have to store the new data in the database.
                   trans = Sync.db.transaction(["notes"], "readwrite")
                   store = trans.objectStore "notes"
@@ -362,8 +406,14 @@ window.Sync =
 
   importData: (obj) ->
     input = JSON.parse(obj)
+
+    console.log("why isn't this working", Note, Notebook)
+
+    # We have to save it to the db, otherwise it just hangs around in memory.
     Note.refresh(input.Note, clear: true)
     Notebook.refresh(input.Notebook, clear: true)
+    Note.saveLocal()
+    Notebook.saveLocal()
 
   # Merges the client & server, using a queue
   # Spits out the result, id changes & fs changes
