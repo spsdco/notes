@@ -62,13 +62,20 @@ window.Sync =
       )
 
     if Sync.oauth.service is "undefined"
-      socket = io.connect("https://springseed-oauth.herokuapp.com:443")
-      socket.on "meta", (data) ->
+      # There's something weird, even thought the sockets should die.
+      if Sync.socket
+        Sync.socket.disconnect()
+        Sync.socket.socket.reconnect()
+      else
+        Sync.socket = io.connect("https://springseed-oauth.herokuapp.com:443")
+
+      Sync.socket.on "meta", (data) ->
+        console.log('meta', data)
         callback(data)
 
-      socket.on "authorized", (data) ->
+      Sync.socket.on "authorized", (data) ->
         onData(data)
-        socket.disconnect() # Free up server resources
+        Sync.socket.disconnect() # Free up server resources
 
     # If it expires in the next ten minutes, we'll refresh the token
     else if Sync.oauth.service is "skydrive" and new Date().getTime() > (Sync.oauth.expires - 6000000)
@@ -401,8 +408,6 @@ window.Sync =
 
   importData: (obj) ->
     input = JSON.parse(obj)
-
-    console.log("why isn't this working", Note, Notebook)
 
     # We have to save it to the db, otherwise it just hangs around in memory.
     Note.refresh(input.Note, clear: true)

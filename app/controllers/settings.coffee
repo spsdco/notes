@@ -1,14 +1,14 @@
 Spine = require 'spine'
 $ = Spine.$
-Sync = require '../controllers/sync.coffee'
+Sync = require './sync.coffee'
 
 # Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
 shell = window.require('nw.gui').Shell if window.require
 
 class Settings extends Spine.Controller
   elements:
-    '#signin': 'signin'
-    '#signout': 'signout'
+    '#signin': 'signinbtn'
+    '#signout': 'signoutbtn'
     '.username': 'username'
     '.about': 'aboutPage'
     '.general': 'generalPage'
@@ -17,7 +17,7 @@ class Settings extends Spine.Controller
 
   events:
     'click .tabs li': 'tabs'
-    'click #signin': 'initauth'
+    'click #signin': 'signin'
     'click #signout': 'signout'
 
   state: off
@@ -27,6 +27,7 @@ class Settings extends Spine.Controller
 
     # A really bad hack
     $('body').on('authorized.sync', =>
+      @hide()
       @signedout.hide()
       @signedin.show()
       $.ajax(
@@ -39,7 +40,7 @@ class Settings extends Spine.Controller
     $('body').on('unauthorized.sync', =>
       @signedout.show()
       @signedin.hide()
-      @signin.text 'Sign In'
+      @signinbtn.text 'Sign In'
     )
 
   tabs: (e) ->
@@ -63,8 +64,8 @@ class Settings extends Spine.Controller
     setTimeout ( => @el.hide(0)), 350
     @el.off("click.modal")
 
-  initauth: ->
-    @signin.text 'Connecting...'
+  signin: ->
+    @signinbtn.text 'Connecting...'
     Sync.auth (data) =>
       if shell
         shell.openExternal data.url
@@ -72,7 +73,7 @@ class Settings extends Spine.Controller
         window.open data.url
 
   signout: ->
-    Sync.signout()
+    Sync.signOut()
 
 
 settings = null # Temp
