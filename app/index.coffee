@@ -1,6 +1,9 @@
 require './lib/setup.coffee'
 Spine = require 'spine'
 
+# Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
+shell = window.require('nw.gui').Shell if window.require
+
 # Splitter. Not working in setup for whatever reason.
 Splitter = require('./lib/splitter.js')
 
@@ -71,6 +74,13 @@ class App extends Spine.Controller
 
     # We'll put the sync conenct here as well.
     $('body').trigger('authorized.sync') if Sync.oauth.service != "undefined"
+
+    # Stuff for node webkit.
+    $('body').on 'mousedown', 'a', (e) ->
+      e.preventDefault()
+      if e.which is 1 or e.which is 2
+        shell.openExternal $(@).attr("href")
+      return false
 
   # We're sending an event to the editor here because we need the checksel to be global
   checkSel: ->

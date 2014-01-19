@@ -58,6 +58,10 @@ class Editor extends Spine.Controller
       currentNote.loadNote (content) =>
         @contentread.html marked(content)
         @contentwrite.text content
+
+        # this needs to be bound
+        $('#contentread a').attr('target', '_blank').click ->
+          return false
     else
       @el.addClass("deselected")
 
@@ -84,6 +88,7 @@ class Editor extends Spine.Controller
         # Copy the text in
         noteText = @contentwrite.text()
         @contentread.html marked(noteText)
+        $('#contentread a').attr('target', '_blank')
 
         # Save it
         if Note.current isnt undefined
@@ -163,16 +168,19 @@ class Editor extends Spine.Controller
     , 50
 
   checkSel: ->
-    sel = window.getSelection()
-    if sel.toString().trim() is ''
+    if @mode is "preview"
       @controls.hide()
     else
-      @sel = sel
-      @selrange = sel.getRangeAt(0)
-      @controls.show()
-      toppos = @selrange.getBoundingClientRect().top - 55 - @controls.height() + 'px'
-      leftpos = @selrange.getBoundingClientRect().right - (@controls.width() / 2) + 'px'
-      @controls.css {top: toppos, left: leftpos}
+      sel = window.getSelection()
+      if sel.toString().trim() is ''
+        @controls.hide()
+      else
+        @sel = sel
+        @selrange = sel.getRangeAt(0)
+        @controls.show()
+        toppos = @selrange.getBoundingClientRect().top - 55 - @controls.height() + 'px'
+        leftpos = @selrange.getBoundingClientRect().right - (@controls.width() / 2) + 'px'
+        @controls.css {top: toppos, left: leftpos}
 
   newString: (str) ->
     @selrange.surroundContents(document.createElement("span"))
