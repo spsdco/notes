@@ -13,6 +13,7 @@ class Panel extends Spine.Controller
     "#noteControls": "noteControls"
 
   events:
+    "dblclick": "maximize"
     "click #decor img": "windowControl"
     "click #noteControls img": "noteControl"
     "keyup #search input": "search"
@@ -40,8 +41,11 @@ class Panel extends Spine.Controller
       when "minimize"
         win.minimize()
       when "maximize"
-        win.maximize() if @maximized is false
-        win.unmaximize() if @maximized is true
+        @maximize()
+
+  maximize: ->
+    win.maximize() if @maximized is false
+    win.unmaximize() if @maximized is true
 
   noteControl: (e) ->
     switch e.currentTarget.id
