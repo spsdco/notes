@@ -34,6 +34,11 @@ class Panel extends Spine.Controller
       win.on 'unmaximize', =>
         @maximized = false
 
+    # Resizes the panel seperator
+    browser = $("#browser")
+    $(".splitter.split-right").on "mouseup", =>
+      @noteControls.width((browser.width()-4))
+
   windowControl: (e) ->
     switch e.currentTarget.className
       when "close"
