@@ -67,7 +67,7 @@ window.Sync =
         Sync.socket.disconnect()
         Sync.socket.socket.reconnect()
       else
-        Sync.socket = io.connect("https://springseed-oauth.herokuapp.com:443")
+        Sync.socket = io.connect("https://springseed.azurewebsites.net:443")
 
       Sync.socket.on "meta", (data) ->
         console.log('meta', data)
@@ -329,7 +329,7 @@ window.Sync =
 
       if opts.request is "refresh"
         params.type = "get"
-        params.url = "https://springseed-oauth.herokuapp.com:443/refresh/skydrive?code=" + Sync.oauth.refresh_token
+        params.url = "https://springseed.azurewebsites.net:443/refresh/skydrive?code=" + Sync.oauth.refresh_token
 
       else if opts.request is "me"
         params.type = "get"
