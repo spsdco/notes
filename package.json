@@ -8,6 +8,8 @@
     "min_width": 300,
     "min_height": 500,
     "position": "center",
+    "title": "Springseed",
+    "icon": "public/img/icon.svg",
     "new-instance": false
   },
   "dependencies": {
