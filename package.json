@@ -5,7 +5,6 @@
   "window": {
     "width": 1024,
     "height": 600,
-    "position": "mouse",
     "min_width": 300,
     "min_height": 500,
     "position": "center",
