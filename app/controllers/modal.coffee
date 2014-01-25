@@ -11,7 +11,7 @@ class Modal extends Spine.Controller
     super
 
     # Probably shouldn't be in here, but whatever
-    $('body').on 'meta.sync', =>
+    Spine.bind 'sync:meta', =>
       modals['syncmeta'].run()
 
   state: off

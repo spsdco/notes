@@ -24,18 +24,19 @@ class Browser extends Spine.Controller
 
   addOne: (note) =>
     # We should always be in the right list, but doesn't hurt to check
-    if note.notebook is Notebook.current.id and (Notebook.current.category is "all" or note.category is Notebook.find(Notebook.current.id).categories[Notebook.current.category])
-      note.date = note.prettyDate()
-      @noteBrowser.prepend @template note
+    if !typeof(Notebook.current) is "undefined"
+      if note.notebook is Notebook.current.id and (Notebook.current.category is "all" or note.category is Notebook.find(Notebook.current.id).categories[Notebook.current.category])
+        note.date = note.prettyDate()
+        @noteBrowser.prepend @template note
 
-      view = new NoteItem
-        el: @noteBrowser.find("#note-#{ note.id }")
-        note: note
+        view = new NoteItem
+          el: @noteBrowser.find("#note-#{ note.id }")
+          note: note
 
   changeNotebook: (notebook) =>
     dateSort = (a, b) ->
       return b.date - a.date
-    
+
     if notebook.search is true or notebook.search is not undefined
       noteList = ""
       for note in notebook.result

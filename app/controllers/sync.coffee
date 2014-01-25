@@ -35,8 +35,8 @@ window.Sync =
     # Deletes everything. Should work right?
     localStorage.removeItem 'oauth'
     Sync.oauth = JSON.parse localStorage.oauth or '{"service": "undefined"}'
-    $('body').trigger('unauthorized.sync')
-    $('body').trigger('stop.sync')
+    Spine.trigger 'sync:unauthorized'
+    Spine.trigger 'sync:stop'
 
   auth: (callback) ->
 
@@ -46,7 +46,7 @@ window.Sync =
       data.expires = new Date().getTime() + parseInt(data.expires_in)*1000 if data.hasOwnProperty("expires_in")
       Sync.oauth = data
       localStorage.oauth = JSON.stringify(data)
-      $('body').trigger('authorized.sync')
+      Spine.trigger 'sync:authorized'
 
       # Weird? Do a sync on error. Nope. We're checking if a meta file exists and then asking the user if they
       # want to copy from the server, or copy to the server. I did tests and if we don't have this step, we get
@@ -56,7 +56,7 @@ window.Sync =
           request: "download"
           filename: "meta"
       ).done((data) ->
-         $('body').trigger('meta.sync')
+         Spine.trigger 'sync:meta'
       ).error((data) ->
         Sync.doSync()
       )
@@ -146,7 +146,7 @@ window.Sync =
   # It's magic. Trust me.
   doSync: ->
 
-    $('body').trigger('start.sync')
+    Spine.trigger 'sync:start'
 
     # Downloads a meta file.
     $.ajax(
@@ -252,7 +252,7 @@ window.Sync =
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
             Sync.saveQueue()
-            $('body').trigger('stop.sync')
+            Spine.trigger 'sync:stop'
 
     ).error (data) ->
       if data.status is 401
@@ -289,7 +289,7 @@ window.Sync =
             console.log("all done! Delete the queue")
             Sync.queue = {"Note": {}, "Notebook": {}}
             Sync.saveQueue()
-            $('body').trigger('stop.sync')
+            Spine.trigger 'sync:stop'
 
   # It's *slightly* nicer having a function generating requests
   generateRequest: (opts) ->
@@ -362,26 +362,26 @@ window.Sync =
   connect: (fn) ->
 
     # Only run connect once
-    if @state isnt OFFLINE and typeof fn is 'function 'then return fn()
-    @state = IN_PROGRESS
+    if @state is OFFLINE
+      @state = IN_PROGRESS
 
-    request = indexedDB.open("springseed", 1)
+      request = indexedDB.open("springseed", 1)
 
-    request.onupgradeneeded = (e) =>
-      @db = e.target.result
+      request.onupgradeneeded = (e) =>
+        @db = e.target.result
 
-      # We're going to just be storing all the spine stuff in one store,
-      # just because I cbf seperating the Keys.
-      @db.createObjectStore("meta")
+        # We're going to just be storing all the spine stuff in one store,
+        # just because I cbf seperating the Keys.
+        @db.createObjectStore("meta")
 
-      # We'll make another store to seperate the note s
-      @db.createObjectStore("notes")
+        # We'll make another store to seperate the note s
+        @db.createObjectStore("notes")
 
-    request.onsuccess = (e) =>
-      Sync.db = e.target.result
-      @state = ONLINE
-      fn() if typeof fn is 'function'
-      @_clearPending()
+      request.onsuccess = (e) =>
+        Sync.db = e.target.result
+        @state = ONLINE
+        fn() if typeof fn is 'function'
+        @_clearPending()
 
   # Check an event, and if it is a model update add it to the queue
   addToQueue: (event, args) ->
@@ -575,7 +575,7 @@ Model.Sync =
 
   loadLocal: (options = {}) ->
 
-    console.log '%c> Fetching notes', 'color: blue'
+    console.log "%c> Fetching #{@className}s", 'color: blue'
 
     options.clear = true unless options.hasOwnProperty('clear')
 
@@ -587,6 +587,7 @@ Model.Sync =
     request.onsuccess = (e) =>
       result = e.target.result
       @refresh(result or [], options)
+      Spine.trigger "#{@className}:ready"
 
   saveNote: (content, callback) ->
     trans = Sync.db.transaction(["notes"], "readwrite")

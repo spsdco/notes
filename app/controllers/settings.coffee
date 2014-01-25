@@ -26,7 +26,7 @@ class Settings extends Spine.Controller
     super
 
     # A really bad hack
-    $('body').on('authorized.sync', =>
+    Spine.bind 'sync:authorized', =>
       @hide()
       @signedout.hide()
       @signedin.show()
@@ -35,13 +35,11 @@ class Settings extends Spine.Controller
       ).done((data) =>
         @username.text data.email
       )
-    )
 
-    $('body').on('unauthorized.sync', =>
+    Spine.bind 'sync:unauthorized', =>
       @signedout.show()
       @signedin.hide()
       @signinbtn.text 'Sign In'
-    )
 
   tabs: (e) ->
     # This is ugly. Shoot me later. Could not think of a better implementation.

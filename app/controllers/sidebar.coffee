@@ -35,9 +35,9 @@ class Sidebar extends Spine.Controller
     Notebook.bind "destroy", @destroy
 
     # Starts and stops the animation
-    $('body').on 'start.sync', =>
+    Spine.bind 'sync:start', =>
       @sync.addClass 'spin'
-    $('body').on 'stop.sync', =>
+    Spine.bind 'sync:stop', =>
       @sync.removeClass 'spin'
 
   addOne: (notebook) =>

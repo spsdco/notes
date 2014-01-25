@@ -4,6 +4,9 @@ Spine = require 'spine'
 # Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
 shell = window.require('nw.gui').Shell if window.require
 
+# Upgrader
+Upgrader = require('./controllers/upgrader.coffee')
+
 # Splitter. Not working in setup for whatever reason.
 Splitter = require('./lib/splitter.js')
 
@@ -66,6 +69,7 @@ class App extends Spine.Controller
     @settings = Settings.get()
 
     # Init Stuff
+    new Upgrader()
     @panel = new Panel( el: @panel )
     @sidebar = new Sidebar( el: @sidebar )
     @browser = new Browser( el: @browser )
@@ -73,7 +77,7 @@ class App extends Spine.Controller
     @popover = new Popover( el: @popoverMask )
 
     # We'll put the sync conenct here as well.
-    $('body').trigger('authorized.sync') if Sync.oauth.service != "undefined"
+    Spine.trigger 'sync:authorized' if Sync.oauth.service != "undefined"
 
     # Stuff for node webkit.
     $('body').on 'mousedown', 'a', (e) ->
