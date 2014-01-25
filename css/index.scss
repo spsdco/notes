@@ -896,8 +896,8 @@ button {
 }
 
 .preferences-container {
-  width: 400px;
-  margin-left: -228px;
+  width: 450px;
+  margin-left: -227px;
   text-align: center;
   font-size: 16px;
   color: #333;
@@ -936,12 +936,7 @@ button {
   }
 
   a {
-    color: $purple;
     text-decoration: none;
-
-    &:hover {
-      text-decoration: underline;
-    }
   }
 
   .container {
@@ -984,17 +979,6 @@ button {
 
   &.current {
     display: block;
-  }
-}
-
-.about {
-  .name {
-    font-weight: 300;
-    font-size: 32px;
-  }
-
-  p {
-    font-size: 13px;
   }
 }
 
