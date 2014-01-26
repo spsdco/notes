@@ -496,7 +496,7 @@ window.Sync =
               fschanges[type].push(["destroy", resultant[type][resultantindex[type][key]].id])
 
               # destroy the change from the resultant
-              resultant[type].splice([clientindex[type][key]], 1)
+              resultant[type].splice(resultantindex[type][key], 1)
 
               # reindex
               resultantindex = indexer(resultant)
