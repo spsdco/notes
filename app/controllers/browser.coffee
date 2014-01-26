@@ -24,7 +24,7 @@ class Browser extends Spine.Controller
 
   addOne: (note) =>
     # We should always be in the right list, but doesn't hurt to check
-    if !typeof(Notebook.current) is "undefined"
+    if typeof(Notebook.current) isnt "undefined"
       if note.notebook is Notebook.current.id and (Notebook.current.category is "all" or note.category is Notebook.find(Notebook.current.id).categories[Notebook.current.category])
         note.date = note.prettyDate()
         @noteBrowser.prepend @template note

@@ -679,6 +679,7 @@ button {
       outline: 0;
       padding: 5px 6px;
       color: #fff;
+      vertical-align: top;
     }
 
     button {
@@ -690,6 +691,7 @@ button {
       border-radius: 2px;
       margin: 4px 0;
       padding: 0 10px;
+      vertical-align: top;
 
       &:hover {
         color: #fff;

@@ -28,6 +28,8 @@ class Editor extends Spine.Controller
   constructor: ->
     super
     Note.bind("changeNote", @enable)
+    Note.bind "openNote", =>
+      @toggleMode()
     Note.bind("revert", @revertNote)
     @.bind("checkSel", @checkSelWrap)
 
