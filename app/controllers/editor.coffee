@@ -36,7 +36,10 @@ class Editor extends Spine.Controller
     aliases = { 'js' : 'javascript', 'py': 'python', 'coffee', 'coffeescript' }
     marked.setOptions {
       highlight: (code, lang) ->
-        hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase() || null, code).value
+        if lang
+          hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase(), code).value
+        else
+          hljs.highlightAuto(code).value
     }
     @controls = $("#editorcontrols")
     @controls.find('#bold').click @formatBold

@@ -4,6 +4,7 @@ $white-color: #f9f9f8;
 $red-color: #E15556;
 $border-color: #b4b3b1;
 $sidebar-color: #e7e5e4;
+$font: "Ubuntu", sans-serif;
 $light-font: "Ubuntu Light", "Ubuntu";
 $purple: #522453;
 $nephritis: #66be7f;
@@ -23,7 +24,7 @@ $nephritis: #66be7f;
 }
 
 body, input, textarea {
-  font-family: "Ubuntu", sans-serif;
+  font-family: $font;
   overflow: hidden;
 }
 
@@ -593,7 +594,7 @@ button {
   max-width: 610px;
   padding: 0 20px;
   color: #333;
-  font-family: "Lato", sans-serif;
+  font-family: $font;
 }
 
 #psuedoinput {
