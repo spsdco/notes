@@ -25,7 +25,26 @@ class window.upgrader extends Spine.Controller
       localStorage.version = "1.1"
 
   upgrade: (version) ->
-    if version is "1.0"
+    # New install, add default notes
+    if version is undefined
+      for notebook in ['Personal', 'Scrap', 'Work']
+        Notebook.create
+          name: notebook
+          categories: ["General"]
+          date: Math.round(new Date()/1000)
+
+      # Semi Ajaxed in, rather than hardcoded.
+      $.getJSON('default.json').done (data) ->
+        for defaultNote in data
+          note = Note.create
+            name: defaultNote.name
+            excerpt: defaultNote.content.substring(0, 100)
+            notebook: 'c-2'
+            category: 'General'
+            date: Math.round(new Date().getTime()/1000)
+          note.saveNote defaultNote.content
+
+    else if version is "1.0"
       path = window.require 'path'
       fs = window.require 'fs'
 
