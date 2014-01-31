@@ -93,7 +93,8 @@ class Editor extends Spine.Controller
         # Copy the text in
         noteText = @contentwrite.text()
         @contentread.html marked(noteText)
-        $('#contentread a').attr('target', '_blank')
+        $('#contentread a').attr('target', '_blank').click ->
+          return false
 
         # Save it
         if Note.current isnt undefined
