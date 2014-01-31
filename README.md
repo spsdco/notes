@@ -14,6 +14,9 @@ If you're feeling awesome, you should contribute either with code or a [donation
 Springseed is written in CoffeeScript and uses Spine.JS for MVC.
 
 ### Official Website
+
 <http://getspringseed.com>
+
 Copyright (c) 2013-2014 Caffeinated Code
+
 Open source, under the MIT license.
