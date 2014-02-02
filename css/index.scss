@@ -344,17 +344,20 @@ button {
     height: 33px;
     font-size: 14px;
     border: 0;
-
-    &::-webkit-input-placeholder {
-     color: #000;
-    }
+//
+// Appears the SASS compiler does not like this, not one bit, because it's "invalid" :(
+// To be honest though, it doesn't look half bad without it.
+//
+//    &::-webkit-input-placeholder {
+//     color: #000;
+//    }
 
     &:focus {
       opacity: 1;
 
-      &::-webkit-input-placeholder {
-       color: #ccc;
-      }
+//      &::-webkit-input-placeholder {
+//       color: #ccc;
+//      }
     }
   }
 }

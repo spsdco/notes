@@ -4,6 +4,7 @@ uglify  = require 'uglify-js'
 server  = require 'node-static'
 http    = require 'http'
 fs      = require 'fs'
+sass    = require 'node-sass'
 
 # Configuration
 config =
@@ -13,12 +14,26 @@ config =
     input:  'app/init.coffee'
     output: 'public/application.js'
     min:    'public/application.js'
+  sass:
+    input:  'css/index.scss'
+    output: 'public/application.css'
 
 # Options
 option '-p', '--port [port]', 'Set port for cake server'
 option '-w', '--watch', 'Watch the folder for changes'
 
 compile =
+
+  sass: ->
+    sass.render {
+      file: config.sass.input
+      success: (css) ->
+        fs.writeFile config.sass.output, css, (err) ->
+          console.warn err if err
+      error: (err) ->
+        console.warn err if err
+      outputStyle: 'compressed'
+    }
 
   coffee: (options={}) ->
 
@@ -49,6 +64,7 @@ compile =
 task 'server', 'Start server', (options) ->
 
   # Compile files
+  compile.sass
   compile.coffee(options)
 
   # Start Server
@@ -64,4 +80,5 @@ task 'server', 'Start server', (options) ->
 
 task 'build',  'Compile CoffeeScript', compile.coffee
 task 'minify', 'Minify application.js', compile.minify
+task 'style',  'Compile Stylesheets', compile.sass
 
