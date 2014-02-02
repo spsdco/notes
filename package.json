@@ -24,6 +24,7 @@
     "handlebars": "1.0.x",
     "coffee-scrunch": "*",
     "uglify-js": "*",
-    "node-static": "*"
+    "node-static": "*",
+    "node-sass": "*"
   }
 }
