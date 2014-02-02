@@ -13,6 +13,14 @@ window.Sync =
   queue: JSON.parse localStorage.Queue or '{"Note": {}, "Notebook": {}}'
   syncMeta: {}
 
+  # Run a Sync on a Timeout
+  # Clears if another request is put through
+  timeoutSync: ->
+    clearTimeout Sync.timeoutId
+    Sync.timeoutId = setTimeout ->
+      Sync.doSync() if localStorage.oauth
+    , 5000
+
   # Hold pending actions
   pending: []
 
@@ -562,6 +570,7 @@ Model.Sync =
       Sync.addToQueue(event, record)
       console.log '%c> Calling change: ' + event, 'background: #eee'
       Sync.defer(this, @saveLocal)
+      Sync.timeoutSync()
 
     Sync.connect()
 
@@ -595,6 +604,7 @@ Model.Sync =
     request = store.put(content, @id)
 
     request.onsuccess = (e) =>
+      Sync.timeoutSync()
       callback() if callback
 
   loadNote: (callback) ->
