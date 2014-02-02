@@ -12,8 +12,7 @@ config =
   js:
     input:  'app/init.coffee'
     output: 'public/application.js'
-    min:    'public/application.min.js'
-
+    min:    'public/application.js'
 
 # Options
 option '-p', '--port [port]', 'Set port for cake server'
