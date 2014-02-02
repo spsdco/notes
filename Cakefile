@@ -1,59 +1,60 @@
-{spawn, exec} = require 'child_process'
-node_static = require 'node-static'
-http = require 'http'
-fs = require 'fs'
 
-# Modules
-WATCHIFY   = './node_modules/watchify/bin/cmd.js'
-BROWSERIFY = './node_modules/browserify/bin/cmd.js'
-COFFEEIFY  = './node_modules/caching-coffeeify/index.js'
-UGLIFY     = './node_modules/uglify-js/bin/uglifyjs'
-SASS_COMPILER = 'sass'
+Scrunch = require 'coffee-scrunch'
+uglify  = require 'uglify-js'
+server  = require 'node-static'
+http    = require 'http'
+fs      = require 'fs'
 
 # Configuration
-INPUT  = 'app/init.coffee'
-OUTPUT = 'public/application.js'
-SASS   = 'css/index.scss'
-CSS    = 'public/application.css'
+config =
+  port: 9294
+  public: 'public'
+  js:
+    input:  'app/init.coffee'
+    output: 'public/application.js'
+    min:    'public/application.min.js'
+
 
 # Options
 option '-p', '--port [port]', 'Set port for cake server'
 option '-w', '--watch', 'Watch the folder for changes'
 
-# Functions
-run = (cmd, args) ->
-  terminal = spawn(cmd, args)
-  terminal.stdout.on 'data', (data) -> console.log(data.toString())
-  terminal.stderr.on 'data', (data) -> console.log(data.toString())
-  terminal.on 'error', (data) -> console.log(data.toString())
+compile =
 
-compileCoffee = (options={}) ->
-  args = ['-t', COFFEEIFY, INPUT, '-o', OUTPUT]
-  if options.watch
-    args.unshift('-v')
-    run(WATCHIFY, args)
-  else
-    run(BROWSERIFY, args)
+  coffee: (options={}) ->
 
-compileSass = (options={}) ->
-  args = [SASS + ':' + CSS]
-  if options.watch then args.unshift('--watch')
-  run(SASS_COMPILER, args)
+    scrunch = new Scrunch
+      path: config.js.input
+      compile: true
+      verbose: true
+      watch: options.watch
 
-minifyApp = ->
-  args = [OUTPUT, '-c', '-m', '-o', OUTPUT]
-  run(UGLIFY, args)
+    scrunch.vent.on 'init', ->
+      scrunch.scrunch()
 
+    scrunch.vent.on 'scrunch', (data) ->
+      console.log '[JS] Writing'
+      fs.writeFile config.js.output, data
+
+    scrunch.init()
+
+  minify: ->
+    js = uglify.minify(config.js.output).code
+    fs.writeFile config.js.min, js
+
+
+# ===============================================================
 # Tasks
+# ===============================================================
+
 task 'server', 'Start server', (options) ->
 
   # Compile files
-  compileCoffee(options)
-  compileSass(options)
+  compile.coffee(options)
 
   # Start Server
-  port = options.port or 9294
-  file= new(node_static.Server)('./public')
+  port = options.port or config.port
+  file= new(server.Server)(config.public)
   server = http.createServer (req, res) ->
     req.addListener( 'end', ->
       file.serve(req, res)
@@ -62,8 +63,6 @@ task 'server', 'Start server', (options) ->
 
   console.log 'Server started on ' + port
 
-task 'build', 'Compile CoffeeScript and SASS', (options) ->
-  compileCoffee(options)
-  compileSass(options)
+task 'build',  'Compile CoffeeScript', compile.coffee
+task 'minify', 'Minify application.js', compile.minify
 
-task 'minify', 'Minify application.js', minifyApp

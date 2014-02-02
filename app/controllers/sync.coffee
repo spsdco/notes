@@ -1,5 +1,5 @@
 Spine = @Spine or require('spine')
-io = require 'socket.io-client'
+io = require '../lib/socket.io'
 Model = Spine.Model
 
 # Connection states

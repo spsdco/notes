@@ -22,9 +22,7 @@
   },
   "devDependencies": {
     "handlebars": "1.0.x",
-    "browserify": "*",
-    "caching-coffeeify": "*",
-    "watchify": "*",
+    "coffee-scrunch": "*",
     "uglify-js": "*",
     "node-static": "*"
   }
