@@ -22,9 +22,10 @@
   },
   "devDependencies": {
     "handlebars": "1.0.x",
-    "coffee-scrunch": "*",
+    "coffee-scrunch": "0.2.x",
     "uglify-js": "*",
     "node-static": "*",
-    "node-sass": "*"
+    "node-sass": "*",
+    "node-watch": "~0.3.4"
   }
 }

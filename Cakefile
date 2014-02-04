@@ -5,12 +5,14 @@ server  = require 'node-static'
 http    = require 'http'
 fs      = require 'fs'
 sass    = require 'node-sass'
+watch   = require 'node-watch'
 
 # Configuration
 config =
   port: 9294
   public: 'public'
   js:
+    folder: 'app/'
     input:  'app/init.coffee'
     output: 'public/application.js'
     min:    'public/application.js'
@@ -35,22 +37,14 @@ compile =
       outputStyle: 'compressed'
     }
 
-  coffee: (options={}) ->
+  coffee: (options) ->
 
-    scrunch = new Scrunch
-      path: config.js.input
-      compile: true
-      verbose: true
-      watch: options.watch
+    if options.watch
+      watch config.js.folder, ->
+        console.log 'compiling'
+        Scrunch(config.js).end()
 
-    scrunch.vent.on 'init', ->
-      scrunch.scrunch()
-
-    scrunch.vent.on 'scrunch', (data) ->
-      console.log '[JS] Writing'
-      fs.writeFile config.js.output, data
-
-    scrunch.init()
+    Scrunch(config.js).end()
 
   minify: ->
     js = uglify.minify(config.js.output).code
