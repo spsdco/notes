@@ -421,7 +421,7 @@ button {
     &.selected {
       box-shadow: 0 -1px 3px rgba(0,0,0,0.1) inset;
       border-top: 1px solid rgba(0,0,0,0.1);
-      // @include background(linear-gradient($white-color, lighten($white-color, 10%)));
+      background: -webkit-linear-gradient($white-color, lighten($white-color, 10%));
     }
   }
 

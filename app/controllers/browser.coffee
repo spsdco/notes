@@ -54,11 +54,11 @@ class Browser extends Spine.Controller
       @noteBrowser.html(noteList)
 
       # Defers for speed
-      setTimeout( =>
+      window.requestAnimationFrame( =>
         for note in Note.filter(Notebook.current.id, Notebook.current.category)
           view = new NoteItem
             el: @noteBrowser.find("#note-#{ note.id }")
             note: note
-      , 100)
+      )
 
 module.exports = Browser

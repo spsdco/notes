@@ -48,7 +48,18 @@ class Sidebar extends Spine.Controller
 
   change: (notebook) =>
     # This is defined here, or some weird shit happens
-    Note.trigger "changeNote"
+
+    # Annoyingly, this is a two step process
+    if Note.current
+      if Note.current.persist
+        setTimeout( =>
+          Note.trigger "changeNote", Note.current
+        , 100)
+      else
+        Note.trigger "changeNote"
+    else
+      Note.trigger "changeNote"
+
     Notebook.current = notebook
 
   refresh: () =>
@@ -59,20 +70,29 @@ class Sidebar extends Spine.Controller
     @list.html(html)
 
     # Defers for speed
-    setTimeout( =>
+    window.requestAnimationFrame( =>
       # All Notes
       new NotebookItem
         el: @list.find("#notebook-all")
         notebook: {id: "all", name: "All Notes", categories: []}
-      # This feels so bad :(
-      $("#notebook-all").trigger("click")
 
       # Normal Notes
       for notebook in Notebook.all()
         view = new NotebookItem
           el: @list.find("#notebook-#{ notebook.id }")
           notebook: notebook
-    , 100)
+
+      # This feels so bad :(
+      if Notebook.current
+        Note.current.persist = true if Note.current
+        # Doubley bad
+        if Notebook.current.id is "all"
+          $("#notebook-all").trigger("click")
+        else
+          Notebook.trigger('changeNotebook', Notebook.current)
+      else
+        $("#notebook-all").trigger("click")
+    )
 
   destroy: ->
     # This is bad practice, but I knew this would happen.
