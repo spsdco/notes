@@ -64,6 +64,9 @@ body.resizing { cursor: ew-resize; }
   user-select: none;
   cursor: default !important;
 }
+.nodrag {
+  -webkit-app-region: no-drag;
+}
 
 #sidebar, #panel, #browser {
   -webkit-user-select: none;

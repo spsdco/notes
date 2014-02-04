@@ -86,6 +86,17 @@ class App extends Spine.Controller
         shell.openExternal $(@).attr("href")
       return false
 
+    # Going to use this to enable the dev tools, because yolo
+    konami_keys = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]
+    konami_index = 0
+    $(document).keydown (e) ->
+      if e.keyCode is konami_keys[konami_index++]
+        if konami_index is konami_keys.length
+          $(document).unbind "keydown", arguments.callee
+          window.require('nw.gui').Window.get().showDevTools()
+      else
+        konami_index = 0
+
   # We're sending an event to the editor here because we need the checksel to be global
   checkSel: ->
     @editor.trigger("checkSel")

@@ -10,7 +10,8 @@
     "position": "center",
     "title": "Springseed",
     "icon": "public/img/icon.svg",
-    "new-instance": false
+    "new-instance": false,
+    "frame": false
   },
   "dependencies": {
     "underscore": "1.4.x",
