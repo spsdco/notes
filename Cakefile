@@ -26,22 +26,29 @@ option '-w', '--watch', 'Watch the folder for changes'
 
 compile =
 
-  sass: ->
-    sass.render {
-      file: config.sass.input
-      success: (css) ->
-        fs.writeFile config.sass.output, css, (err) ->
-          console.warn err if err
-      error: (err) ->
-        console.warn err if err
-      outputStyle: 'compressed'
-    }
+  sass: (options) ->
+    sasscompile = ->
+      console.log 'compoling sassess'
+      sass.render {
+          file: config.sass.input
+          success: (css) ->
+            fs.writeFile config.sass.output, css, (err) ->
+              console.warn err if err
+          error: (err) ->
+            console.warn err if err
+          outputStyle: 'compressed'
+        }
+
+    if options.watch
+      watch config.sass.input, sasscompile
+
+    sasscompile()
 
   coffee: (options) ->
 
     if options.watch
       watch config.js.folder, ->
-        console.log 'compiling'
+        console.log 'compoling coffeescirpts'
         Scrunch(config.js).end()
 
     Scrunch(config.js).end()
@@ -58,7 +65,7 @@ compile =
 task 'server', 'Start server', (options) ->
 
   # Compile files
-  compile.sass
+  compile.sass(options)
   compile.coffee(options)
 
   # Start Server
