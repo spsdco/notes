@@ -11,6 +11,7 @@
     "title": "Springseed",
     "icon": "public/img/icon.svg",
     "new-instance": false,
+    "toolbar": false,
     "frame": false
   },
   "dependencies": {
