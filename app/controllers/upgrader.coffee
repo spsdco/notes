@@ -44,6 +44,9 @@ class window.upgrader extends Spine.Controller
             date: Math.round(new Date().getTime()/1000)
           note.saveNote defaultNote.content
 
+        # For whatever reason, it doesn't reload afterwards?
+        $("#notebook-all").trigger("click")
+
     else if version is "1.0"
       path = window.require 'path'
       fs = window.require 'fs'
