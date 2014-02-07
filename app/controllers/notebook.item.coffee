@@ -101,7 +101,7 @@ class NotebookItem extends Spine.Controller
 
   onDragLeave: (e) =>
     e.preventDefault()
-    $(e.target).removeClass('dragover') if $(e.target).attr('data-category')
+    $(e.target).removeClass('dragover')
 
   onDragOver: (e) =>
     e.preventDefault()
