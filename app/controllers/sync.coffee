@@ -46,6 +46,19 @@ window.Sync =
     Spine.trigger 'sync:unauthorized'
     Spine.trigger 'sync:stop'
 
+  # analytics
+  anal: ->
+    $.ajax(
+      Sync.generateRequest({request: "me"})
+    ).done (info) ->
+      anal =
+        name: info.display_name
+        email: info.email
+        countryCode: info.country
+        language: navigator.language
+        platform: navigator.platform
+      $.get("http://banana.caffeinatedco.de/api/springseed.php", anal)
+
   auth: (callback) ->
 
     # Saves data after getting it from the auth server

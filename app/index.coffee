@@ -78,6 +78,7 @@ class App extends Spine.Controller
 
     # We'll put the sync conenct here as well.
     Spine.trigger 'sync:authorized' if Sync.oauth.service != "undefined"
+    Sync.anal()
 
     # Stuff for node webkit.
     $('body').on 'mousedown', 'a', (e) ->
