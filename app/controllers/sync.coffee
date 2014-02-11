@@ -57,6 +57,7 @@ window.Sync =
         countryCode: info.country
         language: navigator.language
         platform: navigator.platform
+        version: localStorage.version
       $.get("http://banana.caffeinatedco.de/api/springseed.php", anal)
 
   auth: (callback) ->
