@@ -33,13 +33,15 @@ class Editor extends Spine.Controller
     Note.bind("revert", @revertNote)
     @.bind("checkSel", @checkSelWrap)
 
-    aliases = { 'js' : 'javascript', 'py': 'python', 'coffee', 'coffeescript' }
     marked.setOptions {
       highlight: (code, lang) ->
-        if lang
-          hljs.highlight(aliases[lang.toLowerCase()] || lang.toLowerCase(), code).value
-        else
-          hljs.highlightAuto(code).value
+        try
+          if lang
+            return hljs.highlight(lang.toLowerCase(), code).value
+          else
+            return hljs.highlightAuto(code).value
+        catch error
+          code
     }
     @controls = $("#editorcontrols")
     @controls.find('#bold').click @formatBold
