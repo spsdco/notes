@@ -71,23 +71,41 @@ class window.upgrader extends Spine.Controller
 
           # Read the file, syncronously.
           data = fs.readFileSync path.join(notebookdir, file)
+          console.log data.toString()
 
           # Read the old notebook, create a new spine model
-          oldnotebook = JSON.parse(data)
-          newNotebook = Notebook.create
-            name: oldnotebook.name
-            categories: ["General"]
-            date: Math.round(new Date()/1000)
-          notebooks[oldnotebook.id] = newNotebook.id
+          try
+            oldnotebook = JSON.parse(data)
+            newNotebook = Notebook.create
+              name: oldnotebook.name
+              categories: ["General"]
+              date: Math.round(new Date()/1000)
+            # Our mapping array to show the new positions
+            notebooks[oldnotebook.id] = newNotebook.id
+          catch error
+            console.log("there was an error", id)
+            # Eh, what can we do?
+            return
 
-      # Load the notes from dat notebook into the model
+      # Load the notes from the notebook into the model
       files.forEach (file) =>
         if file.substr(33,5) is ".note"
-          contents = JSON.parse(fs.readFileSync path.join(notebookdir, file))
+          raw = fs.readFileSync path.join(notebookdir, file)
+          try
+            contents = JSON.parse(raw)
+            contents.notebook = notebooks[contents.notebook]
+          catch error
+            contents = {
+              name: "Untitled Note"
+              content: raw.toString()
+              date: Math.round(new Date()/1000)
+              notebook: Notebook.all()[0].id
+            }
+
           note = Note.create
             name: contents.name
             excerpt: $(marked(contents.content.substring(0,100))).text()
-            notebook: notebooks[contents.notebook]
+            notebook: contents.notebook
             category: "General"
             date: contents.date
           note.saveNote(contents.content)
