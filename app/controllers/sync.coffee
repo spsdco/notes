@@ -469,50 +469,51 @@ window.Sync =
     for type of queue
       for key, value of queue[type]
         # Ensures that the key exists
-        if clientindex[type][key]
           switch value[0]
             when "create"
-              # we copy the change into the resultant
-              oldId = key
-              newId = "c-" + (resultantindex[type].max += 1)
-              client[type][clientindex[type][key]].id = newId
-              resultant[type].push(client[type][clientindex[type][key]])
-
-              # update the index
-              resultantindex[type][newId] = resultant[type].length
-
-              # add to fschanges
-              fschanges[type].push(["upload", newId])
-
-              # add to name changes
-              namechanges[type].push([oldId, newId]) if oldId isnt newId
-
-            when "update"
-              # If the item update was before the update on the server, create a conflicted copy
-              if value[1] < resultant[type][resultantindex[type][key]].date
-                # bad case of DRY here
-
+              if clientindex[type][key]
                 # we copy the change into the resultant
                 oldId = key
                 newId = "c-" + (resultantindex[type].max += 1)
                 client[type][clientindex[type][key]].id = newId
-                client[type][clientindex[type][key]].name += " (Conflicted Copy)"
                 resultant[type].push(client[type][clientindex[type][key]])
 
                 # update the index
                 resultantindex[type][newId] = resultant[type].length
 
                 # add to fschanges
-                fschanges[type].push(["download", resultant[type][resultantindex[type][key]].id])
                 fschanges[type].push(["upload", newId])
 
                 # add to name changes
                 namechanges[type].push([oldId, newId]) if oldId isnt newId
-              else
-                # copies the new change in
-                resultant[type][resultantindex[type][key]] = client[type][clientindex[type][key]]
 
-                fschanges[type].push(["upload", resultant[type][resultantindex[type][key]].id])
+            when "update"
+              if clientindex[type][key]
+                # If the item update was before the update on the server, create a conflicted copy
+                if value[1] < resultant[type][resultantindex[type][key]].date
+                  # bad case of DRY here
+
+                  # we copy the change into the resultant
+                  oldId = key
+                  newId = "c-" + (resultantindex[type].max += 1)
+                  client[type][clientindex[type][key]].id = newId
+                  client[type][clientindex[type][key]].name += " (Conflicted Copy)"
+                  resultant[type].push(client[type][clientindex[type][key]])
+
+                  # update the index
+                  resultantindex[type][newId] = resultant[type].length
+
+                  # add to fschanges
+                  fschanges[type].push(["download", resultant[type][resultantindex[type][key]].id])
+                  fschanges[type].push(["upload", newId])
+
+                  # add to name changes
+                  namechanges[type].push([oldId, newId]) if oldId isnt newId
+                else
+                  # copies the new change in
+                  resultant[type][resultantindex[type][key]] = client[type][clientindex[type][key]]
+
+                  fschanges[type].push(["upload", resultant[type][resultantindex[type][key]].id])
             when "destroy"
               # If the item was after before the delete event, don't do anything
               if value[1] > resultant[type][resultantindex[type][key]].date
