@@ -28,7 +28,7 @@ compile =
 
   sass: (options) ->
     sasscompile = ->
-      console.log 'compoling sassess'
+      console.log 'Compiling SASS'
       sass.render {
           file: config.sass.input
           success: (css) ->
@@ -48,10 +48,15 @@ compile =
 
     if options.watch
       watch config.js.folder, ->
-        console.log 'compoling coffeescirpts'
-        Scrunch(config.js).end()
+        process.stdout.write 'Compiling CoffeeScript: '
+        Scrunch(config.js).then ->
+          process.stdout.write 'Done!\n'
+        .end()
 
-    Scrunch(config.js).end()
+    process.stdout.write 'Compiling CoffeeScript: '
+    Scrunch(config.js).then ->
+      process.stdout.write 'Done!\n'
+    .end()
 
   minify: ->
     js = uglify.minify(config.js.output).code
@@ -64,10 +69,6 @@ compile =
 
 task 'server', 'Start server', (options) ->
 
-  # Compile files
-  compile.sass(options)
-  compile.coffee(options)
-
   # Start Server
   port = options.port or config.port
   file= new(server.Server)(config.public)
@@ -77,7 +78,11 @@ task 'server', 'Start server', (options) ->
     ).resume()
   server.listen(port)
 
-  console.log 'Server started on ' + port
+  console.log "Server started on :#{port}"
+
+  # Compile files
+  compile.sass(options)
+  compile.coffee(options)
 
 task 'build',  'Compile CoffeeScript', compile.coffee
 task 'minify', 'Minify application.js', compile.minify
