@@ -468,60 +468,62 @@ window.Sync =
     # Add Changes from client
     for type of queue
       for key, value of queue[type]
-        switch value[0]
-          when "create"
-            # we copy the change into the resultant
-            oldId = key
-            newId = "c-" + (resultantindex[type].max += 1)
-            client[type][clientindex[type][key]].id = newId
-            resultant[type].push(client[type][clientindex[type][key]])
-
-            # update the index
-            resultantindex[type][newId] = resultant[type].length
-
-            # add to fschanges
-            fschanges[type].push(["upload", newId])
-
-            # add to name changes
-            namechanges[type].push([oldId, newId]) if oldId isnt newId
-
-          when "update"
-            # If the item update was before the update on the server, create a conflicted copy
-            if value[1] < resultant[type][resultantindex[type][key]].date
-              # bad case of DRY here
-
+        # Ensures that the key exists
+        if clientindex[type][key]
+          switch value[0]
+            when "create"
               # we copy the change into the resultant
               oldId = key
               newId = "c-" + (resultantindex[type].max += 1)
               client[type][clientindex[type][key]].id = newId
-              client[type][clientindex[type][key]].name += " (Conflicted Copy)"
               resultant[type].push(client[type][clientindex[type][key]])
 
               # update the index
               resultantindex[type][newId] = resultant[type].length
 
               # add to fschanges
-              fschanges[type].push(["download", resultant[type][resultantindex[type][key]].id])
               fschanges[type].push(["upload", newId])
 
               # add to name changes
               namechanges[type].push([oldId, newId]) if oldId isnt newId
-            else
-              # copies the new change in
-              resultant[type][resultantindex[type][key]] = client[type][clientindex[type][key]]
 
-              fschanges[type].push(["upload", resultant[type][resultantindex[type][key]].id])
-          when "destroy"
-            # If the item was after before the delete event, don't do anything
-            if value[1] > resultant[type][resultantindex[type][key]].date
-              # tell the server to delete it
-              fschanges[type].push(["destroy", resultant[type][resultantindex[type][key]].id])
+            when "update"
+              # If the item update was before the update on the server, create a conflicted copy
+              if value[1] < resultant[type][resultantindex[type][key]].date
+                # bad case of DRY here
 
-              # destroy the change from the resultant
-              resultant[type].splice(resultantindex[type][key], 1)
+                # we copy the change into the resultant
+                oldId = key
+                newId = "c-" + (resultantindex[type].max += 1)
+                client[type][clientindex[type][key]].id = newId
+                client[type][clientindex[type][key]].name += " (Conflicted Copy)"
+                resultant[type].push(client[type][clientindex[type][key]])
 
-              # reindex
-              resultantindex = indexer(resultant)
+                # update the index
+                resultantindex[type][newId] = resultant[type].length
+
+                # add to fschanges
+                fschanges[type].push(["download", resultant[type][resultantindex[type][key]].id])
+                fschanges[type].push(["upload", newId])
+
+                # add to name changes
+                namechanges[type].push([oldId, newId]) if oldId isnt newId
+              else
+                # copies the new change in
+                resultant[type][resultantindex[type][key]] = client[type][clientindex[type][key]]
+
+                fschanges[type].push(["upload", resultant[type][resultantindex[type][key]].id])
+            when "destroy"
+              # If the item was after before the delete event, don't do anything
+              if value[1] > resultant[type][resultantindex[type][key]].date
+                # tell the server to delete it
+                fschanges[type].push(["destroy", resultant[type][resultantindex[type][key]].id])
+
+                # destroy the change from the resultant
+                resultant[type].splice(resultantindex[type][key], 1)
+
+                # reindex
+                resultantindex = indexer(resultant)
 
     # Er, well if notebook name id changes we have to change note ids
     # @consindo is an idiot. Please send him angry messages.
