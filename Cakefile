@@ -51,12 +51,10 @@ compile =
         process.stdout.write 'Compiling CoffeeScript: '
         Scrunch(config.js).then ->
           process.stdout.write 'Done!\n'
-        .end()
 
     process.stdout.write 'Compiling CoffeeScript: '
     Scrunch(config.js).then ->
       process.stdout.write 'Done!\n'
-    .end()
 
   minify: ->
     js = uglify.minify(config.js.output).code
