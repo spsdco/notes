@@ -16,6 +16,10 @@ class Browser extends Spine.Controller
 
   elements:
     'ul': 'noteBrowser'
+    'span': 'title'
+
+  events:
+    'click #new': 'newNote'
 
   constructor: ->
     super
@@ -32,6 +36,24 @@ class Browser extends Spine.Controller
         view = new NoteItem
           el: @noteBrowser.find("#note-#{ note.id }")
           note: note
+
+  newNote: (e) =>
+    if Notebook.current.id isnt "all"
+
+          # Create the note meta
+          note = Note.create
+            name: "Untitled Note"
+            excerpt: "This is your new blank note - add some content!"
+            notebook: Notebook.current.id
+            category: if Notebook.current.category is "all" then Notebook.find(Notebook.current.id).categories[0] else Notebook.find(Notebook.current.id).categories[Notebook.current.category]
+            date: Math.round(new Date().getTime()/1000)
+
+          # Set the content with the special function
+          note.saveNote "# This is your new blank note\nAdd some content!", ->
+
+            # Select it and throw it into editable mode
+            note.trigger("changeNote")
+            note.trigger("openNote")
 
   changeNotebook: (notebook) =>
     dateSort = (a, b) ->

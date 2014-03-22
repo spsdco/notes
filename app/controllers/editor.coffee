@@ -12,11 +12,12 @@ class Editor extends Spine.Controller
 
   elements:
     ".headerwrap .left input": "title"
-    ".headerwrap .right time": "time"
+    ".headerwrap .left time": "time"
     "#contentread": "contentread"
     "#contentwrite > .inner": "contentwrite"
     ".headerwrap .edit": "toggle"
     "#psuedoinput": "psuedoinput"
+    ".headerwrap i.star": "star"
 
   events:
     "click .headerwrap .edit": "toggleMode"
@@ -24,6 +25,26 @@ class Editor extends Spine.Controller
     "keydown #contentwrite > .inner": "keydown"
     "paste #contentwrite > .inner": "paste"
     "dblclick #contentread": "toggleMode"
+    "click header .right .delete": "deleteNote"
+    "click header .star": "starNote"
+
+  starNote: ->
+    note = Note.find(Note.current.id)
+    if note.starred is "true"
+      note.updateAttribute("starred", "false")
+      @star.addClass("fa-star-o")
+      @star.removeClass("fa-star")
+      @star.removeClass("starred")
+    else
+      note.updateAttribute("starred", "true")
+      @star.removeClass("fa-star-o")
+      @star.addClass("fa-star")
+      @star.addClass("starred")
+
+  deleteNote: (e) ->
+    note = Note.find(Note.current.id)
+    $(".delete-container span.name").text(note.name)
+    Modal.get("delete").run()
 
   constructor: ->
     super
@@ -61,6 +82,11 @@ class Editor extends Spine.Controller
       @title.val currentNote.name
       @time.text currentNote.prettyDate(true)
 
+      if currentNote.starred is "true"
+        @star.attr('class', 'star fa fa-star starred')
+      else
+        @star.attr('class', 'star fa fa-star-o')
+
       # Content
       currentNote.loadNote (content) =>
         @contentread.html marked(content)
@@ -78,7 +104,8 @@ class Editor extends Spine.Controller
     if @mode is "preview" # enable the editor
       # UI bits and bobs
       @el.addClass("edit")
-      @toggle.text("save")
+      @toggle.find("i").addClass("fa-lock")
+      @toggle.find("i").removeClass("fa-pencil")
       @title.prop "disabled", false
       @mode = "edit"
 
@@ -123,13 +150,15 @@ class Editor extends Spine.Controller
 
       # The opposite
       @el.removeClass("edit")
-      @toggle.text("edit")
+      @toggle.find("i").removeClass("fa-lock")
+      @toggle.find("i").addClass("fa-pencil")
       @title.prop "disabled", true
       @mode = "preview"
       @time.text currentNote.prettyDate(true)
 
   revert: ->
-    Modal.get('revert').run()
+    if @mode isnt "preview"
+      Modal.get('revert').run()
 
   revertNote: =>
     @toggleMode(false)

@@ -22,7 +22,7 @@ class window.upgrader extends Spine.Controller
 
     $.when.apply($, [notebookPromise.promise(), notePromise.promise()]).then =>
       @upgrade(localStorage.version)
-      localStorage.version = "1.1"
+      localStorage.version = "1.2"
 
   upgrade: (version) ->
     # New install, add default notes
@@ -30,6 +30,7 @@ class window.upgrader extends Spine.Controller
       for notebook in ['Personal', 'Scrap', 'Work']
         Notebook.create
           name: notebook
+          attributes: {starred: false}
           categories: ["General"]
           date: Math.round(new Date()/1000)
 
@@ -46,6 +47,16 @@ class window.upgrader extends Spine.Controller
 
         # For whatever reason, it doesn't reload afterwards?
         $("#notebook-all").trigger("click")
+
+    else if version is "1.1"
+      console.log "Upgrading DB"
+      for note in Note.toJSON()
+        note = Note.create
+          name: note.name
+          starred: false
+          categories: note.categories
+          date: note.date
+        Note.find(note.id).destroy()
 
     else if version is "1.0"
       path = window.require 'path'
