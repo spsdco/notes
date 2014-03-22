@@ -4,6 +4,7 @@ Notebook = require './notebook.coffee'
 class window.Note extends Spine.Model
   @configure 'Note',
     'name',
+    'starred',
     'excerpt',
     'notebook',
     'category',

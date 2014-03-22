@@ -15,7 +15,6 @@ class Panel extends Spine.Controller
   events:
     "dblclick": "maximize"
     "click #decor img": "windowControl"
-    "click #noteControls img": "noteControl"
     "keyup #search input": "search"
 
   maximized: false
@@ -47,31 +46,6 @@ class Panel extends Spine.Controller
   maximize: ->
     win.maximize() if @maximized is false
     win.unmaximize() if @maximized is true
-
-  noteControl: (e) ->
-    switch e.currentTarget.id
-      when "new"
-        if Notebook.current.id isnt "all"
-
-          # Create the note meta
-          note = Note.create
-            name: "Untitled Note"
-            excerpt: "This is your new blank note - add some content!"
-            notebook: Notebook.current.id
-            category: if Notebook.current.category is "all" then Notebook.find(Notebook.current.id).categories[0] else Notebook.find(Notebook.current.id).categories[Notebook.current.category]
-            date: Math.round(new Date().getTime()/1000)
-
-          # Set the content with the special function
-          note.saveNote "# This is your new blank note\nAdd some content!", ->
-
-            # Select it and throw it into editable mode
-            note.trigger("changeNote")
-            note.trigger("openNote")
-
-      when "share"
-        console.log("Sharing")
-      when "del"
-        Modal.get("delete").run()
 
   toggleNote: (note) =>
     if note isnt undefined

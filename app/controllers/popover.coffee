@@ -8,8 +8,8 @@ Modal = require './modal.coffee'
 class Popover extends Spine.Controller
 
   elements:
-    ".category-popover": "categoryPopover"
-    ".category-popover input": "categoryInput"
+    ".delete-popover": "categoryPopover"
+    ".delete-popover input": "categoryInput"
     ".delete-popover": "delpopover"
 
   events:
@@ -19,7 +19,7 @@ class Popover extends Spine.Controller
     "keyup .category-popover input": "addCategory"
     "click .delete-popover #deleteNotebook": "deleteNotebook"
     "click .delete-popover #renameNotebook": "renameNotebook"
-
+    "keyup .delete-popover #addCat": "addCategory"
 
   constructor: ->
     super
@@ -30,7 +30,7 @@ class Popover extends Spine.Controller
     @el.hide().children().hide() if $(e.target)[0].nodeName isnt "INPUT"
 
   addCategory: (e) ->
-    if e.type is "keyup" and e.which is 13 or e.type is "click"
+    if e.type is "keyup" and e.which is 13
       # adds the new category on
       notebook = Notebook.find(Notebook.current.id)
       cat = notebook.categories
