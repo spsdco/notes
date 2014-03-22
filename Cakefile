@@ -17,7 +17,7 @@ config =
     output: 'public/application.js'
     min:    'public/application.js'
   sass:
-    input:  'css/index.scss'
+    input:  'css/new.scss'
     output: 'public/application.css'
 
 # Options
