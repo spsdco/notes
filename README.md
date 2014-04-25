@@ -6,6 +6,7 @@ Springseed provides easy note taking.
 
 You'll need node & npm installed.
 
+    npm install -g coffee-script
     npm install .
     cake -w server
 
