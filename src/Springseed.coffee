@@ -15,3 +15,62 @@ class SpringseedWindow
 			center: true
 			title: "Springseed"
 			frame: false
+
+		@window.on "closed", ->
+			@window = null # Dereference the window.
+
+		if process.platform is "darwin"
+			@osxMenus()
+		else
+			@linuxMenus()
+
+	osxMenus: ->
+		tmpl = [
+			{
+				label: "Springseed",
+				submenu: [
+				{
+					label: "About Springseed",
+					click: ->
+						new AboutWindow()
+				},
+				{
+					type: "seperator"
+				},
+				{
+					label: "Quit",
+					accelerator: "Command+Q",
+					click: ->
+						app.quit()
+				}
+			}
+		]
+
+		menu = Menu.buildFromTemplate tmpl
+		Menu.setApplicationMenu menu
+
+	linuxMenus: ->
+		# GNOME stuff.
+		tmpl = [
+			{
+				label: "Application",
+				submenu: [
+				{
+					label: "About Springseed",
+					click: ->
+						new AboutWindow()
+				},
+				{
+					type: "seperator"
+				},
+				{
+					label: "Quit",
+					accelerator: "Command+Q",
+					click: ->
+						app.quit()
+				}
+			}
+		]
+
+		menu = Menu.buildFromTemplate tmpl
+		Menu.setMenu menu	
