@@ -17,6 +17,10 @@
       <div id="decor" class="nodrag">
         <img class="close" src="img/close.png"><img class="minimize" src="img/minimize.png"><img class="maximize" src="img/maximize.png">
       </div>
+      <div id="loginbox" class="nodrag">
+        <span class="name">Log In</span>
+        <span class="gopro">go pro</span>
+      </div>
       <!-- <div id="search">
         <input type="text" placeholder="Search">
       </div> -->
@@ -86,12 +90,28 @@
   <div class="preferences-container">
     <nav class="tabs">
       <ul>
-        <li data-id="sync" class="current">Sync</li>
+        <li data-id="account" class="current">Account</li>
+        <li data-id="sync">Sync</li>
         <li data-id="about">About</li>
       </ul>
     </nav>
     <div class="container">
-      <div class="sync current">
+      <div class="account current">
+        <!-- <img src="img/icon.svg" width="150"> -->
+        <div class="signedout">
+          <p>Your Springseed Account can do amazing things. Learn more or register <a target="_blank" href="http://accounts.springseed.com/register">here</a>.</p>
+          <input type="text" id="accusername" placeholder="Username">
+          <input type="password" id="accpassword" placeholder="Password">
+          <button id="signin" class="special">Sign In</button>
+        </div>
+        <div class="signedin">
+          <p>Signed in as <strong class="name"></strong></p>
+          <div id="pro" class="pro"><h1>Go pro today!</h1><p>Springseed Pro is a one time payment of $8. This goes towards development of more pro freatures (and some free features). Pro also entitles you to try new features before anyone else. Isn't that great?</div>
+          <div id="alreadypro" class="pro"><h1>You're Pro!</h1><p>You. Are. Awesome. You're helping Springseed grow and develop into a much better piece of software. Thank you.</div>
+          <button id="signout" class="special">Sign Out</button>
+        </div>
+      </div>
+      <div class="sync">
         <img src="img/dropbox.png">
         <div class="signedout">
           <p>Springseed can connect to Dropbox for access to notes on all your devices.</p>
@@ -125,6 +145,13 @@
     <button class="true special">Rename</button>&nbsp;<button class="false special">Cancel</button>
   </div>
   </section>
+
+<section class="modal pleaseLogIn">
+  <div class="delete-container">
+    <span>You need to be logged in to do that.</span>
+    <button class="false special">Okay.</button>
+  </div>
+</section>
 
 <!-- Popovers -->
 <section class="popover-mask">

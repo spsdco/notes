@@ -5,20 +5,32 @@ Sync = require './sync.coffee'
 # Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
 shell = window.require('nw.gui').Shell if window.require
 
+Account = require("../controllers/account.coffee")
+
 class Settings extends Spine.Controller
   elements:
-    '#signin': 'signinbtn'
-    '#signout': 'signoutbtn'
-    '.username': 'username'
+    '.sync #signin': 'signinbtn'
+    '.sync #signout': 'signoutbtn'
+    '.account #signin': 'signinacc'
+    '.sync .username': 'username'
+    '.account .name': 'accusername'
     '.about': 'aboutPage'
     '.general': 'generalPage'
-    '.signedin': 'signedin'
-    '.signedout': 'signedout'
+    '.sync .signedin': 'signedin'
+    '.sync .signedout': 'signedout'
+    '.account .signedin': 'accsignedin'
+    '.account .signedout': 'accsignedout'
+    '#accusername': 'usernameinput'
+    '#accpassword': 'passwordinput'
+    '.account .signedin #pro': 'pro'
+    '.account .signedin #alreadypro': 'alreadypro'
 
   events:
     'click .tabs li': 'tabs'
-    'click #signin': 'signin'
-    'click #signout': 'signout'
+    'click .sync #signin': 'signin'
+    'click .sync #signout': 'signout'
+    'click .account #signin': 'accountSignin'
+    'click .account #signout': 'accountSignout'
 
   state: off
 
@@ -41,12 +53,42 @@ class Settings extends Spine.Controller
       @signedin.hide()
       @signinbtn.text 'Sign In'
 
+    setInterval () =>
+      if Account.isSignedIn()
+        @accsignedout.hide()
+        @accsignedin.show()
+        @accusername.text(Account.get().first_name + " " + Account.get().last_name)
+        if Account.get().pro
+          @pro.hide()
+          @alreadypro.show()
+      else
+        @accsignedin.hide()
+        @accsignedout.show()
+        @pro.show()
+        @alreadypro.hide()
+    ,100
+
+  accountSignin: ->
+    if Account.signin(@usernameinput.val(), @passwordinput.val())
+      if Account.isSignedIn()
+        @hide()
+        Account.enableChecks()
+    else
+      @signinacc.text "Wrong Username/Password"
+      setTimeout () =>
+        @signinacc.text "Sign in"
+      , 5000
+
+
+  accountSignout: ->
+    Account.signout()
+
   tabs: (e) ->
     # This is ugly. Shoot me later. Could not think of a better implementation.
     @el.find('.current').removeClass 'current'
     @el.find('div.'+$(e.target).addClass('current').attr('data-id')).addClass 'current'
 
-  show: ->
+  show: (tab) ->
     return unless @state is off
     @state = on
     @el.show(0).addClass("show")
@@ -54,6 +96,16 @@ class Settings extends Spine.Controller
       @el.on "click.modal", (event) =>
         if event.target.className.indexOf('modal') > -1 then @hide()
     ), 500
+
+    if Account.isSignedIn()
+      @accsignedin.show()
+      @accsignedout.hide()
+    else
+      @accsignedout.show()
+      @accsignedin.hide()
+
+    if tab is not null
+      $('.tabs ul li[data-id="'+tab+'"]').click()
 
   hide: ->
     return unless @state is on

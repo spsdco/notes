@@ -27,6 +27,7 @@ class Editor extends Spine.Controller
     "dblclick #contentread": "toggleMode"
     "click header .right .delete": "deleteNote"
     "click header .star": "starNote"
+      
 
   starNote: ->
     note = Note.find(Note.current.id)

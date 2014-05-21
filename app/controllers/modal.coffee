@@ -157,3 +157,11 @@ module.exports =
 
           Notebook.trigger 'refresh'
         @hide()
+
+    modals['pleaseLogIn'] = new Modal
+      el: $('.modal.pleaseLogIn')
+      events:
+        'click .false': 'hide'
+
+      hide: ->
+        @hide()

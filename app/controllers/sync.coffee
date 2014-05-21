@@ -58,7 +58,7 @@ window.Sync =
         language: navigator.language
         platform: navigator.platform
         version: localStorage.version
-      $.get("http://banana.caffeinatedco.de/api/springseed.php", anal)
+      $.get("http://api.getspringseed.com/client", anal)
 
   auth: (callback) ->
 

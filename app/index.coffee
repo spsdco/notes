@@ -21,6 +21,7 @@ Browser = require './controllers/browser.coffee'
 Editor = require './controllers/editor.coffee'
 Popover = require './controllers/popover.coffee'
 Modal = require './controllers/modal.coffee'
+Account = require './controllers/account.coffee'
 Settings = require './controllers/settings.coffee'
 
 class App extends Spine.Controller
@@ -39,6 +40,7 @@ class App extends Spine.Controller
   constructor: ->
     super
 
+    Account.enableChecks()
     Notebook.fetch()
     Note.fetch()
 
@@ -91,6 +93,7 @@ class App extends Spine.Controller
     konami_keys = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]
     konami_index = 0
     $(document).keydown (e) ->
+      location.reload() if e.keyCode is 116
       if e.keyCode is konami_keys[konami_index++]
         if konami_index is konami_keys.length
           $(document).unbind "keydown", arguments.callee

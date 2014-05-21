@@ -2,7 +2,7 @@
 @import "normalize";
 @import "keyframes";
 
-$light-color: #ECECEC;
+$light-color: #ecf0f1;
 $gray-color: #AAAAAA;
 $dark-color: #2d3235;
 
@@ -59,6 +59,28 @@ body, input, textarea {
 		padding: 3px;
 
 		-webkit-transition: all 0.25s ease;
+	}
+}
+
+#loginbox {
+	position: absolute;
+	top: 0; right: 15px;
+	text-align: right;
+	padding: 5px;
+	color: lighten($dark-color, 15%);
+
+	.name {
+		display: block;
+		text-transform: uppercase;
+		font-size: 10pt;
+		font-weight: 600;
+	}
+
+	.gopro {
+		display: block;
+		text-transform: lowercase;
+		font-size: 8pt;
+		font-weight: 200;
 	}
 }
 
@@ -201,7 +223,7 @@ body, input, textarea {
 
 #editor {
 	position: absolute;
-	background: white;
+	background: #ffffff;
 	right: 0;
 
 	&.deselected {
@@ -212,7 +234,7 @@ body, input, textarea {
 			content: "Select a note using the sidebar.";
 			position: absolute;
 			top: 230px;
-			font-weight: 200px;
+			font-weight: 200;
 			font-size: 16pt;
 			left: 0;
 			right: 0;
@@ -227,7 +249,7 @@ body, input, textarea {
 
 	header {
 		margin: 0;
-		background: #2d8dd6;
+		background: #9b59b6;
 		position: absolute;
 		left: 15px; right: 15px;
 		padding: 10px;
@@ -241,7 +263,7 @@ body, input, textarea {
 			}
 
 			.star.starred {
-				color: #FFD300;
+				color: #f1c40f;
 			}
 
 			input {
@@ -282,6 +304,7 @@ body, input, textarea {
 					background: transparent;
 					font-size: 14pt;
 					padding: 8px;
+					outline: 0;
 				}
 			}
 		}
@@ -309,7 +332,7 @@ body, input, textarea {
 	position: absolute;
 	top: 0; bottom: 0;
 	left: 0; right: 0;
-	background: white;
+	background: #FFFFFF;
 	padding: 0 30px;
 	color: $dark-color;
 	font-family: $font;
@@ -411,8 +434,8 @@ body, input, textarea {
 	}
 
 	.delete-container, .error-container {
-		width: 400px;
-		margin-left: -228px;
+		width: 600px;
+		margin-left: -328px;
 		padding: 25px;
 		text-align: center;
 		font-size: 18px;
@@ -429,7 +452,7 @@ body, input, textarea {
 		}
 	}
 
-	.dsyncmeta-container {
+	.syncmeta-container {
 		width: 600px;
 		margin-left: -328px;
 		padding: 25px;
@@ -448,17 +471,36 @@ body, input, textarea {
 		}
 	}
 
+	.rename-container {
+		width: 600px;
+		margin-left: -328px;
+		padding: 25px;
+		text-align: center;
+		font-size: 16px;
+		font-weight: 200;
+		color: $dark-color;
+		border: 5px solid $dark-color;
+
+		.special {
+			border-color: #E15556;
+		}
+
+		.special.green {
+			border-color: #66BE7F;
+		}
+	}
+
 	.preferences-container {
 		width: 450px;
 		margin-left: -227px;
 		text-align: center;
 		font-size: 16px;
 		color: $dark-color;
-		border: 5px solid #66be7f;
+		border: 5px solid #9b59b6;
 		font-weight: 200;
 
 		.tabs {
-			border-bottom: 2px solid #66be7f;
+			border-bottom: 2px solid #9b59b6;
 
 			ul {
 				list-style: none;
@@ -477,11 +519,11 @@ body, input, textarea {
 				cursor: default;
 			
 				&:active {
-					color: darken(#66be7f, 15%);
+					color: darken(#9b59b6, 15%);
 				}
 
 				&.current {
-					background: #66be7f;
+					background: #9b59b6;
 					color: white;
 				}
 			}
@@ -489,6 +531,21 @@ body, input, textarea {
 
 		a {
 			text-decoration: none;
+		}
+
+		.account {
+			padding: 10px;
+
+			.pro {
+				background: #9b59b6;
+				color: white;
+				padding: 1px 35px 20px;
+				margin: 10px -35px;
+
+				p {
+					font-weight: normal;
+				}
+			}
 		}
 
 		.container {
@@ -510,13 +567,17 @@ body, input, textarea {
 		}
 
 		input {
-			font-size: 14px;
-			border: 2px solid #66be7f;
-			padding: 5px 10px;
-			outline: 0;
+			display: block;
+			text-decoration: none;
+			border-radius: 0.0001px;
+			border: 1px solid $light-color;
+			background: lighten($light-color, 5%);
+			margin: 10px 0 0;
+			padding: 10px 15px;
+			font-size: 10pt;
 		}
 
-		.about, .sync {
+		.about, .sync, .account {
 			display: none;
 			text-align: left;
 

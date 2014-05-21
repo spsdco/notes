@@ -113,7 +113,7 @@ class Sidebar extends Spine.Controller
       @input.val ""
 
   toggleSettings: (e) ->
-    Settings.get().show()
+    Settings.get().show("sync")
 
   doSync: ->
     if localStorage.oauth
