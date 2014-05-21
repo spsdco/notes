@@ -2,18 +2,6 @@
   "main": "public/index.html",
   "name": "Springseed",
   "version": "1.1.0",
-  "window": {
-    "width": 1024,
-    "height": 600,
-    "min_width": 300,
-    "min_height": 500,
-    "position": "center",
-    "title": "Springseed",
-    "icon": "public/img/icon.svg",
-    "new-instance": false,
-    "toolbar": false,
-    "frame": false
-  },
   "dependencies": {
     "underscore": "1.4.x",
     "jqueryify": "~1.9.1",
