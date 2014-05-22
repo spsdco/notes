@@ -36,6 +36,21 @@ body, input, textarea {
 	-webkit-app-region: no-drag;
 }
 
+//
+//  ABOUT PAGE
+//
+
+body.aboutpage {
+	text-align: center;
+	font-family: $light-font;
+	background: #F0F0F0;
+	color: #111111;
+
+	p {
+		font-size: 10pt;
+	}
+}
+
 // Panel
 
 #panel {
@@ -89,7 +104,7 @@ body, input, textarea {
 		width: 100%;
 		bottom: 30px;
 		overflow-x: hidden;
-		
+
 		& .title {
 			padding: 10px 15px;
 			color: $light-color;
@@ -127,7 +142,7 @@ body, input, textarea {
 		bottom: 0; left: 0;
 		color: $light-color;
 		padding: 5px;
-		
+
 		& i {
 			font-size: 12pt;
 			cursor: pointer;
@@ -234,7 +249,7 @@ body, input, textarea {
 
 		.headerwrap {
 			-webkit-user-select: none;
-		
+
 			.star {
 				color: $light-color;
 				font-size: 14pt;
@@ -323,7 +338,7 @@ body, input, textarea {
 #contentwrite {
 	padding: 35px 25px;
 	display: none;
-	
+
 	> .inner {
 		width: 100%;
 		margin: 0;
@@ -475,7 +490,7 @@ body, input, textarea {
 				font-weight: 400;
 				color: $dark-color;
 				cursor: default;
-			
+
 				&:active {
 					color: darken(#66be7f, 15%);
 				}
@@ -533,7 +548,7 @@ body, input, textarea {
 				float: left;
 				margin-right: 10px;
 			}
-			
+
 			&.current {
 				display: block;
 			}
