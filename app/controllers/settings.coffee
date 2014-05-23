@@ -1,5 +1,6 @@
 Spine = require 'spine'
 $ = Spine.$
+open = require 'open'
 
 Sync = require './sync.coffee'
 Account = require("../controllers/account.coffee")
@@ -114,10 +115,7 @@ class Settings extends Spine.Controller
   signin: ->
     @signinbtn.text 'Connecting...'
     Sync.auth (data) =>
-      # if shell
-      #   shell.openExternal data.url
-      # else
-      #   window.open data.url
+      open data.url
 
   signout: ->
     Sync.signOut()
