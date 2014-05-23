@@ -12,10 +12,6 @@
   },
   "devDependencies": {
     "handlebars": "1.0.x",
-    "coffee-script": "1.7.x",
-    "uglify-js": "*",
-    "node-static": "*",
-    "node-sass": "*",
-    "node-watch": "~0.3.4"
+    "coffee-script": "1.7.x"
   }
 }
