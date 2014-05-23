@@ -40,14 +40,20 @@ body, input, textarea {
 //  ABOUT PAGE
 //
 
-body.aboutpage {
+body.about {
 	text-align: center;
 	font-family: $light-font;
 	background: #F0F0F0;
-	color: #111111;
+	font-size: 16px;
+	color: $dark-color;
+	font-weight: 200;
+
+	h1 {
+		font-weight: 400;
+	}
 
 	p {
-		font-size: 10pt;
+		font-size: 10px;
 	}
 }
 
