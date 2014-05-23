@@ -19,7 +19,6 @@ class SpringseedWindow
 			'min-height': 300
 			'center': true
 			'title': "Springseed"
-			'frame': false
 
 		console.log __dirname
 

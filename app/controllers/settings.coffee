@@ -1,5 +1,6 @@
 Spine = require 'spine'
 $ = Spine.$
+
 Sync = require './sync.coffee'
 Account = require("../controllers/account.coffee")
 
