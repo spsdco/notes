@@ -14,3 +14,4 @@ public/application.css
 public/application.js
 
 src/*.js
+app/views/*.js
