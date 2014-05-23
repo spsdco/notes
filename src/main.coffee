@@ -1,3 +1,7 @@
+# Springseed. Simply awesome note taking.
+# Copyright (c) 2014, Springseed Team
+# All Rights Reserved.
+
 app = require "app"
 SpringseedWindow = require './springseed'
 
