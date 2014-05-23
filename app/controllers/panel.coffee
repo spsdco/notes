@@ -1,8 +1,5 @@
 Spine = require 'spine'
 
-# Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
-# shell = window.require('nw.gui').Shell if window.require
-
 # Models
 Note = require("../models/note.coffee")
 Notebook = require("../models/notebook.coffee")

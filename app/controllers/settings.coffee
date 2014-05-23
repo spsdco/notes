@@ -1,10 +1,6 @@
 Spine = require 'spine'
 $ = Spine.$
 Sync = require './sync.coffee'
-
-# Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
-# shell = window.require('nw.gui').Shell if window.require
-
 Account = require("../controllers/account.coffee")
 
 class Settings extends Spine.Controller
