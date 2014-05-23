@@ -8,7 +8,7 @@ spsd_out = public/application.js
 atom_out = $(atom:%.coffee=%.js)
 css_out = public/application.css
 
-all: npm build-atom build-app style handlebars
+all: npm build-atom handlebars style build-app
 
 build-atom: $(atom_out)
 
