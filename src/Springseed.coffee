@@ -5,6 +5,7 @@
 app 			= require "app"
 Menu						= require "menu"
 BrowserWindow 	= require "browser-window"
+AboutWindow		 = require "./AboutWindow"
 
 class SpringseedWindow
 	constructor: (devtools) ->
