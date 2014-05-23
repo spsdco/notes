@@ -1,7 +1,15 @@
 {
-  "main": "src/main.js",
+  "main": "public/index.html",
   "name": "Springseed",
-  "version": "1.1.0",
+  "version": "2.0.0",
+   "window": {
+    "toolbar": false,
+    "width": 1024,
+    "height": 600,
+    "position": "center",
+    "min_width": 300,
+    "min_height": 500,
+  },
   "dependencies": {
     "underscore": "1.4.x",
     "jqueryify": "~1.9.1",
