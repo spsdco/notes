@@ -7,9 +7,12 @@ Menu						= require "menu"
 BrowserWindow 	= require "browser-window"
 AboutWindow		 = require "./AboutWindow"
 
+# We need a global reference of the window because Node.js may GC if if we don't.
+window = null
+
 class SpringseedWindow
-	constructor: (devtools) ->
-		@window = new BrowserWindow
+	constructor: ->
+		window = new BrowserWindow
 			'width': 1024
 			'height': 600
 			'min-width': 500
@@ -20,10 +23,10 @@ class SpringseedWindow
 
 		console.log __dirname
 
-		@window.loadUrl "file://"+__dirname+"/../public/index.html"
+		window.loadUrl "file://"+__dirname+"/../public/index.html"
 
-		@window.on "closed",  ->
-			@window = null # Dereference the window.
+		window.on "closed",  ->
+			window = null # Dereference the window.
 
 		if process.platform is "darwin"
 			@osxMenus()
