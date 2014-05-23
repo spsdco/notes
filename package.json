@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "handlebars": "1.0.x",
-    "coffee-scrunch": "0.2.x",
+    "coffee-script": "1.7.x",
     "uglify-js": "*",
     "node-static": "*",
     "node-sass": "*",
