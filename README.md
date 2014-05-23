@@ -1,13 +1,15 @@
 # Springseed
 
-Springseed provides easy note taking.
+Springseed is the simple and easy way to take your notes.
 
-## How to use this code
+## Building this code.
+Springseed is now based on the awesome work of the people at Github and as such we use the fantastic `atom-shell` framework to get stuff done. As such, we have introduced a new build systembased on the GNU Makefile build system.
 
-You'll need node & npm installed.
+    # The command below automatically runs npm, then builds Springseed
+    make
 
-    npm install -g coffee-script
-    npm install .
+After this, you can use our old build system to build the app part of it (for now)
+
     cake -w server
 
 If you're feeling awesome, you should contribute either with code or a [donation](http://getspringseed.com/donate). Check out the [issue tracker](https://github.com/consindo/notes/issues) and tackle an issue.

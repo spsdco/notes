@@ -1,5 +1,5 @@
 {
-  "main": "public/index.html",
+  "main": "js/main.js",
   "name": "Springseed",
   "version": "1.1.0",
   "dependencies": {
@@ -12,7 +12,7 @@
   },
   "devDependencies": {
     "handlebars": "1.0.x",
-    "coffee-scrunch": "0.2.x",
+    "coffee-script": "1.7.x",
     "uglify-js": "*",
     "node-static": "*",
     "node-sass": "*",
