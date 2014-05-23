@@ -12,3 +12,5 @@ libpeerconnection.log
 *.nw
 public/application.css
 public/application.js
+
+js
