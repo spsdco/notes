@@ -1,5 +1,5 @@
 {
-  "main": "public/index.html",
+  "main": "js/main.js",
   "name": "Springseed",
   "version": "1.1.0",
   "dependencies": {
