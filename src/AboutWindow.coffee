@@ -11,6 +11,7 @@ class AboutWindow
       'width': 400
       'height': 300
       'center': true
+      'resizable': false
       'title': "About Springseed"
 
     @window.loadUrl "file://"+__dirname+"/../public/about.html"
