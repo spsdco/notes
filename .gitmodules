@@ -1,3 +1,3 @@
-[submodule "socket.io"]
+[submodule "app/lib/socket.io"]
 	path = app/lib/socket.io
-	url = git@github.com:LearnBoost/socket.io-client.git
+	url = https://github.com/LearnBoost/socket.io-client.git
