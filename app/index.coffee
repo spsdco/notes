@@ -2,7 +2,7 @@ require './lib/setup.coffee'
 Spine = require 'spine'
 
 # Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
-shell = window.require('nw.gui').Shell if window.require
+# shell = window.require('nw.gui').Shell if window.require
 
 # Upgrader
 Upgrader = require('./controllers/upgrader.coffee')
@@ -83,11 +83,11 @@ class App extends Spine.Controller
     Sync.anal()
 
     # Stuff for node webkit.
-    $('body').on 'mousedown', 'a', (e) ->
-      e.preventDefault()
-      if e.which is 1 or e.which is 2
-        shell.openExternal $(@).attr("href")
-      return false
+    # $('body').on 'mousedown', 'a', (e) ->
+    #   e.preventDefault()
+    #   if e.which is 1 or e.which is 2
+    #     shell.openExternal $(@).attr("href")
+    #   return false
 
     # Going to use this to enable the dev tools, because yolo
     konami_keys = [38, 38, 40, 40, 37, 39, 37, 39, 66, 65]

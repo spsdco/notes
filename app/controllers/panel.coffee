@@ -1,8 +1,5 @@
 Spine = require 'spine'
 
-# Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
-win = window.require('nw.gui').Window.get() if window.require
-
 # Models
 Note = require("../models/note.coffee")
 Notebook = require("../models/notebook.coffee")
@@ -51,13 +48,13 @@ class Panel extends Spine.Controller
     Settings.get().show("account")
 
   windowControl: (e) ->
-    switch e.currentTarget.className
-      when "close"
-        win.close()
-      when "minimize"
-        win.minimize()
-      when "maximize"
-        @maximize()
+    # switch e.currentTarget.className
+    #   when "close"
+    #     win.close()
+    #   when "minimize"
+    #     win.minimize()
+    #   when "maximize"
+    #     @maximize()
 
   maximize: ->
     win.maximize() if @maximized is false
