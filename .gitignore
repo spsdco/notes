@@ -13,5 +13,4 @@ libpeerconnection.log
 public/application.css
 public/application.js
 
-/app/*.js
-/src/*.js
+src/*.js

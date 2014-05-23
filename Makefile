@@ -1,17 +1,30 @@
-BIN = ./node_modules/.bin
-SRC = $(wildcard src/*.coffee)
-OUT = $(SRC:src/%.coffee=js/%.js)
+node_bin = ./node_modules/.bin
 
-build: $(OUT)
+spsd = $(wildcard app/*.coffee app/controllers/*.coffee app/lib/*.coffee app/models/*.coffee)
+atom = $(wildcard src/*.coffee)
+css = css/new.scss
 
-js/%.js: src/%.coffee
-	@mkdir -p $(@D)
-	@$(BIN)/coffee -bcp $< > $@
+spsd_out = public/application.js
+atom_out = $(atom:%.coffee=%.js)
+css_out = public/application.css
+
+build-atom: $(atom_out)
+
+src/%.js: src/%.coffee
+	@$(node_bin)/coffee -bc $< > $@
+
+build-app: $(spsd_out)
+
+$(spsd_out): $(spsd)
+	$(node_bin)/coffee -bcp $< > $@
+
+style:
+	@sass $(css) $(css_out)
 
 npm:
 	@npm install .
 
 clean:
-	@rm -f $(OUT)
+	@rm -f $(spsd_out) $(atom_out)
 
-default: npm build
+default: npm build-atom build-app style
