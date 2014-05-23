@@ -3,7 +3,7 @@ $ = Spine.$
 Sync = require './sync.coffee'
 
 # Node-Webkit. IMPORTANT NOTE: USE WINDOW.REQUIRE
-shell = window.require('nw.gui').Shell if window.require
+# shell = window.require('nw.gui').Shell if window.require
 
 Account = require("../controllers/account.coffee")
 
@@ -117,10 +117,10 @@ class Settings extends Spine.Controller
   signin: ->
     @signinbtn.text 'Connecting...'
     Sync.auth (data) =>
-      if shell
-        shell.openExternal data.url
-      else
-        window.open data.url
+      # if shell
+      #   shell.openExternal data.url
+      # else
+      #   window.open data.url
 
   signout: ->
     Sync.signOut()

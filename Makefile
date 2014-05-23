@@ -1,6 +1,6 @@
 node_bin = ./node_modules/.bin
 
-spsd = app
+spsd = app/init.coffee
 atom = $(wildcard src/*.coffee)
 css = css/new.scss
 
@@ -18,7 +18,7 @@ src/%.js: src/%.coffee
 build-app: $(spsd_out)
 
 $(spsd_out): $(spsd)
-	$(node_bin)/coffee -bc -j $@ $<
+	$(node_bin)/browserify -t coffeeify $< > $@
 
 style:
 	@sass $(css) $(css_out)
