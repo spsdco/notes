@@ -1,6 +1,6 @@
 Spine = require 'spine'
 $ = Spine.$
-open = require 'open'
+shell = window.require('nw.gui').Shell if window.require
 
 Sync = require './sync.coffee'
 Account = require("../controllers/account.coffee")
@@ -115,7 +115,7 @@ class Settings extends Spine.Controller
   signin: ->
     @signinbtn.text 'Connecting...'
     Sync.auth (data) =>
-      open data.url
+        shell.openExternal(data.url)
 
   signout: ->
     Sync.signOut()

@@ -1,6 +1,6 @@
 require './lib/setup.coffee'
 Spine = require 'spine'
-open = require 'open'
+shell = window.require('nw.gui').Shell if window.require
 
 # Upgrader
 Upgrader = require('./controllers/upgrader.coffee')
@@ -81,10 +81,10 @@ class App extends Spine.Controller
     Sync.anal()
 
     # Stuff for node webkit.
-    $('body').on 'mousedown', 'a', (e) ->
+    $('a').on 'click', (e) ->
       e.preventDefault()
       if e.which is 1 or e.which is 2
-        open $(@).attr("href")
+        shell.openExternal $(@).attr("href")
       return false
 
     # Going to use this to enable the dev tools, because yolo
