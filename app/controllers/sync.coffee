@@ -312,6 +312,7 @@ window.Sync =
             Sync.queue = {"Note": {}, "Notebook": {}}
             Sync.saveQueue()
             Spine.trigger 'sync:stop'
+            Note.trigger 'refresh'
 
   # It's *slightly* nicer having a function generating requests
   generateRequest: (opts) ->

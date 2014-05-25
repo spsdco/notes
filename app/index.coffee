@@ -1,6 +1,7 @@
 require './lib/setup.coffee'
 Spine = require 'spine'
-shell = window.require('nw.gui').Shell if window.require
+
+shell = window.require('shell') if window.require
 
 # Upgrader
 Upgrader = require('./controllers/upgrader.coffee')

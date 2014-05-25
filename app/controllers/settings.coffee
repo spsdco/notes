@@ -1,6 +1,7 @@
 Spine = require 'spine'
 $ = Spine.$
-shell = window.require('nw.gui').Shell if window.require
+
+shell = window.require('shell') if window.require
 
 Sync = require './sync.coffee'
 Account = require("../controllers/account.coffee")

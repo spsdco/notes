@@ -36,13 +36,18 @@ class SpringseedWindow
 		tmpl = [{
 				label: "Springseed",
 				submenu: [{
+					label: "Developer Tools",
+					accelerator: "Control+Alt+I"
+					click: =>
+						window.openDevTools()
+					}, {
 					label: "About Springseed",
-					click: ->
+					click: =>
 						new AboutWindow()
 					}, {
 					label: "Quit",
 					accelerator: "Command+Q",
-					click: ->
+					click: =>
 						app.quit()
 			}]
 		}]

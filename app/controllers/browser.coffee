@@ -43,6 +43,7 @@ class Browser extends Spine.Controller
           # Create the note meta
           note = Note.create
             name: "Untitled Note"
+            starred: false
             excerpt: "This is your new blank note - add some content!"
             notebook: Notebook.current.id
             category: if Notebook.current.category is "all" then Notebook.find(Notebook.current.id).categories[0] else Notebook.find(Notebook.current.id).categories[Notebook.current.category]

@@ -1,9 +1,9 @@
 {
-  "main": "public/index.html",
+  "main": "src/main.js",
   "name": "Springseed",
   "version": "2.0.0",
    "window": {
-    "toolbar": false,
+    "toolbar": true,
     "width": 1024,
     "height": 600,
     "position": "center",
