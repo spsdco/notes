@@ -17,7 +17,8 @@
     "marked": "0.2.9",
     "socket.io-client": "0.9.16",
     "highlight.js": "7.3.0",
-    "open": "0.0.5"
+    "open": "0.0.5",
+    "analytics-node": "*"
   },
   "devDependencies": {
     "handlebars": "1.0.x",

@@ -2,6 +2,7 @@ require './lib/setup.coffee'
 Spine = require 'spine'
 
 shell = window.require('shell') if window.require
+Analytics = require 'analytics-node'
 
 # Upgrader
 Upgrader = require('./controllers/upgrader.coffee')
@@ -42,6 +43,18 @@ class App extends Spine.Controller
     Account.enableChecks()
     Notebook.fetch()
     Note.fetch()
+
+    anal = new Analytics('u9g1p9otaa')
+
+    # We're nosey.
+    anal.track({
+      'userId': 'anonymous_user',
+      'event': 'Open App',
+      'properties': {
+        'os': @getOS(),
+        'version': localStorage.version
+      }
+    })
 
     # Init the Splitter so we can see crap.
     Splitter.init
@@ -103,5 +116,18 @@ class App extends Spine.Controller
   # We're sending an event to the editor here because we need the checksel to be global
   checkSel: ->
     @editor.trigger("checkSel")
+
+  getOS: ->
+    ua = navigator.userAgent
+    return "Linux" if ua.indexOf("Linux") > -1
+    return "Mac OS X 10.9" if ua.indexOf("Mac OS X 10_9") > -1
+    return "Mac OS X 10.8" if ua.indexOf("Mac OS X 10_8") > -1
+    return "Mac OS X 10.7" if ua.indexOf("Mac OS X 10_7") > -1
+    return "Mac OS X 10.6" if ua.indexOf("Mac OS X 10_6") > -1
+    return "Windows XP" if ua.indexOf("Windows NT 6.2") > -1
+    return "Windows Vista" if ua.indexOf("Windows NT 6") > -1
+    return "Windows 7" if ua.indexOf("Windows NT 6.1") > -1
+    return "Windows 8" if ua.indexOf("Windows NT 6.2") > -1
+    return "Windows 8.1" if ua.indexOf("Windows NT 6.3") > -1
 
 module.exports = App
