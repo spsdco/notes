@@ -52,6 +52,8 @@ class App extends Spine.Controller
       'event': 'Open App',
       'properties': {
         'os': @getOS(),
+        'country': @getCountry(),
+        'language': navigator.language,
         'version': localStorage.version
       }
     })
@@ -129,5 +131,9 @@ class App extends Spine.Controller
     return "Windows 7" if ua.indexOf("Windows NT 6.1") > -1
     return "Windows 8" if ua.indexOf("Windows NT 6.2") > -1
     return "Windows 8.1" if ua.indexOf("Windows NT 6.3") > -1
+
+  getCountry: ->
+    $.getJSON 'http://freegeoip.net/json/', (loc) ->
+      return loc.country_name
 
 module.exports = App
