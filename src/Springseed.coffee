@@ -29,8 +29,8 @@ class SpringseedWindow
 
 		if process.platform is "darwin"
 			@osxMenus()
-		else
-			@linuxMenus()
+		# else
+		# 	@linuxMenus()
 
 	osxMenus: ->
 		tmpl = [{
@@ -54,24 +54,5 @@ class SpringseedWindow
 
 		menu = Menu.buildFromTemplate tmpl
 		Menu.setApplicationMenu menu
-
-	linuxMenus: ->
-		# GNOME stuff.
-		tmpl = [{
-				label: "Application",
-				submenu: [{
-					label: "About Springseed",
-					click: ->
-						new AboutWindow()
-					}, {
-					label: "Quit",
-					accelerator: "Command+Q",
-					click: ->
-						app.quit()
-			}]
-		}]
-
-		menu = Menu.buildFromTemplate tmpl
-		Menu.setMenu menu
 
 module.exports = SpringseedWindow
