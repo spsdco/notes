@@ -3,7 +3,7 @@
 # All Rights Reserved.
 
 app = require "app"
-SpringseedWindow = require './springseed'
+SpringseedWindow = require './Springseed'
 
 app.on 'ready', ->
   window = new SpringseedWindow()
