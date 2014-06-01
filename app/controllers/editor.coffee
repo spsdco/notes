@@ -27,7 +27,7 @@ class Editor extends Spine.Controller
     "dblclick #contentread": "toggleMode"
     "click header .right .delete": "deleteNote"
     "click header .star": "starNote"
-      
+
 
   starNote: ->
     note = Note.find(Note.current.id)
@@ -99,7 +99,16 @@ class Editor extends Spine.Controller
     else
       @el.addClass("deselected")
 
+
+    setInterval(@wc, 1000)
+
     @mode = "preview"
+
+  wc: ->
+    text = $('#contentwrite section').text()
+    wc = $(marked(text)).text().split(' ').length
+    $('.wc').text(wc)
+
 
   toggleMode: (save) ->
     if @mode is "preview" # enable the editor

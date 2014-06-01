@@ -381,6 +381,18 @@ body.about {
 		outline: none;
 		white-space: pre-wrap;
 	}
+
+	& > .wc {
+		position: absolute;
+		bottom: 5px;
+		right: 5px;
+		border-radius: 3px;
+		font-size: 12px;
+		padding: 5px 10px;
+		background: #3f3b3a;
+		color: white;
+		display: block-inline;
+	}
 }
 
 #contentread {
@@ -422,6 +434,10 @@ body.about {
 		font-size: 0.95em;
 		line-height: 1.1;
 		font-family: monospace;
+	}
+
+	& > .wc {
+		display: none;
 	}
 }
 
