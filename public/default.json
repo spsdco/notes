@@ -1,6 +1,6 @@
 [
 	{
-		"name": "Springseed 2.0",
-		"content": "Springseed 2.0 is here!\n\n# Springseed 2.0 Changelog\n* Overhauled UI\n* LOTS of bug fixes\n* OS X Version\n* UI uses System Titlebars.\n\n# @SpringseedNotes\n\nWe now have a twitter, available at @SpringseedNotes. This twitter account will provide updates about what is going on with Springseed, as well as announce new versions of springseed and what's going on with development of Springseed. You can also follow @MichealHarker for more off-topic banter about Springseed.\n\n# What to expect\n\nSpringseed 2.0 is a major release, and we plan to chage to a more rapid development scheme. This means that we plan to release changes more rapidly than before, which means newer versions will be released through our repo on Linux, and OS X users will be informed of newer versions through a notice on their clients.\n\n# 3.0 and the future\n\nIn the future we expect to release an Android application, and prehaps a iOS application, as well as have a online version of Springseed."
+		"name": "Springseed!",
+		"content": "Springseed 2.0 is here and there's a lot going on. We finally have a Twitter and Google+ page, which means that we're going to keep you updated with what is going on with Springseed.\n\nOur Twitter can be found at http://twitter.com/springseednotes whereas our Google+ page can be found at http://plus.google.com/+Getspringseed - we hope that you follow us on these platforms because it's great to let you know what's happening.\n\nIn other news, we're also working on other cool stuff so do try and get involved as much as you can, it means a lot to us!\n\nOh, and before we forgot, we also have IRC! We can be found at irc.freenode.net in #springseed"
 	}
 ]
