@@ -1,5 +1,7 @@
 # Springseed
 
+**Current Version: 2.0**
+
 Springseed is the simple and easy way to take your notes.
 
 ## Building this code.
