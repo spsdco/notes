@@ -2,6 +2,10 @@
   "main": "src/main.js",
   "name": "Springseed",
   "version": "2.0.0",
+  "repository": { 
+    "type":"git", 
+    "url": "http://github.com/springseednotes/springseed.git"
+  },
    "window": {
     "toolbar": true,
     "width": 1024,
