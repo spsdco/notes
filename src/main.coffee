@@ -9,7 +9,6 @@ app.on 'ready', ->
   window = new SpringseedWindow()
 
 app.on 'window-all-closed', ->
-  if process.platform is not 'darwin'
     app.quit()
 
 app.on 'activate-with-no-open-windows', ->
