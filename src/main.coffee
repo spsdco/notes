@@ -9,7 +9,7 @@ app.on 'ready', ->
   window = new SpringseedWindow()
 
 app.on 'window-all-closed', ->
-    app.quit()
+  app.quit()
 
 app.on 'activate-with-no-open-windows', ->
   window = new SpringseedWindow()
