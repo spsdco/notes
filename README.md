@@ -26,11 +26,13 @@ Springseed is written in CoffeeScript and uses Spine.JS for MVC.
 
 <http://getspringseed.com>
 
-Copyright &copy; 2013-2014 Caffeinated Code
-Copyright &copy; 2014 Hestia
+Copyright &copy; 2013-2014 [Caffeinated Code][3]
+Copyright &copy; 2014 Hestia[4]
 
-Open source under the [MIT license][3].
+Open source under the [MIT license][5].
 
 [1]: http://getspringseed.com/donate
 [2]: https://github.com/byhestia/springseed
-[3]: http://opensource.org/licenses/MIT
+[3]: http://www.caffeinatedco.de/
+[4]: http://byhestia.com/
+[5]: http://opensource.org/licenses/MIT
