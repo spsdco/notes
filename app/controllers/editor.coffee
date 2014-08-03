@@ -116,6 +116,7 @@ class Editor extends Spine.Controller
       @el.addClass("edit")
       @toggle.find("i").addClass("fa-lock")
       @toggle.find("i").removeClass("fa-pencil")
+      @toggle.find("i")[0].parentNode.title = "Preview Note"
       @title.prop "disabled", false
       @mode = "edit"
 
@@ -162,6 +163,7 @@ class Editor extends Spine.Controller
       @el.removeClass("edit")
       @toggle.find("i").removeClass("fa-lock")
       @toggle.find("i").addClass("fa-pencil")
+      @toggle.find("i")[0].parentNode.title = "Edit Note"
       @title.prop "disabled", true
       @mode = "preview"
       @time.text currentNote.prettyDate(true)
