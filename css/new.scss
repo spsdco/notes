@@ -196,6 +196,7 @@ body.about {
 	position: absolute;
 	background: $light-color;
 	overflow-x: hidden;
+	overflow-y: auto;
 
 	& .title {
 		padding: 10px 15px;
