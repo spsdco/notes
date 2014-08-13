@@ -4,7 +4,7 @@ $ = Spine.$
 shell = window.require('shell') if window.require
 
 Sync = require './sync.coffee'
-Account = require("../controllers/account.coffee")
+Account = require '../controllers/account.coffee'
 
 class Settings extends Spine.Controller
   elements:

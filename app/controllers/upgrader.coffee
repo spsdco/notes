@@ -7,8 +7,8 @@
 Spine = require 'spine'
 marked = require 'marked'
 
-Note = require("../models/note.coffee")
-Notebook = require("../models/notebook.coffee")
+Note = require '../models/note.coffee'
+Notebook = require '../models/notebook.coffee'
 
 class window.upgrader extends Spine.Controller
   constructor: ->

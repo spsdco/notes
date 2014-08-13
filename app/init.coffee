@@ -1,4 +1,4 @@
-jQuery  = require("jqueryify")
+jQuery  = require 'jqueryify'
 exports = this
 jQuery ->
   App = require './index.coffee'
