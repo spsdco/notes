@@ -64,6 +64,10 @@ class Editor extends Spine.Controller
             return hljs.highlightAuto(code).value
         catch error
           code
+      tables: true
+      sanitize: true
+      smartLists: true
+      smartypants: true
     }
     @controls = $("#editorcontrols")
     @controls.find('#bold').click @formatBold
