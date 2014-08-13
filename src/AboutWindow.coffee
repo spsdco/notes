@@ -2,8 +2,8 @@
 # Copyright (c) 2014, Springseed Team
 # All Rights Reserved.
 
-app 			= require "app"
-BrowserWindow 	= require "browser-window"
+app       = require "app"
+BrowserWindow   = require "browser-window"
 
 class AboutWindow
   constructor: (devtools) ->
