@@ -1,4 +1,4 @@
-Spine = @Spine or require('spine')
+Spine = @Spine or require 'spine'
 io = require '../lib/socket.io-client/dist/socket.io.js'
 Model = Spine.Model
 

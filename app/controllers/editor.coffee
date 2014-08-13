@@ -1,6 +1,6 @@
 Spine = require 'spine'
 marked = require 'marked'
-hljs = require ("highlight.js")
+hljs = require 'highlight.js'
 
 # Models
 Note = require '../models/note.coffee'

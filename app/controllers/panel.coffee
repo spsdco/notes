@@ -1,11 +1,11 @@
 Spine = require 'spine'
 
 # Models
-Note = require("../models/note.coffee")
-Notebook = require("../models/notebook.coffee")
-Modal = require("../controllers/modal.coffee")
-Settings = require("../controllers/settings.coffee")
-Account = require("../controllers/account.coffee")
+Note = require '../models/note.coffee'
+Notebook = require '../models/notebook.coffee'
+Modal = require '../controllers/modal.coffee'
+Settings = require '../controllers/settings.coffee'
+Account = require '../controllers/account.coffee'
 
 class Panel extends Spine.Controller
   elements:
