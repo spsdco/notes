@@ -2,8 +2,8 @@
 # Copyright (c) 2014, Springseed Team
 # All Rights Reserved.
 
-app       = require "app"
-BrowserWindow   = require "browser-window"
+app = require "app"
+BrowserWindow = require "browser-window"
 
 class AboutWindow
   constructor: (devtools) ->
@@ -14,7 +14,7 @@ class AboutWindow
       'resizable': false
       'title': "About Springseed"
 
-    @window.loadUrl "file://"+__dirname+"/../public/about.html"
+    @window.loadUrl "file://#{__dirname}/../public/about.html"
 
     @window.on "closed",  ->
       @window = null # Dereference the window.
