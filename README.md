@@ -14,7 +14,7 @@ make operations won't complete if they've errored. Nothing we can do to fix
 this. :)
 
     sudo gem install sass
-    git submodule --init update
+    git submodule update --init
     make
 
 If you're feeling awesome, you should contribute either with code or a
