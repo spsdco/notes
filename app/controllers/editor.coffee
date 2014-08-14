@@ -57,6 +57,11 @@ class Editor extends Spine.Controller
     Note.bind("revert", @revertNote)
     @.bind("checkSel", @checkSelWrap)
 
+    emojify.setConfig {
+      ignored_tags: {
+        'CODE': 1
+      }
+    }
     marked.setOptions {
       highlight: (code, lang) ->
         try
