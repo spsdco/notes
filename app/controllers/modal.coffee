@@ -27,6 +27,7 @@ class Modal extends Spine.Controller
           @hide()
     ), 500
 
+
   hide: ->
     return unless @state is on
     @state = off

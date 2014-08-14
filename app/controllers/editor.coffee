@@ -27,6 +27,8 @@ class Editor extends Spine.Controller
     "dblclick #contentread": "toggleMode"
     "click header .right .delete": "deleteNote"
     "click header .star": "starNote"
+    "textInput section.inner": "inputHandler" # used for emojis
+    "blur section.inner": "blurHandler" # again, used for emojis
 
 
   starNote: ->
@@ -159,6 +161,7 @@ class Editor extends Spine.Controller
           # Update IndexedDB
           currentNote.saveNote(noteText)
 
+
       # The opposite
       @el.removeClass("edit")
       @toggle.find("i").removeClass("fa-lock")
@@ -185,6 +188,7 @@ class Editor extends Spine.Controller
     range.setStartAfter(textNode)
     sel.removeAllRanges()
     sel.addRange(range)
+
 
   keydown: (e) ->
     # Some keys are special
@@ -282,7 +286,7 @@ class Editor extends Spine.Controller
         @sel.modify("extend", "forward", "word")
         @selrange = @sel.getRangeAt(0)
         str = @selrange.toString()
-        @newString("*" + str + "*")
+        @newString("*#{str}*")
 
   formatHead: (e) =>
     @sel.modify("extend", "backward", "paragraphboundary")
@@ -297,5 +301,18 @@ class Editor extends Spine.Controller
       @selrange.surroundContents(document.createElement("span"))
       text = @el.find("span").text()
       @el.find("span").text(text.substring(3)).contents().unwrap()
+
+  inputHandler: (e) ->
+    # Handle Emoji creation
+    if e.originalEvent.data == ":" # capture colon key
+      setTimeout (->
+        emojify.run() # ALL the emojis!
+      ), 100
+
+
+  blurHandler: (e) ->
+    for i in $('section.inner img.emoji')
+      $(i).replaceWith(i.title)
+
 
 module.exports = Editor

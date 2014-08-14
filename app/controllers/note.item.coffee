@@ -22,11 +22,17 @@ class NoteItem extends Spine.Controller
     @note.bind "destroy", @deleteNote
 
   select: ->
+
     Note.trigger "changeNote", {id: @note.id}
+    # console.log 'unemojified - change'
 
   changeNote: =>
     @el.parent().find(".selected").removeClass("selected")
     @el.addClass("selected")
+    setTimeout (->
+      emojify.run() # ALL the emojis!
+    ), 100
+
 
   updateNote: =>
     @title.text @note.name
