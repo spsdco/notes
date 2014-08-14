@@ -136,4 +136,5 @@ class App extends Spine.Controller
     $.getJSON 'http://freegeoip.net/json/', (loc) ->
       return loc.country_name
 
+
 module.exports = App

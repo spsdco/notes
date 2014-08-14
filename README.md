@@ -1,4 +1,5 @@
 # Springseed
+[![Stories in Ready](https://badge.waffle.io/byhestia/springseed.svg?label=ready&title=Ready)](http://waffle.io/byhestia/springseed) 
 
 **Current version: 2.0**
 

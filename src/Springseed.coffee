@@ -29,8 +29,8 @@ class SpringseedWindow
 
     if process.platform is "darwin"
       @osxMenus()
-    # else
-    #   @linuxMenus()
+    else
+      @linuxMenus()
 
   osxMenus: ->
     tmpl = [{
@@ -47,6 +47,25 @@ class SpringseedWindow
           }, {
           label: "Quit",
           accelerator: "Command+Q",
+          click: =>
+            app.quit()
+      }]
+    }]
+  linuxMenus: ->
+    tmpl = [{
+        label: "Springseed",
+        submenu: [{
+          label: "Developer Tools",
+          accelerator: "Control+Alt+I"
+          click: =>
+            window.openDevTools()
+          }, {
+          label: "About Springseed",
+          click: =>
+            new AboutWindow()
+          }, {
+          label: "Quit",
+          accelerator: "Ctrl+Q",
           click: =>
             app.quit()
       }]
