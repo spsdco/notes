@@ -15,3 +15,5 @@ public/application.js
 
 src/*.js
 app/views/*.js
+
+.srclib-cache
