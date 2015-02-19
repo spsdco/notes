@@ -207,6 +207,9 @@ class Editor extends Spine.Controller
     else if e.keyCode is 9 #tab
       e.preventDefault()
       @insertText "    "
+    else if e.keyCode is 27 #escape key
+      e.preventDefault()
+      @toggleMode()
 
   paste: (e) ->
     # Keeps the range for later
