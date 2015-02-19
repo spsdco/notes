@@ -68,6 +68,13 @@ module.exports =
           currentNote.destroy()
 
           @hide()
+    
+	modals['newNote'] = new Modal
+	  el: $('.newNote')
+	  events:
+	    'click .gotit': 'hide'
+	  run: ->
+	    @show()
 
     modals['revert'] = new Modal
       el: $('.modal.revert')
