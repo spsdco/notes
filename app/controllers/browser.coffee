@@ -55,6 +55,8 @@ class Browser extends Spine.Controller
             # Select it and throw it into editable mode
             note.trigger("changeNote")
             note.trigger("openNote")
+    else
+      Modal.get('newNote').run()
 
   changeNotebook: (notebook) =>
     dateSort = (a, b) ->

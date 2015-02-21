@@ -513,6 +513,17 @@ body.about {
 		}
 	}
 
+	.newNote-container {
+		width: 600px;
+		margin-left: -328px;
+		padding: 25px;
+		text-align: center;
+		font-size: 16px;
+		font-weight: 200;
+		color: $dark-color;
+		border: 5px solid #66BE7F;
+	}
+
 	.rename-container {
 		width: 600px;
 		margin-left: -328px;
