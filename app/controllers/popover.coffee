@@ -20,6 +20,7 @@ class Popover extends Spine.Controller
     "click .delete-popover #deleteNotebook": "deleteNotebook"
     "click .delete-popover #renameNotebook": "renameNotebook"
     "keyup .delete-popover #addCat": "addCategory"
+    "focusout .delete-popover #addCat": "cleanField"
 
   constructor: ->
     super
@@ -28,6 +29,10 @@ class Popover extends Spine.Controller
     # Not sure where to put this, but it is global
     e.preventDefault()
     @el.hide().children().hide() if $(e.target)[0].nodeName isnt "INPUT"
+
+  cleanField: (e) ->
+    $(e.target)[0].value = ""
+
 
   addCategory: (e) ->
     if e.type is "keyup" and e.which is 13
@@ -38,6 +43,7 @@ class Popover extends Spine.Controller
       if name isnt ''
         cat.push(name)
         notebook.updateAttribute("categories", cat)
+        @cleanField(e)
 
       @el.hide()
 
