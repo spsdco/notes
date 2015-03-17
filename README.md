@@ -5,6 +5,15 @@
 
 Springseed is the simple and easy way to take your notes.
 
+# Binaries
+
+A fairly up-to-date build is available [here](http://assets.apertron.net/springseed.zip).
+
+1. Extract springseed.zip into its own directory.
+2. `./run.sh` **should** download atom-shell, extract it, then run the app.
+
+If there are any issues, please don't hesitate to submit a bug report.
+
 ## Building this code
 
 Springseed is now based on the awesome work of the people at GitHub and as
