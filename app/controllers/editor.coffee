@@ -202,7 +202,7 @@ class Editor extends Spine.Controller
   keydown: (e) ->
     # Some keys are special
     if e.keyCode is 13 #return
-      e.preventDefault()
+      #e.preventDefault()
       @insertText "\n"
     else if e.keyCode is 9 #tab
       e.preventDefault()
@@ -216,7 +216,7 @@ class Editor extends Spine.Controller
     @range = window.getSelection().getRangeAt(0)
 
     # Paste it into a textarea (removes formatting)
-    @psuedoinput.val("").focus()
+    #@psuedoinput.val("").focus()
 
     # As the paste event isn't instant, put it back in a few secs.
     setTimeout( =>
