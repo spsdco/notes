@@ -23,7 +23,7 @@ class Editor extends Spine.Controller
     "click .headerwrap .edit": "toggleMode"
     "click .headerwrap .revert": "revert"
     "keydown #contentwrite > .inner": "keydown"
-    "paste #contentwrite > .inner": "paste"
+    #"paste #contentwrite > .inner": "paste"
     "dblclick #contentread": "toggleMode"
     "click header .right .delete": "deleteNote"
     "click header .star": "starNote"
@@ -211,21 +211,21 @@ class Editor extends Spine.Controller
       e.preventDefault()
       @toggleMode()
 
-  paste: (e) ->
-    # Keeps the range for later
-    @range = window.getSelection().getRangeAt(0)
+  #paste: (e) ->
+  #  # Keeps the range for later
+  #  @range = window.getSelection().getRangeAt(0)
 
-    # Paste it into a textarea (removes formatting)
-    #@psuedoinput.val("").focus()
+  #  # Paste it into a textarea (removes formatting)
+  #  #@psuedoinput.val("").focus()
 
-    # As the paste event isn't instant, put it back in a few secs.
-    setTimeout( =>
-      s = window.getSelection()
-      s.removeAllRanges()
-      s.addRange(@range)
+  #  # As the paste event isn't instant, put it back in a few secs.
+  #  setTimeout( =>
+  #    s = window.getSelection()
+  #    s.removeAllRanges()
+  #    s.addRange(@range)
 
-      @insertText @psuedoinput.val()
-    , 10)
+  #    @insertText @psuedoinput.val()
+  #  , 10)
 
   checkSelWrap: ->
     setTimeout =>
