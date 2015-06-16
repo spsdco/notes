@@ -114,6 +114,7 @@ module.exports =
 
       run: (notebookid, @category) ->
         @notebook = Notebook.find(notebookid)
+        numberofNotes = Note.filter(notebookid, category).length;
         if @category is "all"
           @el.find('.type').text "Notebook"
           @el.find('i').text @notebook.name
@@ -121,7 +122,17 @@ module.exports =
           @el.find('.type').text "Subcategory"
           @el.find('i').text @notebook.categories[@category]
 
-        @show()
+        @el.find('.numberofNotes').text(numberofNotes)
+
+        if numberofNotes > 1
+          @el.find('.oneOrMore').show()  
+        else
+          @el.find('.oneOrMore').hide()
+
+        if numberofNotes > 0
+          @show()
+        else
+          @delete()
 
       delete: ->
         Note.trigger 'changeNote'
