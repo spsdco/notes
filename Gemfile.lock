@@ -39,3 +39,6 @@ DEPENDENCIES
   guard
   guard-shell
   sass
+
+BUNDLED WITH
+   1.10.4
