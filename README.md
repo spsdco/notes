@@ -7,7 +7,7 @@ Springseed is the simple and easy way to take your notes.
 
 # Binaries
 
-A fairly up-to-date build is available [here](https://xack.xyz/misc/springeed.zip).
+A fairly up-to-date build is available [here](https://xack.xyz/misc/springseed.zip).
 
 1. Extract `springseed.zip` into its own directory.
 2. `./run.sh` **should** download atom-shell, extract it, then run the app.
