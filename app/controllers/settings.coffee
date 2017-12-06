@@ -1,7 +1,6 @@
 Spine = require 'spine'
 $ = Spine.$
-
-shell = window.require('shell') if window.require
+shell = window.require("electron").shell if window.require
 
 Sync = require './sync.coffee'
 Account = require '../controllers/account.coffee'

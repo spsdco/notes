@@ -1,7 +1,8 @@
 require './lib/setup.coffee'
 Spine = require 'spine'
 
-shell = window.require('shell') if window.require
+shell = window.require("electron").shell if window.require
+
 Analytics = require 'analytics-node'
 
 # Upgrader

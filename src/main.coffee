@@ -1,8 +1,8 @@
 # Springseed. Simply awesome note taking.
 # Copyright (c) 2014, Springseed Team
 # All Rights Reserved.
-
-app = require "app"
+electron = require "electron"
+app = electron.app
 SpringseedWindow = require './Springseed'
 
 app.on 'ready', ->
