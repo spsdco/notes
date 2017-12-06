@@ -3,9 +3,10 @@
     "name": "Springseed",
     "version": "2.0.0",
     "repository": {
-        "type":"git",
+        "type": "git",
         "url": "http://github.com/springseednotes/springseed.git"
     },
+    "license": "MIT",
     "window": {
         "toolbar": true,
         "width": 1024,
@@ -25,9 +26,10 @@
         "analytics-node": "1.0.4"
     },
     "devDependencies": {
-        "handlebars": "1.0.x",
-        "coffee-script": "1.7.x",
         "browserify": "4.1.x",
-        "coffeeify": "0.6.x"
+        "coffee-script": "1.7.x",
+        "coffeeify": "0.6.x",
+        "electron": "1.7.9",
+        "handlebars": "1.0.x"
     }
 }
