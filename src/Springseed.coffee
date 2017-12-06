@@ -2,9 +2,10 @@
 # Copyright (c) 2014, Springseed Team
 # All Rights Reserved.
 
-app = require "app"
-Menu = require "menu"
-BrowserWindow = require "browser-window"
+electron = require "electron"
+app = electron.app
+Menu = electron.Menu
+BrowserWindow = electron.BrowserWindow
 AboutWindow = require "./AboutWindow"
 
 # We need a global reference of the window because Node.js may GC if if we don't.
@@ -22,7 +23,7 @@ class SpringseedWindow
 
     console.log __dirname
 
-    window.loadUrl "file://"+__dirname+"/../public/index.html"
+    window.loadURL "file://"+__dirname+"/../public/index.html"
 
     window.on "closed",  ->
       window = null # Dereference the window.
